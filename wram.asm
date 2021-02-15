@@ -145,7 +145,8 @@ wUnusedScriptByte:: db
 
 wMapTimeOfDay:: db
 
-	ds 3
+	ds 2
+wFollowerSpriteID:: db
 
 wPrinterConnectionOpen:: db
 wPrinterOpcode:: db
@@ -2725,10 +2726,11 @@ wObject9Struct::  object_struct wObject9
 wObject10Struct:: object_struct wObject10
 wObject11Struct:: object_struct wObject11
 wObject12Struct:: object_struct wObject12
+wObject13Struct:: object_struct wObject13
 
 wCmdQueue:: ds CMDQUEUE_CAPACITY * CMDQUEUE_ENTRY_SIZE
 
-	ds 40
+;	ds 40
 
 wMapObjects::
 wPlayerObject:: map_object wPlayer
@@ -2838,7 +2840,7 @@ wMooMooBerries:: db
 wUndergroundSwitchPositions:: db
 wFarfetchdPosition:: db
 
-	ds 13
+;	ds 13
 
 ; map scene ids
 wPokecenter2FSceneID::                            db

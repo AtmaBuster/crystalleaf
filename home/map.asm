@@ -571,7 +571,10 @@ ReadObjectEvents::
 	push hl
 	call ClearObjectStructs
 	pop de
-	ld hl, wMap1Object
+;	ld hl, wMap1Object
+	ld a, -1
+	ld [wMap1Object], a
+	ld hl, wMapObjects + MAPOBJECT_LENGTH * 2
 	ld a, [de]
 	inc de
 	ld [wCurMapObjectEventCount], a
@@ -586,7 +589,7 @@ ReadObjectEvents::
 ; get NUM_OBJECTS - [wCurMapObjectEventCount]
 	ld a, [wCurMapObjectEventCount]
 	ld c, a
-	ld a, NUM_OBJECTS ; - 1
+	ld a, NUM_OBJECTS  - 2
 	sub c
 	jr z, .skip
 	; jr c, .skip
@@ -638,21 +641,21 @@ CopyMapObjectEvents::
 	ret
 
 ClearObjectStructs::
-	ld hl, wObject1Struct
-	ld bc, OBJECT_LENGTH * (NUM_OBJECT_STRUCTS - 1)
+	ld hl, wObject2Struct
+	ld bc, OBJECT_LENGTH * (NUM_OBJECT_STRUCTS - 2)
 	xor a
 	call ByteFill
 
 ; Just to make sure (this is rather pointless)
-	ld hl, wObject1Struct
-	ld de, OBJECT_LENGTH
-	ld c, NUM_OBJECT_STRUCTS - 1
-	xor a
-.loop
-	ld [hl], a
-	add hl, de
-	dec c
-	jr nz, .loop
+;	ld hl, wObject1Struct
+;	ld de, OBJECT_LENGTH
+;	ld c, NUM_OBJECT_STRUCTS - 1
+;	xor a
+;.loop
+;	ld [hl], a
+;	add hl, de
+;	dec c
+;	jr nz, .loop
 	ret
 
 GetWarpDestCoords::

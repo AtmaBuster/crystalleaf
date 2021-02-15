@@ -30,10 +30,270 @@ OutdoorSprites:
 	dw SaffronGroupSprites
 	dw CherrygroveGroupSprites
 
+if 1
+PalletGroupSprites:
+; Route1, PalletTown
+ViridianGroupSprites:
+; Route2, Route22, ViridianCity
+PewterGroupSprites:
+; Route3, PewterCity
+CinnabarGroupSprites:
+; Route19, Route20, Route21, CinnabarIsland
+	db SPRITE_TEACHER
+	db SPRITE_FISHER
+	db SPRITE_YOUNGSTER
+	db SPRITE_GRAMPS
+	db SPRITE_BUG_CATCHER
+	db SPRITE_COOLTRAINER_F
+	db SPRITE_SWIMMER_GIRL
+	db SPRITE_SWIMMER_GUY
+	; 8 / 9 walking
+	db SPRITE_BLUE ; does not move in these groups
+	db SPRITE_POKE_BALL
+	db SPRITE_FRUIT_TREE
+	db 0 ; end
+
+CeruleanGroupSprites:
+; Route4, Route9, Route10North, Route24, Route25, CeruleanCity
+SaffronGroupSprites:
+; Route5, SaffronCity
+	db SPRITE_COOLTRAINER_M
+	db SPRITE_SUPER_NERD
+	db SPRITE_COOLTRAINER_F
+	db SPRITE_FISHER
+	db SPRITE_YOUNGSTER
+	db SPRITE_LASS
+	db SPRITE_POKEFAN_M
+	db SPRITE_MISTY
+	; 8 / 9 walking
+	db SPRITE_ROCKET ; does not move in these groups
+	db SPRITE_POKE_BALL
+	db SPRITE_SLOWPOKE
+	db 0 ; end
+
+VermilionGroupSprites:
+; Route6, Route11, VermilionCity
+	db SPRITE_POKEFAN_M
+	db SPRITE_GRAMPS
+	db SPRITE_YOUNGSTER
+	db SPRITE_TEACHER
+	db SPRITE_SUPER_NERD
+	; 5 / 9 walking
+	db SPRITE_BIG_SNORLAX
+	db SPRITE_MACHOP
+	db SPRITE_POKE_BALL
+	db SPRITE_FRUIT_TREE
+	db 0 ; end
+
+CeladonGroupSprites:
+; Route7, Route16, Route17, CeladonCity
+	db SPRITE_FISHER
+	db SPRITE_TEACHER
+	db SPRITE_GRAMPS
+	db SPRITE_YOUNGSTER
+	db SPRITE_LASS
+	db SPRITE_BIKER
+	; 6 / 9 walking
+	db SPRITE_POLIWAG
+	db SPRITE_POKE_BALL
+	db SPRITE_FRUIT_TREE
+	db 0 ; end
+
+LavenderGroupSprites:
+; Route8, Route12, Route10South, LavenderTown
+FuchsiaGroupSprites:
+; Route13, Route14, Route15, Route18, FuchsiaCity
+	db SPRITE_POKEFAN_M
+	db SPRITE_GRAMPS
+	db SPRITE_YOUNGSTER
+	db SPRITE_FISHER
+	db SPRITE_TEACHER
+	db SPRITE_SUPER_NERD
+	db SPRITE_BIKER
+	; 7 / 9 walking
+	db SPRITE_POKE_BALL
+	db SPRITE_FRUIT_TREE
+	db 0 ; end
+
+IndigoGroupSprites:
+; Route23
+	; 0 / 9 walking
+	db 0 ; end
+
+NewBarkGroupSprites:
+; Route26, Route27, Route29, NewBarkTown
+CherrygroveGroupSprites:
+; Route30, Route31, CherrygroveCity
+	db SPRITE_SILVER
+	db SPRITE_TEACHER
+	db SPRITE_FISHER
+	db SPRITE_COOLTRAINER_M
+	db SPRITE_YOUNGSTER
+	db SPRITE_MONSTER
+	db SPRITE_GRAMPS
+	db SPRITE_BUG_CATCHER
+	; 8 / 9 walking
+	db SPRITE_COOLTRAINER_F ; does not move in these groups
+	db SPRITE_POKE_BALL
+	db SPRITE_FRUIT_TREE
+	db 0 ; end
+
+VioletGroupSprites:
+; Route32, Route35, Route36, Route37, VioletCity
+EcruteakGroupSprites:
+; EcruteakCity
+	db SPRITE_FISHER
+	db SPRITE_LASS
+	db SPRITE_OFFICER
+	db SPRITE_GRAMPS
+	db SPRITE_YOUNGSTER
+	db SPRITE_COOLTRAINER_M
+	db SPRITE_BUG_CATCHER
+	db SPRITE_SUPER_NERD
+	; 8 / 9 walking
+	db SPRITE_WEIRD_TREE ; variable sprite: becomes SPRITE_SUDOWOODO and SPRITE_TWIN
+	db SPRITE_POKE_BALL
+	db SPRITE_FRUIT_TREE
+	db SPRITE_SUICUNE
+	db 0 ; end
+
+AzaleaGroupSprites:
+; Route33, AzaleaTown
+	db SPRITE_GRAMPS
+	db SPRITE_YOUNGSTER
+	db SPRITE_POKEFAN_M
+	db SPRITE_TEACHER
+	db SPRITE_AZALEA_ROCKET ; variable sprite: becomes SPRITE_ROCKET and SPRITE_SILVER
+	db SPRITE_LASS
+	; 6 / 9 walking
+	db SPRITE_FRUIT_TREE
+	db SPRITE_SLOWPOKE
+	db SPRITE_KURT_OUTSIDE ; non-walking version of SPRITE_KURT
+	db 0 ; end
+
+GoldenrodGroupSprites:
+; Route34, GoldenrodCity
+	db SPRITE_GRAMPS
+	db SPRITE_YOUNGSTER
+	db SPRITE_OFFICER
+	db SPRITE_POKEFAN_M
+	db SPRITE_COOLTRAINER_F
+	db SPRITE_ROCKET
+	db SPRITE_LASS
+	; 7 / 9 walking
+	db SPRITE_DAY_CARE_MON_1
+	db SPRITE_DAY_CARE_MON_2
+	db SPRITE_POKE_BALL
+	db 0 ; end
+
+OlivineGroupSprites:
+; Route38, Route39, OlivineCity
+CianwoodGroupSprites:
+; Route40, Route41, CianwoodCity, BattleTowerOutside
+	db SPRITE_OLIVINE_RIVAL ; variable sprite: becomes SPRITE_SILVER and SPRITE_SWIMMER_GUY
+	db SPRITE_POKEFAN_M
+	db SPRITE_LASS
+	db SPRITE_BUENA
+	db SPRITE_SWIMMER_GIRL
+	db SPRITE_SAILOR
+	db SPRITE_POKEFAN_F
+	db SPRITE_SUPER_NERD
+	; 8 / 9 walking
+	db SPRITE_TAUROS
+	db SPRITE_FRUIT_TREE
+	db SPRITE_ROCK
+	db SPRITE_STANDING_YOUNGSTER ; non-walking version of SPRITE_YOUNGSTER
+	db SPRITE_SUICUNE
+	db 0 ; end
+
+MahoganyGroupSprites:
+; Route42, Route44, MahoganyTown
+	db SPRITE_GRAMPS
+	db SPRITE_YOUNGSTER
+	db SPRITE_LASS
+	db SPRITE_SUPER_NERD
+	db SPRITE_COOLTRAINER_M
+	db SPRITE_POKEFAN_M
+	db SPRITE_COOLTRAINER_F
+	db SPRITE_FISHER
+	; 8 / 9 walking
+	db SPRITE_FRUIT_TREE
+	db SPRITE_POKE_BALL
+	db SPRITE_SUICUNE
+	db 0 ; end
+
+LakeOfRageGroupSprites:
+; Route43, LakeOfRage
+	db SPRITE_LANCE
+	db SPRITE_GRAMPS
+	db SPRITE_SUPER_NERD
+	db SPRITE_COOLTRAINER_F
+	db SPRITE_FISHER
+	db SPRITE_COOLTRAINER_M
+	db SPRITE_LASS
+	db SPRITE_YOUNGSTER
+	; 8 / 9 walking
+	db SPRITE_GYARADOS
+	db SPRITE_FRUIT_TREE
+	db SPRITE_POKE_BALL
+	db 0 ; end
+
+BlackthornGroupSprites:
+; Route45, Route46, BlackthornCity
+	db SPRITE_GRAMPS
+	db SPRITE_YOUNGSTER
+	db SPRITE_LASS
+	db SPRITE_SUPER_NERD
+	db SPRITE_COOLTRAINER_M
+	db SPRITE_POKEFAN_M
+	db SPRITE_BLACK_BELT
+	db SPRITE_COOLTRAINER_F
+	; 8 / 9 walking
+	db SPRITE_FRUIT_TREE
+	db SPRITE_POKE_BALL
+	db 0 ; end
+
+SilverGroupSprites:
+; Route28, SilverCaveOutside
+	; 0 / 9 walking
+	db 0 ; end
+
+DungeonsGroupSprites:
+; NationalPark, NationalParkBugContest, RuinsOfAlphOutside
+	db SPRITE_LASS
+	db SPRITE_POKEFAN_F
+	db SPRITE_TEACHER
+	db SPRITE_YOUNGSTER
+	db SPRITE_POKEFAN_M
+	db SPRITE_ROCKER
+	db SPRITE_FISHER
+	db SPRITE_SCIENTIST
+	; 8 / 9 walking
+	db SPRITE_GAMEBOY_KID
+	db SPRITE_GROWLITHE
+	db SPRITE_POKE_BALL
+	db 0 ; end
+
+FastShipGroupSprites:
+; OlivinePort, VermilionPort, MountMoonSquare, TinTowerRoof
+	db SPRITE_SAILOR
+	db SPRITE_FISHING_GURU
+	db SPRITE_SUPER_NERD
+	db SPRITE_COOLTRAINER_F
+	db SPRITE_YOUNGSTER
+	; 5 / 9 walking
+	db SPRITE_HO_OH
+	db SPRITE_FAIRY
+	db SPRITE_ROCK
+	db 0 ; end
+
+CableClubGroupSprites:
+; (no outdoor maps)
+	; 0 / 9 walking
+	db 0 ; end
+else
 PalletGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -57,8 +317,6 @@ PalletGroupSprites:
 
 ViridianGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -82,8 +340,6 @@ ViridianGroupSprites:
 
 PewterGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -107,8 +363,6 @@ PewterGroupSprites:
 
 CinnabarGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -132,8 +386,6 @@ CinnabarGroupSprites:
 
 CeruleanGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -157,8 +409,6 @@ CeruleanGroupSprites:
 
 SaffronGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -182,8 +432,6 @@ SaffronGroupSprites:
 
 CeladonGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -207,8 +455,6 @@ CeladonGroupSprites:
 
 LavenderGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -232,8 +478,6 @@ LavenderGroupSprites:
 
 VermilionGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -257,8 +501,6 @@ VermilionGroupSprites:
 
 FuchsiaGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -282,8 +524,6 @@ FuchsiaGroupSprites:
 
 IndigoGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -307,8 +547,6 @@ IndigoGroupSprites:
 
 NewBarkGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -332,8 +570,6 @@ NewBarkGroupSprites:
 
 CherrygroveGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -357,8 +593,6 @@ CherrygroveGroupSprites:
 
 SilverGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -382,8 +616,6 @@ SilverGroupSprites:
 
 VioletGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -407,8 +639,6 @@ VioletGroupSprites:
 
 EcruteakGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -423,7 +653,7 @@ EcruteakGroupSprites:
 	db SPRITE_OFFICER
 	db SPRITE_GRAMPS
 	db SPRITE_YOUNGSTER
-	db SPRITE_COOLTRAINER_M
+;	db SPRITE_COOLTRAINER_M
 	db SPRITE_BUG_CATCHER
 	db SPRITE_SUPER_NERD
 	db SPRITE_WEIRD_TREE
@@ -432,8 +662,6 @@ EcruteakGroupSprites:
 
 AzaleaGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -457,7 +685,6 @@ AzaleaGroupSprites:
 
 GoldenrodGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
 	db SPRITE_POKE_BALL
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
@@ -482,8 +709,6 @@ GoldenrodGroupSprites:
 
 CianwoodGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -507,8 +732,6 @@ CianwoodGroupSprites:
 
 OlivineGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -518,6 +741,7 @@ OlivineGroupSprites:
 	db SPRITE_BIG_ONIX
 	db SPRITE_SUDOWOODO
 	db SPRITE_BIG_SNORLAX
+	db SPRITE_TAUROS
 	db SPRITE_OLIVINE_RIVAL
 	db SPRITE_POKEFAN_M
 	db SPRITE_LASS
@@ -526,14 +750,11 @@ OlivineGroupSprites:
 	db SPRITE_SAILOR
 	db SPRITE_POKEFAN_F
 	db SPRITE_SUPER_NERD
-	db SPRITE_TAUROS
 	db SPRITE_FRUIT_TREE
 	db SPRITE_ROCK
 
 LakeOfRageGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -557,8 +778,6 @@ LakeOfRageGroupSprites:
 
 MahoganyGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -574,7 +793,7 @@ MahoganyGroupSprites:
 	db SPRITE_SUPER_NERD
 	db SPRITE_COOLTRAINER_M
 	db SPRITE_POKEFAN_M
-	db SPRITE_BLACK_BELT
+;	db SPRITE_BLACK_BELT
 	db SPRITE_COOLTRAINER_F
 	db SPRITE_FISHER
 	db SPRITE_FRUIT_TREE
@@ -582,8 +801,6 @@ MahoganyGroupSprites:
 
 BlackthornGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -607,8 +824,6 @@ BlackthornGroupSprites:
 
 DungeonsGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -632,8 +847,6 @@ DungeonsGroupSprites:
 
 FastShipGroupSprites:
 	db SPRITE_SUICUNE
-	db SPRITE_SILVER_TROPHY
-	db SPRITE_FAMICOM
 	db SPRITE_POKEDEX
 	db SPRITE_WILL
 	db SPRITE_KAREN
@@ -667,3 +880,4 @@ CableClubGroupSprites:
 	db SPRITE_FISHING_GURU
 	db SPRITE_POKE_BALL
 	db SPRITE_POKEDEX
+endc
