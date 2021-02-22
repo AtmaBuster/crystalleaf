@@ -234,6 +234,13 @@ sBox12:: box sBox12
 sBox13:: box sBox13
 sBox14:: box sBox14
 
+SECTION "Backup Follower Party SRAM", SRAM
+
+sBackupFollowerPartyData:: ds wBackupPartyDataEnd - wBackupPartyData
+
+SECTION "Follower Party SRAM", SRAM
+
+sFollowerPartyData:: ds wBackupPartyDataEnd - wBackupPartyData
 
 SECTION "SRAM Mobile 1", SRAM
 
@@ -247,7 +254,7 @@ s4_a013:: ds 36
 
 s4_a037:: ds 4
 
-s4_a03b:: ds 37 * 40
+s4_a03b:: ds 37 * 40 - $1ac
 
 s4_a603:: ds 8
 

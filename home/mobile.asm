@@ -1,53 +1,53 @@
 Function3e32::
-; Mobile
-	cp $2
-	ld [$c988], a
-	ld a, l
-	ld [$c986], a
-	ld a, h
-	ld [$c987], a
-	jr nz, .okay
-
-	ld [$c982], a
-	ld a, l
-	ld [$c981], a
-	ld hl, $c983
-	ld a, c
-	ld [hli], a
-	ld a, b
-	ld [hl], a
-
-.okay
-	ld hl, $c822
-	set 6, [hl]
-	ldh a, [hROMBank]
-	push af
-	ld a, BANK(Function110030)
-	ld [$c981], a
-	rst Bankswitch
-
-	jp Function110030
+;; Mobile
+;	cp $2
+;	ld [$c988], a
+;	ld a, l
+;	ld [$c986], a
+;	ld a, h
+;	ld [$c987], a
+;	jr nz, .okay
+;
+;	ld [$c982], a
+;	ld a, l
+;	ld [$c981], a
+;	ld hl, $c983
+;	ld a, c
+;	ld [hli], a
+;	ld a, b
+;	ld [hl], a
+;
+;.okay
+;	ld hl, $c822
+;	set 6, [hl]
+;	ldh a, [hROMBank]
+;	push af
+;	ld a, BANK(Function110030)
+;	ld [$c981], a
+;	rst Bankswitch
+;
+;	jp Function110030
 
 Function3e60::
-; Return from Function110030
-	ld [$c986], a
-	ld a, l
-	ld [$c987], a
-	ld a, h
-	ld [$c988], a
-
-	pop bc
-	ld a, b
-	ld [$c981], a
-	rst Bankswitch
-
-	ld hl, $c822
-	res 6, [hl]
-	ld hl, $c987
-	ld a, [hli]
-	ld h, [hl]
-	ld l, a
-	ld a, [$c986]
+;; Return from Function110030
+;	ld [$c986], a
+;	ld a, l
+;	ld [$c987], a
+;	ld a, h
+;	ld [$c988], a
+;
+;	pop bc
+;	ld a, b
+;	ld [$c981], a
+;	rst Bankswitch
+;
+;	ld hl, $c822
+;	res 6, [hl]
+;	ld hl, $c987
+;	ld a, [hli]
+;	ld h, [hl]
+;	ld l, a
+;	ld a, [$c986]
 	ret
 
 MobileReceive::

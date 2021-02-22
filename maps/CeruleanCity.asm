@@ -8,12 +8,29 @@
 
 CeruleanCity_MapScripts:
 	def_scene_scripts
+	scene_script .DummyScene0 ; SCENE_DEFAULT
 
 	def_callbacks
 	callback MAPCALLBACK_NEWMAP, .FlyPoint
+	callback MAPCALLBACK_TILES, .CeruleanCaveEntrance
+
+.DummyScene0:
+	end
 
 .FlyPoint:
 	setflag ENGINE_FLYPOINT_CERULEAN
+	endcallback
+
+.CeruleanCaveEntrance:
+	checkevent EVENT_OPENED_MT_SILVER
+	iffalse .skip_cave_entrance
+	changeblock 2, 0, $2b
+	changeblock 4, 0, $06
+	changeblock 6, 0, $2a
+	changeblock 2, 2, $29
+	changeblock 4, 2, $31
+	changeblock 6, 2, $24
+.skip_cave_entrance
 	endcallback
 
 CeruleanCityCooltrainerMScript:
@@ -146,6 +163,29 @@ CeruleanCityMartSign:
 
 CeruleanCityHiddenBerserkGene:
 	hiddenitem BERSERK_GENE, EVENT_FOUND_BERSERK_GENE_IN_CERULEAN_CITY
+
+CeruleanCityUpdateCaveLayout:
+	readvar VAR_WEEKDAY
+	ifequal SUNDAY, .layout_rg
+	ifequal MONDAY, .layout_rb
+	ifequal TUESDAY, .layout_y
+	ifequal WEDNESDAY, .layout_rg
+	ifequal THURSDAY, .layout_rb
+	ifequal FRIDAY, .layout_y
+	ifequal SATURDAY, .layout_rg
+	end
+
+.layout_rg
+	loadvar VAR_CERULEAN_CAVE_LAYOUT, 0
+	end
+
+.layout_rb
+	loadvar VAR_CERULEAN_CAVE_LAYOUT, 1
+	end
+
+.layout_y
+	loadvar VAR_CERULEAN_CAVE_LAYOUT, 2
+	end
 
 CeruleanCityCooltrainerMText1:
 	text "KANTO's POWER"
@@ -283,8 +323,11 @@ CeruleanCity_MapEvents:
 	warp_event 19, 21, CERULEAN_POKECENTER_1F, 1
 	warp_event 30, 23, CERULEAN_GYM, 1
 	warp_event 25, 29, CERULEAN_MART, 2
+	warp_event  4,  1, CERULEAN_CAVE_1F, 1
 
 	def_coord_events
+	coord_event  4,  3, SCENE_DEFAULT, CeruleanCityUpdateCaveLayout
+	coord_event  5,  3, SCENE_DEFAULT, CeruleanCityUpdateCaveLayout
 
 	def_bg_events
 	bg_event 23, 23, BGEVENT_READ, CeruleanCitySign

@@ -26,8 +26,13 @@ SpawnPlayer:
 
 	call CheckFollowerLoaded
 	jr c, .skip_follower
+	ld hl, FollowObjTemplateLeaf
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
+	jr z, .got_follower_template
+	ld hl, FollowObjTemplateRed
+.got_follower_template
 	ld a, FOLLOWER
-	ld hl, FollowObjTemplate
 	call CopyPlayerObjectTemplate
 	ld b, FOLLOWER
 	call PlayerSpawn_ConvertCoords
@@ -40,16 +45,18 @@ SpawnPlayer:
 	ld hl, MAPOBJECT_COLOR
 	add hl, bc
 	ln e, PAL_NPC_RED, OBJECTTYPE_SCRIPT
-	ld a, [wPlayerSpriteSetupFlags]
-	bit PLAYERSPRITESETUP_FEMALE_TO_MALE_F, a
-	jr nz, .ok
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ln d, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .ok
-	ln e, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT
+	ln e, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT
+	ln d, PAL_NPC_RED, OBJECTTYPE_SCRIPT
 
 .ok
 	ld [hl], e
+	ld hl, MAPOBJECT_COLOR + MAPOBJECT_LENGTH
+	add hl, bc
+	ld [hl], d
 	ld a, PLAYER_OBJECT
 	ldh [hMapObjectIndex], a
 	ld bc, wMapObjects
@@ -68,9 +75,12 @@ PlayerObjectTemplate:
 _NUM_OBJECT_EVENTS = 0
 	object_event -4, -4, SPRITE_CHRIS, SPRITEMOVEDATA_PLAYER, 15, 15, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, 0, -1
 
-FollowObjTemplate:
-;_NUM_OBJECT_EVENTS = 0
-	object_event -4, -4, SPRITE_FOLLOWER, SPRITEMOVEDATA_FOLLOWNOTEXACT, 15, 15, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, _FollowerScript, -1
+FollowObjTemplateLeaf:
+	object_event -4, -4, SPRITE_KRIS, SPRITEMOVEDATA_FOLLOWNOTEXACT, 15, 15, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, _FollowerScript, -1
+
+FollowObjTemplateRed:
+_NUM_OBJECT_EVENTS = 1
+	object_event -4, -4, SPRITE_CHRIS, SPRITEMOVEDATA_FOLLOWNOTEXACT, 15, 15, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, _FollowerScript, -1
 
 PUSHS
 SECTION "Follower Script Home", ROM0
@@ -362,12 +372,6 @@ InitializeVisibleSprites:
 	ld a, [hl]
 	cp -1
 	jr nz, .next
-
-;	ld hl, MAPOBJECT_SPRITE
-;	add hl, bc
-;	ld a, [hl]
-;	cp SPRITE_FOLLOWER
-;	jr z, .next
 
 	ld a, [wXCoord]
 	ld d, a

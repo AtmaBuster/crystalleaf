@@ -60,6 +60,9 @@ LoadSGBLayoutCGB:
 	dw _CGB_TrainerOrMonFrontpicPals
 	dw _CGB_MysteryGift
 	dw _CGB_Unused1E
+	dw _CGB_IntroBothPlayerPals
+	dw _CGB_HoFBothPlayerPalsBack
+	dw _CGB_HoFBothPlayerPalsFront
 
 _CGB_BattleGrayscale:
 	ld hl, PalPacket_BattleGrayscale + 1
@@ -174,8 +177,8 @@ InitPartyMenuBGPal0:
 	ret
 
 _CGB_PokegearPals:
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .male
 	ld hl, FemalePokegearPals
 	jr .got_pals
@@ -617,7 +620,7 @@ _CGB_TrainerCard:
 	xor a ; CHRIS
 	call GetTrainerPalettePointer
 	call LoadPalette_White_Col1_Col2_Black
-	ld a, FALKNER ; KRIS
+	ld a, KRIS
 	call GetTrainerPalettePointer
 	call LoadPalette_White_Col1_Col2_Black
 	ld a, BUGSY
@@ -632,10 +635,10 @@ _CGB_TrainerCard:
 	ld a, CHUCK
 	call GetTrainerPalettePointer
 	call LoadPalette_White_Col1_Col2_Black
-	ld a, JASMINE
+	ld a, JASMINE ; PRYCE
 	call GetTrainerPalettePointer
 	call LoadPalette_White_Col1_Col2_Black
-	ld a, PRYCE
+	ld a, FALKNER ; CLAIR
 	call GetTrainerPalettePointer
 	call LoadPalette_White_Col1_Col2_Black
 	ld a, PREDEFPAL_CGB_BADGE
@@ -645,8 +648,8 @@ _CGB_TrainerCard:
 	; fill screen with opposite-gender palette for the card border
 	hlcoord 0, 0, wAttrmap
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	ld a, [wPlayerGender]
-	and a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	ld a, $1 ; kris
 	jr z, .got_gender
 	ld a, $0 ; chris
@@ -656,18 +659,15 @@ _CGB_TrainerCard:
 	hlcoord 14, 1, wAttrmap
 	lb bc, 7, 5
 	ld a, [wPlayerGender]
-	and a
+	bit PLAYERGENDER_FEMALE_F, a
 	ld a, $0 ; chris
 	jr z, .got_gender2
 	ld a, $1 ; kris
 .got_gender2
 	call FillBoxCGB
-	; top-right corner still uses the border's palette
-	hlcoord 18, 1, wAttrmap
-	ld [hl], $1
 	hlcoord 2, 11, wAttrmap
 	lb bc, 2, 4
-	ld a, $1 ; falkner
+	ld a, $7 ; falkner
 	call FillBoxCGB
 	hlcoord 6, 11, wAttrmap
 	lb bc, 2, 4
@@ -691,25 +691,19 @@ _CGB_TrainerCard:
 	call FillBoxCGB
 	hlcoord 10, 14, wAttrmap
 	lb bc, 2, 4
-	ld a, $7 ; pryce
+	ld a, $6 ; pryce
 	call FillBoxCGB
-	; clair uses kris's palette
-	ld a, [wPlayerGender]
-	and a
-	push af
-	jr z, .got_gender3
 	hlcoord 14, 14, wAttrmap
 	lb bc, 2, 4
-	ld a, $1
+	ld a, $7 ; clair
 	call FillBoxCGB
-.got_gender3
-	pop af
-	ld c, $0
-	jr nz, .got_gender4
-	inc c
-.got_gender4
-	ld a, c
 	hlcoord 18, 1, wAttrmap
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
+	ld a, $1 ; kris
+	jr z, .got_gender3
+	ld a, $0 ; chris
+.got_gender3
 	ld [hl], a
 	call ApplyAttrmap
 	call ApplyPals
@@ -769,8 +763,8 @@ _CGB_PackPals:
 	cp BATTLETYPE_TUTORIAL
 	jr z, .tutorial_male
 
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .tutorial_male
 
 	ld hl, .KrisPackPals
@@ -981,3 +975,75 @@ GS_CGB_MysteryGift: ; unreferenced
 
 .MysteryGiftPalette:
 INCLUDE "gfx/mystery_gift/gs_mystery_gift.pal"
+
+_CGB_IntroBothPlayerPals:
+	ld de, wBGPals1
+	ld a, CHRIS
+	ld [wTrainerClass], a
+	xor a
+	call GetFrontpicPalettePointer
+	call LoadPalette_White_Col1_Col2_Black
+	ld de, wBGPals1 palette 1
+	ld a, KRIS
+	ld [wTrainerClass], a
+	xor a
+	call GetFrontpicPalettePointer
+	call LoadPalette_White_Col1_Col2_Black
+	call WipeAttrmap
+
+	hlcoord 10, 4, wAttrmap
+	lb bc, 7, 7
+	ld a, 1
+	call FillBoxCGB
+
+	call ApplyAttrmap
+	call ApplyPals
+	ret
+
+_CGB_HoFBothPlayerPalsBack:
+	ld de, wBGPals1
+	ld a, CHRIS
+	ld [wTrainerClass], a
+	xor a
+	call GetFrontpicPalettePointer
+	call LoadPalette_White_Col1_Col2_Black
+	ld de, wBGPals1 palette 1
+	ld a, KRIS
+	ld [wTrainerClass], a
+	xor a
+	call GetFrontpicPalettePointer
+	call LoadPalette_White_Col1_Col2_Black
+	call WipeAttrmap
+
+	hlcoord 3, 6, wAttrmap
+	lb bc, 6, 6
+	ld a, 1
+	call FillBoxCGB
+
+	call ApplyAttrmap
+	call ApplyPals
+	ret
+
+_CGB_HoFBothPlayerPalsFront:
+	ld de, wBGPals1
+	ld a, CHRIS
+	ld [wTrainerClass], a
+	xor a
+	call GetFrontpicPalettePointer
+	call LoadPalette_White_Col1_Col2_Black
+	ld de, wBGPals1 palette 1
+	ld a, KRIS
+	ld [wTrainerClass], a
+	xor a
+	call GetFrontpicPalettePointer
+	call LoadPalette_White_Col1_Col2_Black
+	call WipeAttrmap
+
+	hlcoord 15, 5, wAttrmap
+	lb bc, 5, 7
+	ld a, 1
+	call FillBoxCGB
+
+	call ApplyAttrmap
+	call ApplyPals
+	ret

@@ -248,6 +248,7 @@ DidntChooseStarterScript:
 	end
 
 ElmDirectionsScript:
+	scall ElmsLabGiveCharmanderScript
 	turnobject PLAYER, UP
 	opentext
 	writetext ElmDirectionsText1
@@ -581,6 +582,23 @@ ElmsLabWindow:
 	writetext ElmsLabWindowText1
 	waitbutton
 	closetext
+	end
+
+ElmsLabGiveCharmanderScript:
+	callstd SwapFollowerScript
+	turnobject PLAYER, UP
+	opentext
+	writetext ElmsLabCharmanderText
+	promptbutton
+	waitsfx
+	getmonname STRING_BUFFER_3, CHARMANDER
+	writetext ReceivedStarterText
+	playsound SFX_CAUGHT_MON
+	waitsfx
+	promptbutton
+	givepoke CHARMANDER, 5, BERRY
+	closetext
+	callstd SwapFollowerScript
 	end
 
 ElmsLabTravelTip1:
@@ -1307,6 +1325,14 @@ ElmsLabWindowText1:
 ElmsLabWindowText2:
 	text "He broke in"
 	line "through here!"
+	done
+
+ElmsLabCharmanderText:
+	text "As for you,"
+	line "<PLAYER>…"
+
+	para "You can have"
+	line "this one!"
 	done
 
 ElmsLabTravelTip1Text:

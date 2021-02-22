@@ -2146,6 +2146,19 @@ GetMapAttributesPointer::
 ; returns the current map's data pointer in hl.
 	push bc
 	push de
+; if getting Cerulean Cave, get from different table
+	ld a, [wMapGroup]
+	cp GROUP_CERULEAN_CAVE_1F
+	jr nz, .regular
+	ld a, [wMapNumber]
+	cp MAP_CERULEAN_CAVE_1F
+	jr z, .cerulean_cave
+	cp MAP_CERULEAN_CAVE_2F
+	jr z, .cerulean_cave
+	cp MAP_CERULEAN_CAVE_B1F
+	jr z, .cerulean_cave
+
+.regular
 	ld de, MAP_MAPATTRIBUTES
 	call GetMapField
 	ld l, c
@@ -2153,6 +2166,40 @@ GetMapAttributesPointer::
 	pop de
 	pop bc
 	ret
+
+.cerulean_cave
+	sub MAP_CERULEAN_CAVE_1F
+	ld c, a
+	ld b, 0
+	ld hl, .cerulean_cave_map_attributes
+rept 6
+	add hl, bc
+endr
+	ld a, [wCeruleanCaveLayout]
+	ld c, a
+	ld b, 0
+	add hl, bc
+	add hl, bc
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+	pop de
+	pop bc
+	ret
+
+.cerulean_cave_map_attributes
+; 1F
+	dw CeruleanCave1F_RG_MapAttributes
+	dw CeruleanCave1F_MapAttributes
+	dw CeruleanCave1F_Y_MapAttributes
+; 2F
+	dw CeruleanCave2F_RG_MapAttributes
+	dw CeruleanCave2F_MapAttributes
+	dw CeruleanCave2F_Y_MapAttributes
+; B1F
+	dw CeruleanCaveB1F_RG_MapAttributes
+	dw CeruleanCaveB1F_MapAttributes
+	dw CeruleanCaveB1F_Y_MapAttributes
 
 GetMapEnvironment::
 	push hl

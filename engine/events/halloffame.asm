@@ -526,10 +526,15 @@ HOF_AnimatePlayerPic:
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
 	ld a, " "
 	call ByteFill
-	farcall GetPlayerBackpic
+	farcall HOF_GetTrainerBackpics
+	xor a
+	ldh [hGraphicStartTile], a
+	hlcoord 9, 6
+	lb bc, 6, 6
+	predef PlaceGraphic
 	ld a, $31
 	ldh [hGraphicStartTile], a
-	hlcoord 6, 6
+	hlcoord 3, 6
 	lb bc, 6, 6
 	predef PlaceGraphic
 	ld a, $d0
@@ -540,7 +545,7 @@ HOF_AnimatePlayerPic:
 	xor a
 	ldh [hBGMapMode], a
 	ld [wCurPartySpecies], a
-	ld b, SCGB_PLAYER_OR_MON_FRONTPIC_PALS
+	ld b, SCGB_HOF_BOTH_PLAYER_PALS_BACK
 	call GetSGBLayout
 	call SetPalettes
 	call HOF_SlideBackpic
@@ -550,28 +555,37 @@ HOF_AnimatePlayerPic:
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
 	ld a, " "
 	call ByteFill
-	farcall HOF_LoadTrainerFrontpic
+	xor a
+	ldh [hSCY], a
+	ld a, $b0
+	ldh [hSCX], a
+	farcall HOF_LoadTrainerFrontpics
 	xor a
 	ldh [hGraphicStartTile], a
-	hlcoord 12, 5
-	lb bc, 7, 7
+	hlcoord 10, 5
+	lb bc, 5, 7
 	predef PlaceGraphic
-	ld a, $c0
-	ldh [hSCX], a
+	ld a, $23
+	ldh [hGraphicStartTile], a
+	hlcoord 15, 5
+	lb bc, 5, 7
+	predef PlaceGraphic
 	call WaitBGMap
 	xor a
 	ldh [hBGMapMode], a
-	ldh [hSCY], a
+	ld b, SCGB_HOF_BOTH_PLAYER_PALS_FRONT
+	call GetSGBLayout
+	call SetPalettes
 	call HOF_SlideFrontpic
 	xor a
 	ldh [hBGMapMode], a
 	hlcoord 0, 2
-	lb bc, 8, 9
+	lb bc, 8, 8
 	call Textbox
 	hlcoord 0, 12
 	lb bc, 4, 18
 	call Textbox
-	hlcoord 2, 4
+	hlcoord 1, 4
 	ld de, wPlayerName
 	call PlaceString
 	hlcoord 1, 6
@@ -587,7 +601,7 @@ HOF_AnimatePlayerPic:
 	hlcoord 1, 8
 	ld de, .PlayTime
 	call PlaceString
-	hlcoord 3, 9
+	hlcoord 2, 9
 	ld de, wGameTimeHours
 	lb bc, 2, 3
 	call PrintNum
@@ -601,4 +615,4 @@ HOF_AnimatePlayerPic:
 	ret
 
 .PlayTime:
-	db "PLAY TIME@"
+	db "TIME@"

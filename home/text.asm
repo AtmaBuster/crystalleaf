@@ -218,6 +218,7 @@ ENDM
 	dict "<PARA>",    Paragraph
 	dict "<MOM>",     PrintMomsName
 	dict "<PLAYER>",  PrintPlayerName
+	dict "<FOLLOW>",  PrintFollowerName
 	dict "<RIVAL>",   PrintRivalName
 	dict "<ROUTE>",   PlaceJPRoute
 	dict "<WATASHI>", PlaceWatashi
@@ -243,7 +244,7 @@ ENDM
 	dict "<TARGET>",  PlaceMoveTargetsName
 	dict "<USER>",    PlaceMoveUsersName
 	dict "<ENEMY>",   PlaceEnemysName
-	dict "<PLAY_G>",  PlaceGenderedPlayerName
+	dict "<PLAY_G>",  PrintPlayerName
 	dict "ﾟ",         .place ; should be .diacritic
 	dict "ﾞ",         .place ; should be .diacritic
 	jr .not_diacritic
@@ -304,10 +305,32 @@ print_name: MACRO
 ENDM
 
 PrintMomsName:   print_name wMomsName
-PrintPlayerName: print_name wPlayerName
 PrintRivalName:  print_name wRivalName
 PrintRedsName:   print_name wRedsName
 PrintGreensName: print_name wGreensName
+
+PrintPlayerName:
+	push de
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
+	ld de, PlayerRedName
+	jp z, PlaceCommandCharacter
+	ld de, PlayerLeafName
+	jp PlaceCommandCharacter
+
+PrintFollowerName:
+	push de
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
+	ld de, PlayerRedName
+	jp nz, PlaceCommandCharacter
+	ld de, PlayerLeafName
+	jp PlaceCommandCharacter
+
+PlayerRedName:
+	db "RED@"
+PlayerLeafName:
+	db "LEAF@"
 
 TrainerChar:  print_name TrainerCharText
 TMChar:       print_name TMCharText
@@ -380,19 +403,6 @@ PlaceEnemysName::
 	ld de, wOTClassName
 	jr PlaceCommandCharacter
 
-PlaceGenderedPlayerName::
-	push de
-	ld de, wPlayerName
-	call PlaceString
-	ld h, b
-	ld l, c
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
-	ld de, KunSuffixText
-	jr z, PlaceCommandCharacter
-	ld de, ChanSuffixText
-	jr PlaceCommandCharacter
-
 PlaceCommandCharacter::
 	call PlaceString
 	ld h, b
@@ -415,8 +425,6 @@ String_Space::    db " @"
 PlaceJPRouteText::
 PlaceWatashiText::
 PlaceKokoWaText:: db "@"
-KunSuffixText::   db "@"
-ChanSuffixText::  db "@"
 
 NextLineChar::
 	pop hl

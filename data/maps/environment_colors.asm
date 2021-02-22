@@ -5,7 +5,7 @@ EnvironmentColorsPointers:
 	dw .OutdoorColors ; ROUTE
 	dw .IndoorColors  ; INDOOR
 	dw .DungeonColors ; CAVE
-	dw .Env5Colors    ; ENVIRONMENT_5
+	dw .OutdoorColors ; ENVIRONMENT_5
 	dw .IndoorColors  ; GATE
 	dw .DungeonColors ; DUNGEON
 

@@ -38,40 +38,40 @@ CheckBit5_ScriptFlags2:
 	bit 5, [hl]
 	ret
 
-DisableWarpsConnxns: ; unreferenced
-	ld hl, wScriptFlags2
-	res 2, [hl]
-	ret
-
-DisableCoordEvents: ; unreferenced
-	ld hl, wScriptFlags2
-	res 1, [hl]
-	ret
-
-DisableStepCount: ; unreferenced
-	ld hl, wScriptFlags2
-	res 0, [hl]
-	ret
-
-DisableWildEncounters: ; unreferenced
-	ld hl, wScriptFlags2
-	res 4, [hl]
-	ret
-
-EnableWarpsConnxns: ; unreferenced
-	ld hl, wScriptFlags2
-	set 2, [hl]
-	ret
-
-EnableCoordEvents: ; unreferenced
-	ld hl, wScriptFlags2
-	set 1, [hl]
-	ret
-
-EnableStepCount: ; unreferenced
-	ld hl, wScriptFlags2
-	set 0, [hl]
-	ret
+;DisableWarpsConnxns: ; unreferenced
+;	ld hl, wScriptFlags2
+;	res 2, [hl]
+;	ret
+;
+;DisableCoordEvents: ; unreferenced
+;	ld hl, wScriptFlags2
+;	res 1, [hl]
+;	ret
+;
+;DisableStepCount: ; unreferenced
+;	ld hl, wScriptFlags2
+;	res 0, [hl]
+;	ret
+;
+;DisableWildEncounters: ; unreferenced
+;	ld hl, wScriptFlags2
+;	res 4, [hl]
+;	ret
+;
+;EnableWarpsConnxns: ; unreferenced
+;	ld hl, wScriptFlags2
+;	set 2, [hl]
+;	ret
+;
+;EnableCoordEvents: ; unreferenced
+;	ld hl, wScriptFlags2
+;	set 1, [hl]
+;	ret
+;
+;EnableStepCount: ; unreferenced
+;	ld hl, wScriptFlags2
+;	set 0, [hl]
+;	ret
 
 EnableWildEncounters:
 	ld hl, wScriptFlags2
@@ -136,10 +136,10 @@ EnterMap:
 	ld [wMapStatus], a
 	ret
 
-UnusedWait30Frames: ; unreferenced
-	ld c, 30
-	call DelayFrames
-	ret
+;UnusedWait30Frames: ; unreferenced
+;	ld c, 30
+;	call DelayFrames
+;	ret
 
 HandleMap:
 	call ResetOverworldDelay
@@ -154,8 +154,8 @@ HandleMap:
 
 	call HandleMapObjects
 	call NextOverworldFrame
-	call HandleMapBackground
-	call CheckPlayerState
+	farcall HandleMapBackground
+	farcall CheckPlayerState
 	ret
 
 MapEvents:
@@ -208,31 +208,6 @@ HandleMapObjects:
 	farcall HandleNPCStep
 	farcall _HandlePlayerStep
 	call _CheckObjectEnteringVisibleRange
-	ret
-
-HandleMapBackground:
-	farcall _UpdateSprites
-	farcall ScrollScreen
-	farcall PlaceMapNameSign
-	ret
-
-CheckPlayerState:
-	ld a, [wPlayerStepFlags]
-	bit PLAYERSTEP_CONTINUE_F, a
-	jr z, .events
-	bit PLAYERSTEP_STOP_F, a
-	jr z, .noevents
-	bit PLAYERSTEP_MIDAIR_F, a
-	jr nz, .noevents
-	call EnableEvents
-.events
-	ld a, MAPEVENTS_ON
-	ld [wMapEventStatus], a
-	ret
-
-.noevents
-	ld a, MAPEVENTS_OFF
-	ld [wMapEventStatus], a
 	ret
 
 _CheckObjectEnteringVisibleRange:
@@ -481,10 +456,10 @@ CheckTimeEvents:
 	scf
 	ret
 
-.unused ; unreferenced
-	ld a, $8 ; ???
-	scf
-	ret
+;.unused ; unreferenced
+;	ld a, $8 ; ???
+;	scf
+;	ret
 
 OWPlayerInput:
 	call PlayerMovement
@@ -833,9 +808,20 @@ CheckMenuOW:
 	ret
 
 .Select:
+	ldh a, [hJoyDown]
+	bit B_BUTTON_F, a
+	jr nz, .b_select
+
 	call PlayTalkObject
 	ld a, BANK(SelectMenuScript)
 	ld hl, SelectMenuScript
+	call CallScript
+	scf
+	ret
+
+.b_select
+	ld a, BANK(_SwapFollowerScript)
+	ld hl, _SwapFollowerScript
 	call CallScript
 	scf
 	ret
@@ -928,10 +914,10 @@ CountStep:
 	scf
 	ret
 
-.whiteout ; unreferenced
-	ld a, PLAYEREVENT_WHITEOUT
-	scf
-	ret
+;.whiteout ; unreferenced
+;	ld a, PLAYEREVENT_WHITEOUT
+;	scf
+;	ret
 
 DoRepelStep:
 	ld a, [wRepelEffect]
@@ -990,8 +976,8 @@ PlayerEventScriptPointers:
 InvalidEventScript:
 	end
 
-UnusedPlayerEventScript: ; unreferenced
-	end
+;UnusedPlayerEventScript: ; unreferenced
+;	end
 
 HatchEggScript:
 	callasm OverworldHatchEgg
@@ -1338,3 +1324,29 @@ DoBikeStep::
 	ret
 
 INCLUDE "engine/overworld/cmd_queue.asm"
+
+SECTION "Events 2", ROMX
+CheckPlayerState:
+	ld a, [wPlayerStepFlags]
+	bit PLAYERSTEP_CONTINUE_F, a
+	jr z, .events
+	bit PLAYERSTEP_STOP_F, a
+	jr z, .noevents
+	bit PLAYERSTEP_MIDAIR_F, a
+	jr nz, .noevents
+	farcall EnableEvents
+.events
+	ld a, MAPEVENTS_ON
+	ld [wMapEventStatus], a
+	ret
+
+.noevents
+	ld a, MAPEVENTS_OFF
+	ld [wMapEventStatus], a
+	ret
+
+HandleMapBackground:
+	farcall _UpdateSprites
+	farcall ScrollScreen
+	farcall PlaceMapNameSign
+	ret

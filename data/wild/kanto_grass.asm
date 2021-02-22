@@ -199,16 +199,16 @@ KantoGrassWildMons:
 	db 5, PIDGEY
 	db 7, BUTTERFREE
 	db 7, LEDIAN
-	db 4, PIKACHU
-	db 4, PIKACHU
+	db 4, WEEDLE
+	db 4, WEEDLE
 	; day
 	db 3, CATERPIE
 	db 3, PIDGEY
 	db 5, PIDGEY
 	db 7, BUTTERFREE
 	db 7, PIDGEOTTO
-	db 4, PIKACHU
-	db 4, PIKACHU
+	db 4, WEEDLE
+	db 4, WEEDLE
 	; nite
 	db 3, HOOTHOOT
 	db 3, SPINARAK
@@ -811,5 +811,32 @@ KantoGrassWildMons:
 	db 42, GOLBAT
 	db 42, GOLBAT
 	db 42, GOLBAT
+
+	map_id VIRIDIAN_FOREST
+	db 10 percent, 10 percent, 10 percent ; encounter rates: morn/day/nite
+	; morn
+	db 4, WEEDLE
+	db 4, CATERPIE
+	db 5, METAPOD
+	db 6, KAKUNA
+	db 5, KAKUNA
+	db 4, PIKACHU
+	db 9, PIDGEOTTO
+	; day
+	db 4, WEEDLE
+	db 4, CATERPIE
+	db 5, METAPOD
+	db 6, KAKUNA
+	db 5, KAKUNA
+	db 4, PIKACHU
+	db 9, PIDGEOTTO
+	; nite
+	db 4, WEEDLE
+	db 4, CATERPIE
+	db 5, METAPOD
+	db 6, KAKUNA
+	db 5, KAKUNA
+	db 4, PIKACHU
+	db 9, PIDGEOTTO
 
 	db -1 ; end

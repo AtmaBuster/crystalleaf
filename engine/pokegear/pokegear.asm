@@ -656,10 +656,10 @@ PokegearMap_InitPlayerIcon:
 	push af
 	depixel 0, 0
 	ld b, SPRITE_ANIM_INDEX_RED_WALK
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .got_gender
-	ld b, SPRITE_ANIM_INDEX_BLUE_WALK
+	ld b, SPRITE_ANIM_INDEX_GREEN_WALK
 .got_gender
 	ld a, b
 	call InitSpriteAnimStruct
@@ -728,6 +728,14 @@ TownMap_GetKantoLandmarkLimits:
 	ld a, [wStatusFlags]
 	bit STATUSFLAGS_HALL_OF_FAME_F, a
 	jr z, .not_hof
+	ld a, [wStatusFlags2]
+	bit STATUSFLAGS2_CERULEAN_CAVE_UNLOCKED_F, a
+	jr z, .not_cerulean_cave
+	ld d, LANDMARK_CERULEAN_CAVE
+	ld e, LANDMARK_PALLET_TOWN
+	ret
+
+.not_cerulean_cave
 	ld d, LANDMARK_ROUTE_28
 	ld e, LANDMARK_PALLET_TOWN
 	ret
@@ -2019,6 +2027,11 @@ PokegearMap:
 .kanto
 	call LoadTownMapGFX
 	call FillKantoMap
+	ld a, [wStatusFlags2]
+	bit STATUSFLAGS2_CERULEAN_CAVE_UNLOCKED_F, a
+	ret z
+	hlcoord 11, 5
+	ld [hl], $f
 	ret
 
 _FlyMap:
@@ -2037,6 +2050,9 @@ _FlyMap:
 	ld hl, vTiles2 tile $30
 	lb bc, BANK(FlyMapLabelBorderGFX), 6
 	call Request1bpp
+	xor a
+	ld [wFlymapSwapRegion], a
+.swap_loop
 	call FlyMap
 	call Pokegear_DummyFunction
 	ld b, SCGB_POKEGEAR_PALS
@@ -2051,11 +2067,28 @@ _FlyMap:
 	ld a, [hl]
 	and A_BUTTON
 	jr nz, .pressedA
+	ld a, [hl]
+	and SELECT
+	jr nz, .pressedSelect
 	call .HandleDPad
 	call GetMapCursorCoordinates
 	farcall PlaySpriteAnimations
 	call DelayFrame
 	jr .loop
+
+.pressedSelect
+	ld c, SPAWN_INDIGO
+	call HasVisitedSpawn
+	and a
+	jr z, .loop
+	ld a, [wFlymapSwapRegion]
+	xor 1
+	ld [wFlymapSwapRegion], a
+	call ClearBGPalettes
+	call ClearTilemap
+	call ClearSprites
+	farcall ClearSpriteAnims
+	jr .swap_loop
 
 .pressedB
 	ld a, -1
@@ -2268,13 +2301,10 @@ FlyMap:
 ; Johto fly map
 ; Note that .NoKanto should be modified in tandem with this branch
 	push af
-	ld a, JOHTO_FLYPOINT ; first Johto flypoint
-	ld [wTownMapPlayerIconLandmark], a ; first one is default (New Bark Town)
-	ld [wStartFlypoint], a
-	ld a, KANTO_FLYPOINT - 1 ; last Johto flypoint
-	ld [wEndFlypoint], a
-; Fill out the map
-	call FillJohtoMap
+	ld a, [wFlymapSwapRegion]
+	and a
+	jr nz, .NoJohto
+	call .JohtoMap
 	call .MapHud
 	pop af
 	call TownMapPlayerIcon
@@ -2295,26 +2325,23 @@ FlyMap:
 	and a
 	jr z, .NoKanto
 ; Kanto's map is only loaded if we've visited Indigo Plateau
-	ld a, KANTO_FLYPOINT ; first Kanto flypoint
-	ld [wStartFlypoint], a
-	ld a, NUM_FLYPOINTS - 1 ; last Kanto flypoint
-	ld [wEndFlypoint], a
-	ld [wTownMapPlayerIconLandmark], a ; last one is default (Indigo Plateau)
-; Fill out the map
-	call FillKantoMap
+	ld a, [wFlymapSwapRegion]
+	and a
+	jr nz, .NoKanto
+	call .KantoMap
 	call .MapHud
 	pop af
 	call TownMapPlayerIcon
 	ret
 
+.NoJohto:
+	call .KantoMap
+	pop af
+	jr .MapHud
+
 .NoKanto:
 ; If Indigo Plateau hasn't been visited, we use Johto's map instead
-	ld a, JOHTO_FLYPOINT ; first Johto flypoint
-	ld [wTownMapPlayerIconLandmark], a ; first one is default (New Bark Town)
-	ld [wStartFlypoint], a
-	ld a, KANTO_FLYPOINT - 1 ; last Johto flypoint
-	ld [wEndFlypoint], a
-	call FillJohtoMap
+	call .JohtoMap
 	pop af
 .MapHud:
 	call TownMapBubble
@@ -2326,6 +2353,29 @@ FlyMap:
 	ld [wTownMapCursorCoordinates], a
 	ld a, b
 	ld [wTownMapCursorCoordinates + 1], a
+	ret
+
+.KantoMap
+	ld a, KANTO_FLYPOINT ; first Kanto flypoint
+	ld [wStartFlypoint], a
+	ld a, NUM_FLYPOINTS - 1 ; last Kanto flypoint
+	ld [wEndFlypoint], a
+	ld [wTownMapPlayerIconLandmark], a ; last one is default (Indigo Plateau)
+	call FillKantoMap
+	ld a, [wStatusFlags2]
+	bit STATUSFLAGS2_CERULEAN_CAVE_UNLOCKED_F, a
+	ret z
+	hlcoord 11, 5
+	ld [hl], $f
+	ret
+
+.JohtoMap
+	ld a, JOHTO_FLYPOINT ; first Johto flypoint
+	ld [wTownMapPlayerIconLandmark], a ; first one is default (New Bark Town)
+	ld [wStartFlypoint], a
+	ld a, KANTO_FLYPOINT - 1 ; last Johto flypoint
+	ld [wEndFlypoint], a
+	call FillJohtoMap
 	ret
 
 Pokedex_GetArea:
@@ -2535,10 +2585,10 @@ Pokedex_GetArea:
 	inc de
 	push bc
 	ld c, PAL_OW_RED
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .male
-	inc c ; PAL_OW_BLUE
+	ld c, PAL_OW_GREEN
 .male
 	ld a, c
 	ld [hli], a ; attributes
@@ -2748,10 +2798,10 @@ TownMapPlayerIcon:
 ; Animation/palette
 	depixel 0, 0
 	ld b, SPRITE_ANIM_INDEX_RED_WALK ; Male
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .got_gender
-	ld b, SPRITE_ANIM_INDEX_BLUE_WALK ; Female
+	ld b, SPRITE_ANIM_INDEX_GREEN_WALK ; Female
 .got_gender
 	ld a, b
 	call InitSpriteAnimStruct

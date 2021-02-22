@@ -799,6 +799,40 @@ LoadBluePage:
 	jr z, .done
 	cp $7f
 	jr z, .done
+	call .PlaceOTGenderChar
+.done
+	ret
+
+.PlaceOTGenderChar:
+	push af
+	push de
+	push hl
+	ld de, wTempMonID
+	ld hl, wPlayerID
+	ld a, [de]
+	cp [hl]
+	jr nz, .put_gender_char
+	inc de
+	inc hl
+	ld a, [de]
+	cp [hl]
+	jr nz, .put_gender_char
+	ld hl, .OTNamePointers
+	call GetNicknamePointer
+	ld de, wPlayerName
+.name_check_loop
+	ld a, [de]
+	cp "@"
+	jr z, .no_gender_char
+	inc de
+	cp [hl]
+	jr nz, .put_gender_char
+	inc hl
+	jr .name_check_loop
+.put_gender_char
+	pop de
+	pop hl
+	pop af
 	and CAUGHT_GENDER_MASK
 	ld a, "♂"
 	jr z, .got_gender
@@ -806,7 +840,12 @@ LoadBluePage:
 .got_gender
 	hlcoord 9, 13
 	ld [hl], a
-.done
+	ret
+
+.no_gender_char
+	pop de
+	pop hl
+	pop af
 	ret
 
 .OTNamePointers:

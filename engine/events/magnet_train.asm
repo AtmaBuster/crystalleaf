@@ -131,7 +131,7 @@ MagnetTrain_LoadGFX_PlayMusic:
 	; Load the player sprite's standing frames
 	ldh a, [rSVBK]
 	push af
-	ld a, BANK(wPlayerGender)
+	ld a, BANK(wFollowerFlags)
 	ldh [rSVBK], a
 	farcall GetPlayerIcon
 	pop af
@@ -295,12 +295,12 @@ MagnetTrain_Jumptable:
 	ld b, SPRITE_ANIM_INDEX_MAGNET_TRAIN_RED
 	ldh a, [rSVBK]
 	push af
-	ld a, BANK(wPlayerGender)
+	ld a, BANK(wFollowerFlags)
 	ldh [rSVBK], a
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .got_gender
-	ld b, SPRITE_ANIM_INDEX_MAGNET_TRAIN_BLUE
+	ld b, SPRITE_ANIM_INDEX_MAGNET_TRAIN_GREEN
 .got_gender
 	pop af
 	ldh [rSVBK], a

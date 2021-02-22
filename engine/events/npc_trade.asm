@@ -159,7 +159,7 @@ DoNPCTrade:
 	call Trade_GetAttributeOfCurrentPartymon
 	ld b, h
 	ld c, l
-	farcall GetCaughtGender
+	call GetOTGender
 	ld a, c
 	ld [wPlayerTrademonCaughtData], a
 
@@ -270,6 +270,41 @@ DoNPCTrade:
 	pop de
 	pop bc
 	pop af
+	ret
+
+GetOTGender:
+	push bc
+
+	ld de, wPlayerTrademonID
+	ld hl, wPlayerID
+	ld a, [de]
+	cp [hl]
+	jr nz, .get_gender_normal
+	inc de
+	inc hl
+	ld a, [de]
+	cp [hl]
+	jr nz, .get_gender_normal
+	ld hl, wPlayerTrademonOTName
+	ld de, wPlayerName
+.name_check_loop
+	ld a, [de]
+	cp "@"
+	jr z, .no_gender
+	inc de
+	cp [hl]
+	jr nz, .get_gender_normal
+	inc hl
+	jr .name_check_loop
+.get_gender_normal
+
+	pop bc
+	farcall GetCaughtGender
+	ret
+
+.no_gender
+	pop bc
+	ld c, CAUGHT_BY_UNKNOWN
 	ret
 
 GetTradeAttr:

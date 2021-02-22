@@ -4,8 +4,8 @@ _OakText6::
 	prompt
 
 _OakText7::
-	text "<PLAYER>, are you"
-	line "ready?"
+	text "<PLAYER>, <FOLLOW>,"
+	line "are you ready?"
 
 	para "Your very own"
 	line "#MON story is"

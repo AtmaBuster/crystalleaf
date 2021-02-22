@@ -17,6 +17,7 @@ _UpdatePlayerSprite::
 	ret
 
 AddFollowSprite:
+	call GetFollowerSprite
 	ld a, [wUsedSprites + FOLLOWER * 2]
 	ldh [hUsedSpriteIndex], a
 	ld a, [wUsedSprites + FOLLOWER * 2 + 1]
@@ -61,19 +62,39 @@ RefreshSprites::
 	call LoadAndSortSprites
 	ret
 
+GetFollowerSprite:
+	ld a, [wFollowerFlags]
+	push af
+	xor 1
+	ld [wFollowerFlags], a
+	ld a, [wFollowerState]
+	call GetPlayerOrFollowerSprite
+	ld [wUsedSprites + 2], a
+	ld [wObject1Sprite], a
+	ld [wMap1ObjectSprite], a
+	pop af
+	ld [wFollowerFlags], a
+	ret
+
 GetPlayerSprite:
+	ld a, [wPlayerState]
+	call GetPlayerOrFollowerSprite
+	ld [wUsedSprites + 0], a
+	ld [wPlayerSprite], a
+	ld [wPlayerObjectSprite], a
+	ret
+
+GetPlayerOrFollowerSprite:
 ; Get Chris or Kris's sprite.
+	push af
 	ld hl, ChrisStateSprites
-	ld a, [wPlayerSpriteSetupFlags]
-	bit PLAYERSPRITESETUP_FEMALE_TO_MALE_F, a
-	jr nz, .go
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .go
 	ld hl, KrisStateSprites
 
 .go
-	ld a, [wPlayerState]
+	pop af
 	ld c, a
 .loop
 	ld a, [hli]
@@ -87,15 +108,10 @@ GetPlayerSprite:
 	xor a ; ld a, PLAYER_NORMAL
 	ld [wPlayerState], a
 	ld a, SPRITE_CHRIS
-	jr .finish
+	ret
 
 .good
 	ld a, [hl]
-
-.finish
-	ld [wUsedSprites + 0], a
-	ld [wPlayerSprite], a
-	ld [wPlayerObjectSprite], a
 	ret
 
 INCLUDE "data/sprites/player_sprites.asm"
@@ -127,7 +143,7 @@ AddIndoorSprites:
 	ret
 
 AddOutdoorSprites:
-	ld a, SPRITE_FOLLOWER
+	call GetFollowerOutdoorSprite
 	call AddSpriteGFX
 	ld a, [wMapGroup]
 	dec a
@@ -145,6 +161,43 @@ AddOutdoorSprites:
 	ret z
 	call AddSpriteGFX
 	jr .loop
+
+GetFollowerOutdoorSprite:
+	ld a, [wFollowerState]
+	ld c, 0
+	ld hl, .state_table
+.loop
+	cp [hl]
+	jr z, .found
+	inc c
+	inc hl
+	jr .loop
+
+.found
+	ld b, 0
+	ld hl, .sprite_table
+	add hl, bc
+	add hl, bc
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
+	jr nz, .got_sprite
+	inc hl
+.got_sprite
+	ld a, [hl]
+	ret
+
+.state_table
+	db PLAYER_NORMAL
+	db PLAYER_BIKE
+	db PLAYER_SURF
+	db PLAYER_SURF_PIKA
+
+.sprite_table
+	; red,                leaf
+	db SPRITE_CHRIS,      SPRITE_KRIS      ; walking
+	db SPRITE_CHRIS_BIKE, SPRITE_KRIS_BIKE ; bike
+	db SPRITE_SURF,       SPRITE_SURF      ; surf
+	db SPRITE_SURF,       SPRITE_SURF      ; surf pika
 
 LoadUsedSpritesGFX:
 	ld a, MAPCALLBACK_SPRITES
@@ -176,8 +229,6 @@ SafeGetSprite:
 	ret
 
 GetSprite:
-	call GetFollowingSprite
-	ret c
 	call GetMonSprite
 	ret c
 
@@ -266,47 +317,9 @@ GetMonSprite:
 	and a
 	ret
 
-GetFollowingSprite:
-	cp SPRITE_FOLLOWER
-	jr nz, .none
-
-	ld hl, OverworldSprites
-	ld a, [wFollowerSpriteID]
-	add a
-	ld e, a
-	add e
-	add e
-	ld d, 0
-	add hl, de
-	ld de, wUnusedMapBuffer
-	ld bc, 6
-	ld a, BANK(OverworldSprites)
-	call FarCopyBytes
-	ld hl, wUnusedMapBuffer
-	ld a, [hli]
-	ld e, a
-	ld a, [hli]
-	ld d, a
-	ld a, [hli]
-	swap a
-	and $f
-	ld c, a
-	ld a, [hli]
-	ld b, a
-	ld l, [hl]
-	ld h, 0
-	scf
-	ret
-
-.none
-	and a
-	ret
-
 _DoesSpriteHaveFacings::
 ; Checks to see whether we can apply a facing to a sprite.
 ; Returns carry unless the sprite is a Pokemon or a Still Sprite.
-	cp SPRITE_FOLLOWER
-	jr z, .follower
 	cp SPRITE_POKEMON
 	jr nc, .only_down
 
@@ -326,19 +339,11 @@ _DoesSpriteHaveFacings::
 	scf
 	ret
 
-.follower
-	ld a, WALKING_SPRITE
-
 .only_down
 	and a
 	ret
 
 _GetSpritePalette::
-	ld a, c
-	push bc
-	call GetFollowingSprite
-	pop bc
-	jr c, .follower
 	ld a, c
 	call GetMonSprite
 	jr c, .is_pokemon
@@ -355,10 +360,6 @@ _GetSpritePalette::
 .is_pokemon
 	xor a
 	ld c, a
-	ret
-
-.follower
-	ld c, 0
 	ret
 
 LoadAndSortSprites:

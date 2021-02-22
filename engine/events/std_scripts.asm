@@ -56,6 +56,7 @@ StdScripts::
 	add_stdscript PCScript
 	add_stdscript GameCornerCoinVendorScript
 	add_stdscript HappinessCheckScript
+	add_stdscript SwapFollowerScript
 
 PokecenterNurseScript:
 ; EVENT_WELCOMED_TO_POKECOM_CENTER is never set
@@ -1895,3 +1896,153 @@ Movement_ContestResults_WalkAfterWarp:
 	step DOWN
 	turn_head UP
 	step_end
+
+SwapFollowerScript:
+	faceobject PLAYER, FOLLOWER
+	playsound SFX_JUMP_OVER_LEDGE
+	scall .swap_anim_jump
+	faceobject FOLLOWER, PLAYER
+	callasm .swap_sprites
+	scall .swap_anim_step
+	faceobject FOLLOWER, PLAYER
+	special FollowerSwapTeam
+.skip:
+	end
+
+.swap_anim_jump:
+	readvar VAR_FACING
+	ifequal DOWN, .up_jump
+	ifequal UP, .down_jump
+	ifequal LEFT, .right_jump
+	ifequal RIGHT, .left_jump
+	end
+
+.swap_anim_step:
+	readvar VAR_FACING
+	ifequal DOWN, .down_step
+	ifequal UP, .up_step
+	ifequal LEFT, .left_step
+	ifequal RIGHT, .right_step
+	end
+
+.down_jump:
+	applymovement FOLLOWER, .down_jump_move
+	end
+
+.up_jump:
+	applymovement FOLLOWER, .up_jump_move
+	end
+
+.left_jump:
+	applymovement FOLLOWER, .left_jump_move
+	end
+
+.right_jump:
+	applymovement FOLLOWER, .right_jump_move
+	end
+
+.down_step:
+	applymovement FOLLOWER, .down_step_move
+	end
+
+.up_step:
+	applymovement FOLLOWER, .up_step_move
+	end
+
+.left_step:
+	applymovement FOLLOWER, .left_step_move
+	end
+
+.right_step:
+	applymovement FOLLOWER, .right_step_move
+	end
+
+.down_jump_move:
+	short_jump DOWN
+	step_end
+
+.up_jump_move:
+	short_jump UP
+	step_end
+
+.left_jump_move:
+	short_jump LEFT
+	step_end
+
+.right_jump_move:
+	short_jump RIGHT
+	step_end
+
+.down_step_move:
+	step DOWN
+	step_end
+
+.up_step_move:
+	step UP
+	step_end
+
+.left_step_move:
+	step LEFT
+	step_end
+
+.right_step_move:
+	step RIGHT
+	step_end
+
+.swap_sprites:
+	ld hl, wFollowerFlags
+	ld a, [hl]
+	xor 1
+	ld [hl], a
+; hacky, don't care
+	ld hl, wPlayerObjectColor
+	ld de, MAPOBJECT_LENGTH
+	ld b, [hl]
+	push hl
+	add hl, de
+	ld a, [hl]
+	ld [hl], b
+	pop hl
+	ld [hl], a
+
+	ld hl, wPlayerPalette
+	ld de, OBJECT_LENGTH
+	ld b, [hl]
+	push hl
+	add hl, de
+	ld a, [hl]
+	ld [hl], b
+	pop hl
+	ld [hl], a
+
+	call UpdatePlayerSprite
+	ret
+
+CanSwapFollower:
+	ld a, FALSE
+	ld [wScriptVar], a
+; check for lock flag
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_LOCK_SWAP_F, a
+	ret nz
+; cant swap if states aren't the same
+	ld a, [wPlayerState]
+	ld hl, wFollowerState
+	cp [hl]
+	ret nz
+; cant swap if not adjacent or if on same tile
+	ld hl, wPlayerStandingMapX
+	ld a, [hli]
+	add [hl]
+	ld hl, wObject1StandingMapX
+	sub [hl]
+	inc hl
+	sub [hl]
+	cp 1
+	jr z, .ok
+	cp -1
+	ret nz
+.ok
+	ld a, TRUE
+	ld [wScriptVar], a
+	ret

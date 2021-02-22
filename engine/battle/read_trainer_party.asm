@@ -326,6 +326,9 @@ Battle_GetTrainerName::
 	bit 0, a
 	ld hl, wOTPlayerName
 	jp nz, CopyTrainerName
+	ldh a, [hFollowerBattleMode]
+	and a
+	jp nz, CopyTrainerName
 
 	ld a, [wOtherTrainerID]
 	ld b, a

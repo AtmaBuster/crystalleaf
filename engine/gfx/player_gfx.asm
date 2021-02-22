@@ -1,14 +1,3 @@
-BetaLoadPlayerTrainerClass: ; unreferenced
-	ld c, CAL
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
-	jr z, .got_class
-	ld c, KAREN ; not KRIS?
-.got_class
-	ld a, c
-	ld [wTrainerClass], a
-	ret
-
 MovePlayerPicRight:
 	hlcoord 6, 4
 	ld de, 1
@@ -56,8 +45,8 @@ MovePlayerPic:
 
 ShowPlayerNamingChoices:
 	ld hl, ChrisNameMenuHeader
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .got_header
 	ld hl, KrisNameMenuHeader
 .got_header
@@ -74,8 +63,8 @@ INCLUDE "data/player_names.asm"
 GetPlayerNameArray: ; unreferenced
 	ld hl, wPlayerName
 	ld de, MalePlayerNameArray
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .got_array
 	ld de, FemalePlayerNameArray
 .got_array
@@ -85,8 +74,8 @@ GetPlayerNameArray: ; unreferenced
 GetPlayerIcon:
 	ld de, ChrisSpriteGFX
 	ld b, BANK(ChrisSpriteGFX)
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .got_gfx
 	ld de, KrisSpriteGFX
 	ld b, BANK(KrisSpriteGFX)
@@ -95,8 +84,8 @@ GetPlayerIcon:
 
 GetCardPic:
 	ld hl, ChrisCardPic
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .got_pic
 	ld hl, KrisCardPic
 .got_pic
@@ -121,11 +110,10 @@ TrainerCardGFX:
 INCBIN "gfx/trainer_card/trainer_card.2bpp"
 
 GetPlayerBackpic:
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, GetChrisBackpic
-	call GetKrisBackpic
-	ret
+	jp GetKrisBackpic
 
 GetChrisBackpic:
 	ld hl, ChrisBackpic
@@ -135,67 +123,124 @@ GetChrisBackpic:
 	predef DecompressGet2bpp
 	ret
 
-HOF_LoadTrainerFrontpic:
+HOF_GetTrainerBackpics:
+	ld hl, ChrisBackpic
+	ld b, BANK(ChrisBackpic)
+	ld de, vTiles2
+	ld c, 7 * 7
+	predef DecompressGet2bpp
+
+	ld hl, KrisBackpic
+	ld b, BANK(KrisBackpic)
+	ld de, vTiles2 tile $31
+	ld c, 7 * 7
+	predef DecompressGet2bpp
+	ret
+
+HOF_LoadTrainerFrontpics:
 	call WaitBGMap
 	xor a
 	ldh [hBGMapMode], a
 
-; Get class
-	ld e, CHRIS
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
-	jr z, .got_class
-	ld e, KRIS
-.got_class
-	ld a, e
-	ld [wTrainerClass], a
-
-; Load pic
-	ld de, ChrisPic
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
-	jr z, .got_pic
-	ld de, KrisPic
-.got_pic
+	ld de, ChrisCardPic
+	ld b, BANK(ChrisCardPic)
 	ld hl, vTiles2
-	ld b, BANK(ChrisPic) ; aka BANK(KrisPic)
-	ld c, 7 * 7
+	ld c, 5 * 7
+	call Get2bpp
+	
+	ld de, KrisCardPic
+	ld b, BANK(KrisCardPic)
+	ld hl, vTiles2 + $23 tiles
+	ld c, 5 * 7
 	call Get2bpp
 
 	call WaitBGMap
 	ld a, $1
 	ldh [hBGMapMode], a
 	ret
+;	call WaitBGMap
+;	xor a
+;	ldh [hBGMapMode], a
+;
+;; Get class
+;	ld e, CHRIS
+;	ld a, [wFollowerFlags]
+;	bit FOLLOWER_SWAPPED_F, a
+;	jr z, .got_class
+;	ld e, KRIS
+;.got_class
+;	ld a, e
+;	ld [wTrainerClass], a
+;
+;; Load pic
+;	ld de, ChrisPic
+;	ld a, [wFollowerFlags]
+;	bit FOLLOWER_SWAPPED_F, a
+;	jr z, .got_pic
+;	ld de, KrisPic
+;.got_pic
+;	ld hl, vTiles2
+;	ld b, BANK(ChrisPic) ; aka BANK(KrisPic)
+;	ld c, 7 * 7
+;	call Get2bpp
+;
+;	call WaitBGMap
+;	ld a, $1
+;	ldh [hBGMapMode], a
+;	ret
 
 DrawIntroPlayerPic:
-; Draw the player pic at (6,4).
+;; Draw the player pic at (6,4).
+;
+;; Get class
+;	ld e, CHRIS
+;	ld a, [wFollowerFlags]
+;	bit FOLLOWER_SWAPPED_F, a
+;	jr z, .got_class
+;	ld e, KRIS
+;.got_class
+;	ld a, e
+;	ld [wTrainerClass], a
+;
+;; Load pic
+;	ld de, ChrisPic
+;	ld a, [wFollowerFlags]
+;	bit FOLLOWER_SWAPPED_F, a
+;	jr z, .got_pic
+;	ld de, KrisPic
+;.got_pic
+;	ld hl, vTiles2
+;	ld b, BANK(ChrisPic) ; aka BANK(KrisPic)
+;	ld c, 7 * 7 ; dimensions
+;	call Get2bpp
 
-; Get class
-	ld e, CHRIS
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
-	jr z, .got_class
-	ld e, KRIS
-.got_class
-	ld a, e
+; Get Red pic
+	ld a, CHRIS
 	ld [wTrainerClass], a
-
-; Load pic
 	ld de, ChrisPic
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
-	jr z, .got_pic
-	ld de, KrisPic
-.got_pic
 	ld hl, vTiles2
-	ld b, BANK(ChrisPic) ; aka BANK(KrisPic)
-	ld c, 7 * 7 ; dimensions
+	ld b, BANK(ChrisPic)
+	ld c, 7 * 7
+	call Get2bpp
+; Get Leaf pic
+	ld a, KRIS
+	ld [wTrainerClass], a
+	ld de, KrisPic
+	ld hl, vTiles2 + 49 tiles
+	ld b, BANK(KrisPic)
+	ld c, 7 * 7
 	call Get2bpp
 
-; Draw
+; Draw Red
 	xor a
 	ldh [hGraphicStartTile], a
-	hlcoord 6, 4
+	hlcoord 3, 4
+	lb bc, 7, 7
+	predef PlaceGraphic
+; Draw Leaf
+	ld a, 7 * 7
+	ldh [hGraphicStartTile], a
+	hlcoord 10, 4
 	lb bc, 7, 7
 	predef PlaceGraphic
 	ret
@@ -207,12 +252,12 @@ KrisPic:
 INCBIN "gfx/player/kris.2bpp"
 
 GetKrisBackpic:
-; Kris's backpic is uncompressed.
-	ld de, KrisBackpic
-	ld hl, vTiles2 tile $31
-	lb bc, BANK(KrisBackpic), 7 * 7 ; dimensions
-	call Get2bpp
+	ld hl, KrisBackpic
+	ld b, BANK(KrisBackpic)
+	ld de, vTiles2 tile $31
+	ld c, 7 * 7
+	predef DecompressGet2bpp
 	ret
 
 KrisBackpic:
-INCBIN "gfx/player/kris_back.2bpp"
+INCBIN "gfx/player/kris_back.2bpp.lz"

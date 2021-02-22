@@ -142,10 +142,15 @@ EvolveAfterBattle_MasterLoop:
 	jr .proceed
 
 .trade
+	ldh a, [hFollowerTradeMode]
+	and a
+	jr nz, .skip_link_mode_check
+
 	ld a, [wLinkMode]
 	and a
 	jp z, .dont_evolve_2
 
+.skip_link_mode_check
 	call IsMonHoldingEverstone
 	jp z, .dont_evolve_2
 

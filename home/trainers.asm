@@ -248,7 +248,12 @@ PrintWinLossText::
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
+	ldh a, [hFollowerBattleMode]
+	and a
+	ld a, BANK(FollowerScript)
+	jr nz, .got_bank
 	call GetMapScriptsBank
+.got_bank
 	call FarPrintText
 	call WaitBGMap
 	call WaitPressAorB_BlinkCursor

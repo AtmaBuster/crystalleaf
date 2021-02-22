@@ -306,6 +306,8 @@ ROMX $7d
 ROMX $7e
 	"Crystal Events"
 ROMX $7f
+	"Tileset Data 9"
+	"Events 2"
 	org $7de0
 	"Stadium 2 Checksums"
 WRAM0
@@ -327,6 +329,8 @@ WRAMX 2
 	"Pic Animations"
 WRAMX 3
 	"Battle Tower RAM"
+WRAMX 4
+	"Team Backup RAM"
 WRAMX 5
 	align 8
 	"GBC Video"
@@ -346,8 +350,9 @@ SRAM $00
 	"Scratch"
 	org $a600
 	"SRAM Bank 0"
-	org $b200
+	org $b000
 	"Backup Save"
+	"Backup Follower Party SRAM"
 SRAM $01
 	"Save"
 	"Active Box"
@@ -355,6 +360,7 @@ SRAM $01
 	"SRAM Hall of Fame"
 	"SRAM Crystal Data"
 	"SRAM Battle Tower"
+	"Follower Party SRAM"
 SRAM $02
 	"Boxes 1-7"
 SRAM $03

@@ -18,6 +18,33 @@ INCLUDE "data/events/special_pointers.asm"
 UnusedDummySpecial:
 	ret
 
+FollowerSwapTeam::
+; open sram
+	ld a, BANK(sScratch)
+	call OpenSRAM
+; copy party data to scratch
+	ld hl, wPokemonData
+	ld bc, wPartyMonNicknamesEnd - wPokemonData
+	ld de, sScratch
+	call CopyBytes
+; swap backup party with scratch
+	ld a, BANK(wBackupPartyData)
+	ldh [rSVBK], a
+	ld hl, sScratch
+	ld de, wBackupPartyData
+	ld bc, wPartyMonNicknamesEnd - wPokemonData
+	call SwapBytes
+	ld a, BANK(wPokemonData)
+	ldh [rSVBK], a
+; copy backup party from scratch to main party
+	ld hl, sScratch
+	ld bc, wPartyMonNicknamesEnd - wPokemonData
+	ld de, wPokemonData
+	call CopyBytes
+; close sram
+	call CloseSRAM
+	ret
+
 SetPlayerPalette:
 	ld a, [wScriptVar]
 	ld d, a

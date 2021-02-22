@@ -5968,6 +5968,11 @@ LoadEnemyMon:
 	bit 0, a
 	jp nz, InitEnemyMon
 
+; and also not if in a follower battle
+	ldh a, [hFollowerBattleMode]
+	and a
+	jp nz, InitEnemyMon
+
 ; Make sure everything knows what species we're working with
 	ld a, [wTempEnemyMonSpecies]
 	ld [wEnemyMonSpecies], a
@@ -8085,8 +8090,17 @@ LoadTrainerOrWildMonPic:
 	jr nz, .Trainer
 	ld a, [wTempWildMonSpecies]
 	ld [wCurPartySpecies], a
+	jr .ok
 
 .Trainer:
+	cp TRAINER_FROM_RAM
+	jr nz, .ok
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
+	ld a, KRIS
+	jr z, .ok
+	ld a, CHRIS
+.ok
 	ld [wTempEnemyMonSpecies], a
 	ret
 
@@ -8121,6 +8135,8 @@ BackUpBGMap2:
 
 InitEnemyTrainer:
 	ld [wTrainerClass], a
+	cp TRAINER_FROM_RAM
+	jr z, .from_ram
 	farcall StubbedTrainerRankings_TrainerBattles
 	xor a
 	ld [wTempEnemyMonSpecies], a
@@ -8173,6 +8189,68 @@ InitEnemyTrainer:
 	jr .partyloop
 .done
 	ret
+
+.from_ram
+	ldh a, [rSVBK]
+	push af
+	ld a, BANK(wBackupPartyData)
+	ldh [rSVBK], a
+	ld hl, wBackupPartyData
+	ld bc, wBackupPartyDataEnd - wBackupPartyData
+	ld de, wBoxPartialData
+	call CopyBytes
+	pop af
+	ldh [rSVBK], a
+	ld hl, wBoxPartialData
+	ld bc, wBackupPartyDataEnd - wBackupPartyData
+	ld de, wOTPartyCount
+	call CopyBytes
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
+	ld hl, .leaf_name
+	jr z, .got_follower_name
+	ld hl, .red_name
+.got_follower_name
+	ld de, wOTPlayerName
+	ld bc, NAME_LENGTH
+	call CopyBytes
+	ld hl, wPlayerID
+	ld de, wOTPlayerID
+	ld bc, 2
+	call CopyBytes
+	ld de, wOTClassName
+	ld hl, .pkmntrainer
+	ld bc, NAME_LENGTH
+	call CopyBytes
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
+	ld a, KRIS
+	jr z, .got_follower_pic
+	ld a, CHRIS
+.got_follower_pic
+	ld [wTrainerClass], a
+	ld [wOtherTrainerClass], a
+	ld de, vTiles2
+	callfar GetTrainerPic
+	xor a
+	ldh [hGraphicStartTile], a
+	dec a
+	ld [wEnemyItemState], a
+	hlcoord 12, 0
+	lb bc, 7, 7
+	predef PlaceGraphic
+	xor a
+	ld [wBattleReward], a
+	ld [wBattleReward + 1], a
+	ld [wBattleReward + 2], a
+	ret
+
+.red_name
+	db "RED@"
+.leaf_name
+	db "LEAF@"
+.pkmntrainer
+	db "<PKMN> TRAINER@"
 
 InitEnemyWildmon:
 	ld a, WILD_BATTLE
@@ -8991,8 +9069,8 @@ GetTrainerBackpic:
 	ld a, [wPlayerSpriteSetupFlags]
 	bit PLAYERSPRITESETUP_FEMALE_TO_MALE_F, a
 	jr nz, .Chris
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .Chris
 
 ; It's a girl.

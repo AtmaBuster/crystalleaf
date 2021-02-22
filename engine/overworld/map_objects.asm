@@ -323,7 +323,9 @@ GetNextTile:
 	push bc
 	call GetCoordTile
 	pop bc
+	push af
 	call UpdateFollowerSprite
+	pop af
 	ld hl, OBJECT_NEXT_TILE
 	add hl, bc
 	ld [hl], a
@@ -338,7 +340,6 @@ UpdateFollowerSprite:
 	ld hl, OBJECT_NEXT_TILE
 	add hl, bc
 	ld d, [hl]
-	ld [hl], e
 	push de
 	ld a, d ; previous
 	call GetTileCollision
@@ -357,25 +358,38 @@ UpdateFollowerSprite:
 	ret
 
 .land_tile
-	push af
-	push bc
-	push de
-	push hl
-
+	ld a, [wPlayerState]
 	jr .done
 
 .water_tile
-	push af
-	push bc
-	push de
-	push hl
-
+	ld a, PLAYER_SURF
 .done
-	pop hl
-	pop de
+	ld [wFollowerState], a
+	push bc
+	farcall AddFollowSprite
 	pop bc
-	pop af
 	ret
+
+;.land_tile
+;	push af
+;	ld a, [wFollowerFlags]
+;	bit FOLLOWER_SWAPPED_F, a
+;	ld a, SPRITE_CHRIS
+;	jr nz, .done
+;	ld a, SPRITE_KRIS
+;	jr .done
+;
+;.water_tile
+;	push af
+;	ld a, SPRITE_SURF
+;.done
+;	ld [wUsedSprites + FOLLOWER * 2], a
+;	push bc
+;	ld [wMap1ObjectSprite], a ; should always be here
+;	farcall AddFollowSprite
+;	pop bc
+;	pop af
+;	ret
 
 AddStepVector:
 	call GetStepVector
@@ -1161,6 +1175,8 @@ StepTypesJumptable:
 	dw StepFunction_17              ; 17
 	dw StepFunction_Delete          ; 18
 	dw StepFunction_SkyfallTop      ; 19
+	dw StepFunction_NPCHop
+	dw StepFunction_PlayerHop
 
 WaitStep_InPlace:
 	ld hl, OBJECT_STEP_DURATION
@@ -1846,6 +1862,68 @@ StepFunction_SkyfallTop:
 	add hl, bc
 	ld [hl], STEP_TYPE_FROM_MOVEMENT
 	ret
+
+StepFunction_NPCHop:
+;	call Field1c_AnonJumptable
+;.anon_dw
+;	dw .Jump
+;	dw .Land
+;
+;.Jump:
+;	call AddStepVector
+;	call UpdateShortJumpPosition
+;	ld hl, OBJECT_STEP_DURATION
+;	add hl, bc
+;	dec [hl]
+;	ret nz
+;	call CopyNextCoordsTileToStandingCoordsTile
+;	call GetNextTile
+;	ld hl, OBJECT_FLAGS2
+;	add hl, bc
+;	res OVERHEAD_F, [hl]
+;	call Field1c_IncAnonJumptableIndex
+;	ret
+;
+;.Land:
+	call AddStepVector
+	call UpdateShortJumpPosition
+	ld hl, OBJECT_STEP_DURATION
+	add hl, bc
+	dec [hl]
+	ret nz
+	call CopyNextCoordsTileToStandingCoordsTile
+	ld hl, OBJECT_FLAGS2
+	add hl, bc
+	res OVERHEAD_F, [hl]
+	ld hl, OBJECT_STEP_TYPE
+	add hl, bc
+	ld [hl], STEP_TYPE_FROM_MOVEMENT
+	ret
+
+StepFunction_PlayerHop:
+	ret ; dummy
+
+UpdateShortJumpPosition:
+	call GetStepVector
+	ld a, h
+	ld hl, OBJECT_1F
+	add hl, bc
+	ld e, [hl]
+	add e
+	ld [hl], a
+	nop
+	srl e
+	ld d, 0
+	ld hl, .y_offsets
+	add hl, de
+	ld a, [hl]
+	ld hl, OBJECT_SPRITE_Y_OFFSET
+	add hl, bc
+	ld [hl], a
+	ret
+
+.y_offsets:
+	db -2, -4, -6, -6, -6, -5, -3, 0
 
 Stubbed_UpdateYOffset:
 ; dummied out

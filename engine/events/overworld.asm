@@ -25,12 +25,21 @@ GetPartyNick:
 	ld a, BOXMON
 	ld [wMonType], a
 	ld a, [wCurPartyMon]
+	bit 7, a
+	push af
+	jr z, .ok
+	call _FollowerSwapTeam
+.ok
+	and $7f
 	call GetNick
 	call CopyName1
 ; copy text from wStringBuffer2 to wStringBuffer3
 	ld de, wStringBuffer2
 	ld hl, wStringBuffer3
 	call CopyName2
+	pop af
+	ret z
+	call _FollowerSwapTeam
 	ret
 
 CheckEngineFlag:
@@ -62,6 +71,22 @@ CheckBadge:
 	text_end
 
 CheckPartyMove:
+	call .CheckMove
+	ret nc
+	push de
+	call _FollowerSwapTeam
+	pop de
+	call .CheckMove
+	push af
+	call _FollowerSwapTeam
+	pop af
+	ret c
+	ld a, [wCurPartyMon]
+	or $80
+	ld [wCurPartyMon], a
+	ret
+
+.CheckMove:
 ; Check if a monster in your party has move d.
 
 	ld e, 0
@@ -434,10 +459,20 @@ AlreadySurfingText:
 	text_end
 
 GetSurfType:
+	ld a, [wCurPartyMon]
+	bit 7, a
+	jr z, .GetSurfType
+	call _FollowerSwapTeam
+	call .GetSurfType
+	call _FollowerSwapTeam
+	ret
+
+.GetSurfType:
 ; Surfing on Pikachu uses an alternate sprite.
 ; This is done by using a separate movement type.
 
 	ld a, [wCurPartyMon]
+	and $7f
 	ld e, a
 	ld d, 0
 	ld hl, wPartySpecies
@@ -993,6 +1028,13 @@ SetStrengthFlag:
 	ld hl, wBikeFlags
 	set BIKEFLAGS_STRENGTH_ACTIVE_F, [hl]
 	ld a, [wCurPartyMon]
+	bit 7, a
+	push af
+	jr z, .ok
+	call _FollowerSwapTeam
+.ok
+	and $7f
+	ld [wCurPartyMon], a
 	ld e, a
 	ld d, 0
 	ld hl, wPartySpecies
@@ -1000,6 +1042,10 @@ SetStrengthFlag:
 	ld a, [hl]
 	ld [wStrengthSpecies], a
 	call GetPartyNick
+	pop af
+	jr z, .ok2
+	call _FollowerSwapTeam
+.ok2
 	ret
 
 Script_StrengthFromMenu:
@@ -1692,7 +1738,8 @@ BikeFunction:
 	jr z, .ok
 	cp GATE
 	jr z, .ok
-	jr .nope
+	cp ENVIRONMENT_5
+	jr nz, .nope
 
 .ok
 	call GetPlayerStandingTile
@@ -1709,6 +1756,10 @@ Script_GetOnBike:
 	reloadmappart
 	special UpdateTimePals
 	loadvar VAR_MOVEMENT, PLAYER_BIKE
+	readvar VAR_FOLLOWERSTATE
+	ifequal PLAYER_SURF, .follower_surf
+	loadvar VAR_FOLLOWERSTATE, PLAYER_BIKE
+.follower_surf
 	writetext GotOnBikeText
 	waitbutton
 	closetext
@@ -1717,6 +1768,10 @@ Script_GetOnBike:
 
 Script_GetOnBike_Register:
 	loadvar VAR_MOVEMENT, PLAYER_BIKE
+	readvar VAR_FOLLOWERSTATE
+	ifequal PLAYER_SURF, .follower_surf
+	loadvar VAR_FOLLOWERSTATE, PLAYER_BIKE
+.follower_surf
 	closetext
 	special UpdatePlayerSprite
 	end
@@ -1729,6 +1784,10 @@ Script_GetOffBike:
 	reloadmappart
 	special UpdateTimePals
 	loadvar VAR_MOVEMENT, PLAYER_NORMAL
+	readvar VAR_FOLLOWERSTATE
+	ifequal PLAYER_SURF, .follower_surf
+	loadvar VAR_FOLLOWERSTATE, PLAYER_NORMAL
+.follower_surf
 	writetext GotOffBikeText
 	waitbutton
 
@@ -1740,6 +1799,10 @@ FinishGettingOffBike:
 
 Script_GetOffBike_Register:
 	loadvar VAR_MOVEMENT, PLAYER_NORMAL
+	readvar VAR_FOLLOWERSTATE
+	ifequal PLAYER_SURF, .follower_surf
+	loadvar VAR_FOLLOWERSTATE, PLAYER_NORMAL
+.follower_surf
 	sjump FinishGettingOffBike
 
 Script_CantGetOffBike:

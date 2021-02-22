@@ -56,6 +56,10 @@ MovementPointers:
 	dw Movement_fast_jump_step_up     ; 35
 	dw Movement_fast_jump_step_left   ; 36
 	dw Movement_fast_jump_step_right  ; 37
+	dw Movement_short_jump_down
+	dw Movement_short_jump_up
+	dw Movement_short_jump_left
+	dw Movement_short_jump_right
 	dw Movement_remove_sliding        ; 38
 	dw Movement_set_sliding           ; 39
 	dw Movement_remove_fixed_facing   ; 3a
@@ -629,6 +633,22 @@ Movement_fast_jump_step_right:
 	ld a, STEP_BIKE << 2 | RIGHT
 	jp JumpStep
 
+Movement_short_jump_down:
+	ld a, STEP_WALK << 2 | DOWN
+	jp HopStep
+
+Movement_short_jump_up:
+	ld a, STEP_WALK << 2 | UP
+	jp HopStep
+
+Movement_short_jump_left:
+	ld a, STEP_WALK << 2 | LEFT
+	jp HopStep
+
+Movement_short_jump_right:
+	ld a, STEP_WALK << 2 | RIGHT
+	jp HopStep
+
 Movement_turn_step_down:
 	ld a, OW_DOWN
 	jr TurnStep
@@ -741,6 +761,38 @@ SlideStep:
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
 	ld [hl], STEP_TYPE_PLAYER_WALK
+	ret
+
+HopStep:
+	call InitStep
+	ld hl, OBJECT_1F
+	add hl, bc
+	ld [hl], $0
+
+	ld hl, OBJECT_FLAGS2
+	add hl, bc
+	res OVERHEAD_F, [hl]
+
+	ld hl, OBJECT_ACTION
+	add hl, bc
+	ld [hl], OBJECT_ACTION_STEP
+
+;	call SpawnShadow
+
+	ld hl, wCenteredObject
+	ldh a, [hMapObjectIndex]
+	cp [hl]
+	jr z, .player
+
+	ld hl, OBJECT_STEP_TYPE
+	add hl, bc
+	ld [hl], STEP_TYPE_NPC_HOP
+	ret
+
+.player
+	ld hl, OBJECT_STEP_TYPE
+	add hl, bc
+	ld [hl], STEP_TYPE_PLAYER_HOP
 	ret
 
 JumpStep:

@@ -26,7 +26,6 @@ CHRIS EQU __trainer_class__
 	const PHONECONTACT_ELM
 	const PHONECONTACT_BUENA
 
-KRIS EQU __trainer_class__
 	trainerclass FALKNER ; 1
 	const FALKNER1
 
@@ -347,6 +346,9 @@ KRIS EQU __trainer_class__
 	const ARNIE4
 	const ARNIE5
 	const WAYNE
+	const HUEY
+	const LOUIE
+	const DEWEY
 
 	trainerclass FISHER ; 25
 	const JUSTIN
@@ -421,7 +423,7 @@ KRIS EQU __trainer_class__
 
 	trainerclass SAILOR ; 28
 	const EUGENE
-	const HUEY1
+	const BART1
 	const TERRELL
 	const KENT
 	const ERNEST
@@ -430,9 +432,9 @@ KRIS EQU __trainer_class__
 	const KENNETH
 	const STANLY
 	const HARRY
-	const HUEY2
-	const HUEY3
-	const HUEY4
+	const BART2
+	const BART3
+	const BART4
 
 	trainerclass SUPER_NERD ; 29
 	const STAN
@@ -702,4 +704,7 @@ KRIS EQU __trainer_class__
 	trainerclass MYSTICALMAN ; 43
 	const EUSINE
 
+KRIS EQU __trainer_class__
 NUM_TRAINER_CLASSES EQU __trainer_class__
+
+TRAINER_FROM_RAM EQU __trainer_class__ + 1

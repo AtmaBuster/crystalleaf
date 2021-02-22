@@ -388,6 +388,7 @@ _GrassWildmonLookup:
 	ret c
 	ld hl, JohtoGrassWildMons
 	ld de, KantoGrassWildMons
+	ld bc, CeruleanCaveGrassWildMons
 	call _JohtoWildmonCheck
 	ld bc, GRASS_WILDDATA_LENGTH
 	jr _NormalWildmonOK
@@ -399,16 +400,23 @@ _WaterWildmonLookup:
 	ret c
 	ld hl, JohtoWaterWildMons
 	ld de, KantoWaterWildMons
+	ld bc, CeruleanCaveWaterWildMons
 	call _JohtoWildmonCheck
 	ld bc, WATER_WILDDATA_LENGTH
 	jr _NormalWildmonOK
 
 _JohtoWildmonCheck:
+	push bc
 	call IsInJohto
+	pop bc
 	and a
 	ret z
 	ld h, d
 	ld l, e
+	call CheckCeruleanCaveMap
+	ret nc
+	ld h, b
+	ld l, c
 	ret
 
 _SwarmWildmonCheck:
@@ -452,6 +460,8 @@ _NoSwarmWildmon:
 
 _NormalWildmonOK:
 	call CopyCurrMapDE
+	call CheckCeruleanCaveMap
+	jr c, LookUpWildmonsForCeruleanCave
 	jr LookUpWildmonsForMapDE
 
 CopyCurrMapDE:
@@ -460,6 +470,32 @@ CopyCurrMapDE:
 	ld a, [wMapNumber]
 	ld e, a
 	ret
+
+CheckCeruleanCaveMap:
+	ld a, [wMapGroup]
+	cp GROUP_CERULEAN_CAVE_1F
+	jr nz, .not
+	ld a, [wMapNumber]
+	cp MAP_CERULEAN_CAVE_1F
+	jr z, .yes
+	cp MAP_CERULEAN_CAVE_2F
+	jr z, .yes
+	cp MAP_CERULEAN_CAVE_B1F
+	jr nz, .not
+.yes
+	scf
+	ret
+
+.not
+	and a
+	ret
+
+LookUpWildmonsForCeruleanCave:
+	ld a, e
+	sub MAP_CERULEAN_CAVE_1F
+	ld d, a
+	ld a, [wCeruleanCaveLayout]
+	ld e, a
 
 LookUpWildmonsForMapDE:
 .loop
@@ -967,3 +1003,4 @@ INCLUDE "data/wild/kanto_grass.asm"
 INCLUDE "data/wild/kanto_water.asm"
 INCLUDE "data/wild/swarm_grass.asm"
 INCLUDE "data/wild/swarm_water.asm"
+INCLUDE "data/wild/cerulean_cave.asm"

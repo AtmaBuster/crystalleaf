@@ -175,4 +175,10 @@ hDebugRoomMenuPage::
 endc
 hClockResetTrigger:: db
 
-	ds 19
+hFollowerTrademonSlot:: db
+hPlayerTrademonSlot:: db
+hFollowerTradeSlotBuffer:: db
+hFollowerTradeMode:: db
+hFollowerBattleMode:: db
+
+	ds 14

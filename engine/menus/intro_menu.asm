@@ -63,7 +63,7 @@ NewGame:
 	ld [wDebugFlags], a
 	call ResetWRAM
 	call NewGame_ClearTilemapEtc
-	call AreYouABoyOrAreYouAGirl
+;	call AreYouABoyOrAreYouAGirl
 	call OakSpeech
 	call InitializeWorld
 
@@ -279,6 +279,10 @@ InitializeMagikarpHouse:
 	db "RALPH@"
 
 InitializeNPCNames:
+	ld hl, .RedLeaf
+	ld de, wPlayerName
+	call .Copy
+
 	ld hl, .Rival
 	ld de, wRivalName
 	call .Copy
@@ -299,12 +303,14 @@ InitializeNPCNames:
 	call CopyBytes
 	ret
 
-.Rival:  db "???@"
-.Red:    db "RED@"
-.Green:  db "GREEN@"
-.Mom:    db "MOM@"
+.RedLeaf: db REDLEAF, "@"
+.Rival:   db "???@"
+.Red:     db "RED@"
+.Green:   db "GREEN@"
+.Mom:     db "MOM@"
 
 InitializeWorld:
+	call ClearBackupParty
 	call ShrinkPlayer
 	farcall SpawnPlayer
 	farcall _InitializeStartDay
@@ -699,13 +705,13 @@ OakSpeech:
 	ld [wCurPartySpecies], a
 	farcall DrawIntroPlayerPic
 
-	ld b, SCGB_TRAINER_OR_MON_FRONTPIC_PALS
+	ld b, SCGB_INTRO_BOTH_PLAYER_PALS
 	call GetSGBLayout
 	call Intro_RotatePalettesLeftFrontpic
 
-	ld hl, OakText6
-	call PrintText
-	call NamePlayer
+;	ld hl, OakText6
+;	call PrintText
+;	call NamePlayer
 	ld hl, OakText7
 	call PrintText
 	ret
@@ -775,8 +781,8 @@ NamePlayer:
 
 	ld hl, wPlayerName
 	ld de, .Chris
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .Male
 	ld de, .Kris
 .Male:
@@ -841,15 +847,15 @@ ShrinkPlayer:
 	ld c, 8
 	call DelayFrames
 
-	hlcoord 6, 5
+	hlcoord 3, 5
 	ld b, 7
-	ld c, 7
+	ld c, 14
 	call ClearBox
 
 	ld c, 3
 	call DelayFrames
 
-	call Intro_PlacePlayerSprite
+	call Intro_PlaceBothPlayerSprites
 	call LoadFontsExtra
 
 	ld c, 50
@@ -911,19 +917,44 @@ ShrinkFrame:
 	predef DecompressGet2bpp
 	xor a
 	ldh [hGraphicStartTile], a
-	hlcoord 6, 4
+	hlcoord 3, 4
+	lb bc, 7, 7
+	predef PlaceGraphic
+	hlcoord 10, 4
 	lb bc, 7, 7
 	predef PlaceGraphic
 	ret
 
-Intro_PlacePlayerSprite:
+Intro_PlaceBothPlayerSprites:
+	ld bc, 0
+	call .PlaceSprite
+	ld a, 1
+	ld [wFollowerFlags], a
+	ld bc, 12 tiles
+	call .PlaceSprite
+	xor a
+	ld [wFollowerFlags], a
+	ret
+
+.PlaceSprite:
+	push bc
 	farcall GetPlayerIcon
-	ld c, 12
+	ld a, b
+	pop bc
 	ld hl, vTiles0
+	add hl, bc
+	ld b, a
+	ld c, 12
 	call Request2bpp
 
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	ld hl, wVirtualOAMSprite00
-	ld de, .sprites
+	ld de, .sprites_red
+	jr z, .male1
+	ld hl, wVirtualOAMSprite04
+	ld de, .sprites_leaf
+.male1
 	ld a, [de]
 	inc de
 
@@ -940,10 +971,10 @@ Intro_PlacePlayerSprite:
 	ld [hli], a ; tile id
 
 	ld b, PAL_OW_RED
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .male
-	ld b, PAL_OW_BLUE
+	ld b, PAL_OW_GREEN
 .male
 	ld a, b
 
@@ -952,13 +983,21 @@ Intro_PlacePlayerSprite:
 	jr nz, .loop
 	ret
 
-.sprites
+.sprites_red
 	db 4
 	; y pxl, x pxl, tile offset
-	db  9 * 8 + 4,  9 * 8, 0
-	db  9 * 8 + 4, 10 * 8, 1
-	db 10 * 8 + 4,  9 * 8, 2
-	db 10 * 8 + 4, 10 * 8, 3
+	db  9 * 8 + 4,  6 * 8, 0
+	db  9 * 8 + 4,  7 * 8, 1
+	db 10 * 8 + 4,  6 * 8, 2
+	db 10 * 8 + 4,  7 * 8, 3
+
+.sprites_leaf
+	db 4
+	; y pxl, x pxl, tile offset
+	db  9 * 8 + 4, 13 * 8, 12
+	db  9 * 8 + 4, 14 * 8, 13
+	db 10 * 8 + 4, 13 * 8, 14
+	db 10 * 8 + 4, 14 * 8, 15
 
 
 	const_def
@@ -1363,3 +1402,16 @@ GameInit::
 	ldh [hWY], a
 	call WaitBGMap
 	jp IntroSequence
+
+ClearBackupParty:
+	ldh a, [rSVBK]
+	push af
+	ld a, BANK(wBackupPartyData)
+	ldh [rSVBK], a
+	xor a
+	ld hl, wBackupPartyData
+	ld bc, wBackupPartyDataEnd - wBackupPartyData
+	call ByteFill
+	pop af
+	ldh [rSVBK], a
+	ret

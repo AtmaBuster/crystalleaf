@@ -126,12 +126,57 @@ PlateauRivalPostBattle:
 	waitbutton
 	closetext
 	turnobject PLAYER, DOWN
+	scall PlateauTryGetEggFromRival
 	applymovement INDIGOPLATEAUPOKECENTER1F_SILVER, PlateauRivalLeavesMovement
 	disappear INDIGOPLATEAUPOKECENTER1F_SILVER
 	setscene SCENE_DEFAULT
 	playmapmusic
 	setflag ENGINE_INDIGO_PLATEAU_RIVAL_FIGHT
 PlateauRivalScriptDone:
+	end
+
+PlateauTryGetEggFromRival:
+	checkevent EVENT_GOT_EGG_FROM_RIVAL
+	iffalse .GetEgg
+	end
+
+.GetEgg:
+	applymovement INDIGOPLATEAUPOKECENTER1F_SILVER, PlateauRivalAlmostLeavesMovement
+	showemote EMOTE_SHOCK, INDIGOPLATEAUPOKECENTER1F_SILVER, 15
+	applymovement INDIGOPLATEAUPOKECENTER1F_SILVER, PlateauRivalReturns
+	faceobject PLAYER, INDIGOPLATEAUPOKECENTER1F_SILVER
+	faceobject INDIGOPLATEAUPOKECENTER1F_SILVER, PLAYER
+	opentext
+	writetext PlateauRivalText3
+	waitbutton
+	readvar VAR_PARTYCOUNT
+	ifequal PARTY_LENGTH, .PartyFull
+	iftrue .Totodile
+	checkevent EVENT_GOT_CHIKORITA_FROM_ELM
+	iftrue .Chikorita
+	; Cyndaquil
+	giveegg TOTODILE, EGG_LEVEL
+	sjump .Join
+
+.PartyFull:
+	writetext PlateauRivalText5
+	sjump .SkipEgg
+
+.Totodile:
+	giveegg CHIKORITA, EGG_LEVEL
+	sjump .Join
+
+.Chikorita:
+	giveegg CYNDAQUIL, EGG_LEVEL
+.Join:
+	writetext PlateauGotEggText
+	playsound SFX_GET_EGG
+	waitsfx
+	writetext PlateauRivalText4
+.SkipEgg:
+	waitbutton
+	closetext
+	turnobject PLAYER, DOWN
 	end
 
 IndigoPlateauPokecenter1FNurseScript:
@@ -201,6 +246,18 @@ PlateauRivalLeavesMovement:
 	step DOWN
 	step_end
 
+PlateauRivalAlmostLeavesMovement:
+	step DOWN
+	step DOWN
+	step DOWN
+	step_end
+
+PlateauRivalReturns:
+	step UP
+	step UP
+	step UP
+	step_end
+
 IndigoPlateauPokecenter1FCooltrainerMText:
 	text "At the #MON"
 	line "LEAGUE, you'll get"
@@ -253,6 +310,43 @@ PlateauRivalText2:
 
 	para "Humph! Try not to"
 	line "lose!"
+	done
+
+PlateauRivalText3:
+	text "I almost forgot."
+
+	para "I left my #MON"
+	line "at the daycare."
+
+	para "The folks there"
+	line "found an EGG."
+
+	para "I think you should"
+	line "take it."
+	done
+
+PlateauRivalText4:
+	text "Take care of that"
+	line "EGG."
+
+	para "It might help you"
+	line "fill out a few"
+	cont "pages in your"
+	cont "#DEX."
+	done
+
+PlateauRivalText5:
+	text "Oh, you have no"
+	line "room for it."
+
+	para "I'll give it to"
+	line "you next time we"
+	cont "we battle."
+	done
+
+PlateauGotEggText:
+	text "<PLAYER> received"
+	line "EGG from <RIVAL>!"
 	done
 
 PlateauRivalLoseText:

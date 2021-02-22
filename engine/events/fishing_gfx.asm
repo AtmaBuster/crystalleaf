@@ -5,8 +5,8 @@ LoadFishingGFX:
 	ldh [rVBK], a
 
 	ld de, FishingGFX
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	jr z, .got_gender
 	ld de, KrisFishingGFX
 .got_gender

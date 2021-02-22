@@ -310,8 +310,9 @@ GSIntro_GetMonFrontpic: ; unreferenced
 GetTrainerPic:
 	ld a, [wTrainerClass]
 	and a
-	ret z
-	cp NUM_TRAINER_CLASSES
+	jr z, .chris
+	cp KRIS
+	jr z, .kris
 	ret nc
 	call WaitBGMap
 	xor a
@@ -344,6 +345,25 @@ GetTrainerPic:
 	call Get2bpp
 	pop af
 	ldh [rSVBK], a
+	call WaitBGMap
+	ld a, 1
+	ldh [hBGMapMode], a
+	ret
+
+.chris
+	ld h, d
+	ld l, e
+	ld de, ChrisPic
+	jr .get_non_compressed
+
+.kris
+	ld h, d
+	ld l, e
+	ld de, KrisPic
+.get_non_compressed
+	ld c, 7 * 7
+	ld b, BANK(ChrisPic) ; = BANK(KrisPic)
+	call Get2bpp
 	call WaitBGMap
 	ld a, 1
 	ldh [hBGMapMode], a

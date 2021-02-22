@@ -100,10 +100,10 @@ SpriteAnimOAMData:
 	dbw $00, .OAMData_EZChatCursor5            ; SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_5
 	dbw $00, .OAMData_EZChatCursor6            ; SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_6
 	dbw $00, .OAMData_EZChatCursor7            ; SPRITE_ANIM_OAMSET_EZCHAT_CURSOR_7
-	dbw $00, .OAMData_BlueWalk                 ; SPRITE_ANIM_OAMSET_BLUE_WALK_1
-	dbw $04, .OAMData_BlueWalk                 ; SPRITE_ANIM_OAMSET_BLUE_WALK_2
-	dbw $00, .OAMData_MagnetTrainBlue          ; SPRITE_ANIM_OAMSET_MAGNET_TRAIN_BLUE_1
-	dbw $04, .OAMData_MagnetTrainBlue          ; SPRITE_ANIM_OAMSET_MAGNET_TRAIN_BLUE_2
+	dbw $00, .OAMData_GreenWalk                ; SPRITE_ANIM_OAMSET_GREEN_WALK_1
+	dbw $04, .OAMData_GreenWalk                ; SPRITE_ANIM_OAMSET_GREEN_WALK_2
+	dbw $00, .OAMData_MagnetTrainGreen         ; SPRITE_ANIM_OAMSET_MAGNET_TRAIN_GREEN_1
+	dbw $04, .OAMData_MagnetTrainGreen         ; SPRITE_ANIM_OAMSET_MAGNET_TRAIN_GREEN_2
 	dbw $20, .OAMData_MobileTradeCableBulge    ; SPRITE_ANIM_OAMSET_MOBILE_TRADE_CABLE_BULGE_1
 	dbw $21, .OAMData_MobileTradeCableBulge    ; SPRITE_ANIM_OAMSET_MOBILE_TRADE_CABLE_BULGE_2
 	dbw $22, .OAMData_MobileTradePing1         ; SPRITE_ANIM_OAMSET_MOBILE_TRADE_PING_1
@@ -740,19 +740,19 @@ SpriteAnimOAMData:
 	dbsprite  0,  0,  0,  0, $32, 0
 	dbsprite  0,  1,  0,  0, $35, 0
 
-.OAMData_BlueWalk:
+.OAMData_GreenWalk:
 	db 4
-	dbsprite -1, -1,  0,  0, $00, PAL_OW_BLUE
-	dbsprite  0, -1,  0,  0, $01, PAL_OW_BLUE
-	dbsprite -1,  0,  0,  0, $02, PAL_OW_BLUE
-	dbsprite  0,  0,  0,  0, $03, PAL_OW_BLUE
+	dbsprite -1, -1,  0,  0, $00, PAL_OW_GREEN
+	dbsprite  0, -1,  0,  0, $01, PAL_OW_GREEN
+	dbsprite -1,  0,  0,  0, $02, PAL_OW_GREEN
+	dbsprite  0,  0,  0,  0, $03, PAL_OW_GREEN
 
-.OAMData_MagnetTrainBlue:
+.OAMData_MagnetTrainGreen:
 	db 4
-	dbsprite -1, -1,  0,  0, $00, PAL_OW_BLUE | PRIORITY
-	dbsprite  0, -1,  0,  0, $01, PAL_OW_BLUE | PRIORITY
-	dbsprite -1,  0,  0,  0, $02, PAL_OW_BLUE | PRIORITY
-	dbsprite  0,  0,  0,  0, $03, PAL_OW_BLUE | PRIORITY
+	dbsprite -1, -1,  0,  0, $00, PAL_OW_GREEN | PRIORITY
+	dbsprite  0, -1,  0,  0, $01, PAL_OW_GREEN | PRIORITY
+	dbsprite -1,  0,  0,  0, $02, PAL_OW_GREEN | PRIORITY
+	dbsprite  0,  0,  0,  0, $03, PAL_OW_GREEN | PRIORITY
 
 .OAMData_MobileTradeCableBulge:
 	db 1

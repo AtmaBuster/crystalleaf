@@ -87,41 +87,21 @@ PlayBattleMusic:
 	jr .done
 
 .trainermusic
-	ld de, MUSIC_CHAMPION_BATTLE
-	cp CHAMPION
+	ld hl, TrainerClassMusic
+	ld b, a
+.trainer_loop1
+	ld a, [hli]
+	cp -1
+	jr z, .othertrainer
+	ld d, [hl]
+	ld e, a
+.trainer_loop2
+	ld a, [hli]
+	cp -1
+	jr z, .trainer_loop1
+	cp b
 	jr z, .done
-	cp RED
-	jr z, .done
-
-	; They should have included EXECUTIVEM, EXECUTIVEF, and SCIENTIST too...
-	ld de, MUSIC_ROCKET_BATTLE
-	cp GRUNTM
-	jr z, .done
-	cp GRUNTF
-	jr z, .done
-
-	ld de, MUSIC_KANTO_GYM_LEADER_BATTLE
-	farcall IsKantoGymLeader
-	jr c, .done
-
-	; IsGymLeader also counts CHAMPION, RED, and the Kanto gym leaders
-	; but they have been taken care of before this
-	ld de, MUSIC_JOHTO_GYM_LEADER_BATTLE
-	farcall IsGymLeader
-	jr c, .done
-
-	ld de, MUSIC_RIVAL_BATTLE
-	ld a, [wOtherTrainerClass]
-	cp RIVAL1
-	jr z, .done
-	cp RIVAL2
-	jr nz, .othertrainer
-
-	ld a, [wOtherTrainerID]
-	cp RIVAL2_2_CHIKORITA ; Rival in Indigo Plateau
-	jr c, .done
-	ld de, MUSIC_CHAMPION_BATTLE
-	jr .done
+	jr .trainer_loop2
 
 .othertrainer
 	ld a, [wLinkMode]
@@ -147,6 +127,8 @@ PlayBattleMusic:
 	pop de
 	pop hl
 	ret
+
+INCLUDE "data/trainers/music.asm"
 
 ClearBattleRAM:
 	xor a

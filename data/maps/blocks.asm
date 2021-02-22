@@ -212,6 +212,8 @@ Route40BattleTowerGate_Blocks:
 Route2Gate_Blocks:
 Route29Route46Gate_Blocks:
 Route5SaffronGate_Blocks:
+ViridianForestGateNorth_Blocks:
+ViridianForestGateSouth_Blocks:
 	INCBIN "maps/NorthSouthGate.blk"
 
 BetaEcruteakCity_Blocks: ; unreferenced
@@ -300,9 +302,6 @@ CeruleanCity_Blocks:
 
 Route1_Blocks:
 	INCBIN "maps/Route1.blk"
-
-Route5_Blocks:
-	INCBIN "maps/Route5.blk"
 
 Route9_Blocks:
 	INCBIN "maps/Route9.blk"
@@ -779,6 +778,9 @@ OlivineLighthouse6F_Blocks:
 
 SECTION "Map Blocks 3", ROMX
 
+Route5_Blocks:
+	INCBIN "maps/Route5.blk"
+
 BetaSlowpokeWell1F_Blocks: ; unreferenced
 	INCBIN "maps/unused/BetaSlowpokeWell1F.blk"
 
@@ -1045,3 +1047,33 @@ BetaBlank_Blocks: ; unreferenced
 
 GoldenrodDeptStoreRoof_Blocks:
 	INCBIN "maps/GoldenrodDeptStoreRoof.blk"
+
+ViridianForest_Blocks:
+	INCBIN "maps/ViridianForest.blk"
+
+CeruleanCave1F_Blocks:
+	INCBIN "maps/CeruleanCave1F.blk"
+
+CeruleanCave2F_Blocks:
+	INCBIN "maps/CeruleanCave2F.blk"
+
+CeruleanCaveB1F_Blocks:
+	INCBIN "maps/CeruleanCaveB1F.blk"
+
+CeruleanCave1F_RG_Blocks:
+	INCBIN "maps/CeruleanCave1F_RG.blk"
+
+CeruleanCave2F_RG_Blocks:
+	INCBIN "maps/CeruleanCave2F_RG.blk"
+
+CeruleanCaveB1F_RG_Blocks:
+	INCBIN "maps/CeruleanCaveB1F_RG.blk"
+
+CeruleanCave1F_Y_Blocks:
+	INCBIN "maps/CeruleanCave1F_Y.blk"
+
+CeruleanCave2F_Y_Blocks:
+	INCBIN "maps/CeruleanCave2F_Y.blk"
+
+CeruleanCaveB1F_Y_Blocks:
+	INCBIN "maps/CeruleanCaveB1F_Y.blk"

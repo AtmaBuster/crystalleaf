@@ -395,6 +395,18 @@ NEXTU
 wBT_OTTemp:: battle_tower_struct wBT_OTTemp
 
 NEXTU
+
+wFollowerTrademonBuffer::
+wFollowerTrademonPartySlot:: db
+wPlayerFTrademonPartySlot::  db
+wFollowerTrademonData::      party_struct wFollowerTrademon
+wPlayerFTrademonData::       party_struct wPlayerFTrademon
+wFollowerTrademonNick::      ds MON_NAME_LENGTH
+wPlayerFTrademonNick::       ds MON_NAME_LENGTH
+wFollowerTrademonOT::        ds NAME_LENGTH
+wPlayerFTrademonOT::         ds NAME_LENGTH
+
+NEXTU
 ; battle data
 wBattle::
 wEnemyMoveStruct::  move_struct wEnemyMoveStruct
@@ -1755,6 +1767,7 @@ NEXTU
 wTownMapCursorCoordinates:: dw
 wStartFlypoint:: db
 wEndFlypoint:: db
+wFlymapSwapRegion:: db
 ENDU
 
 NEXTU
@@ -2687,7 +2700,8 @@ wStartSecond:: db
 
 wRTC:: ds 4
 
-	ds 4
+wCeruleanCaveLayout::
+	ds 3
 
 wDST::
 ; bit 7: dst
@@ -2703,9 +2717,7 @@ wGameTimeFrames::  db
 	ds 2
 
 wCurDay:: db
-
-	ds 1
-
+wFollowerFlags:: db
 wObjectFollow_Leader:: db
 wObjectFollow_Follower:: db
 wCenteredObject:: db
@@ -2826,7 +2838,7 @@ wPokegearFlags::
 	db
 wRadioTuningKnob:: db
 wLastDexMode:: db
-	ds 1
+wFollowerState:: db
 wWhichRegisteredItem:: db
 wRegisteredItem:: db
 
@@ -2922,8 +2934,9 @@ wFastShipB1FSceneID::                             db
 wMountMoonSquareSceneID::                         db
 wMobileTradeRoomSceneID::                         db
 wMobileBattleRoomSceneID::                        db
+wCeruleanCitySceneID::                            db
 
-	ds 49
+	ds 48
 
 ; fight counts
 wJackFightCount::    db
@@ -3443,6 +3456,26 @@ NEXTU
 w6_d000:: ds $1000
 ENDU
 
+SECTION "Team Backup RAM", WRAMX
+
+wBackupPartyData::
+wBackupPartyCount::   db
+wBackupPartySpecies:: ds PARTY_LENGTH
+wBackupPartyEnd::     db ; older code doesn't check wPartyCount
+
+wBackupPartyMons::
+wBackupPartyMon1:: party_struct wPartyBackupMon1
+wBackupPartyMon2:: party_struct wPartyBackupMon2
+wBackupPartyMon3:: party_struct wPartyBackupMon3
+wBackupPartyMon4:: party_struct wPartyBackupMon4
+wBackupPartyMon5:: party_struct wPartyBackupMon5
+wBackupPartyMon6:: party_struct wPartyBackupMon6
+
+wBackupPartyMonOT:: ds NAME_LENGTH * PARTY_LENGTH
+
+wBackupPartyMonNicknames:: ds MON_NAME_LENGTH * PARTY_LENGTH
+wBackupPartyMonNicknamesEnd::
+wBackupPartyDataEnd::
 
 SECTION "Stack RAM", WRAMX
 

@@ -17,6 +17,7 @@
 	charmap "<PKMN>",    $4a ; "<PK><MN>"
 	charmap "<_CONT>",   $4b ; implements "<CONT>"
 	charmap "<SCROLL>",  $4c
+	charmap "<FOLLOW>",  $4d
 	charmap "<NEXT>",    $4e
 	charmap "<LINE>",    $4f
 	charmap "@",         $50 ; string terminator
@@ -173,6 +174,8 @@
 	charmap "'s",        $d4
 	charmap "'t",        $d5
 	charmap "'v",        $d6
+
+REDLEAF EQUS "$d8, $d9, $da, $db, $dc, $dd, $de"
 
 	charmap "←",         $df
 	charmap "'",         $e0

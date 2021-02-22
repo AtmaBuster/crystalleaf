@@ -262,11 +262,13 @@ _SaveGameData:
 	call SavePlayerData
 	call SavePokemonData
 	call SaveBox
+	call SaveFollowerParty
 	call SaveChecksum
 	call ValidateBackupSave
 	call SaveBackupOptions
 	call SaveBackupPlayerData
 	call SaveBackupPokemonData
+	call SaveBackupFollowerParty
 	call SaveBackupChecksum
 	call UpdateStackTop
 	farcall BackupPartyMonMail
@@ -504,6 +506,38 @@ SaveBox:
 	call SaveBoxAddress
 	ret
 
+SaveBackupFollowerParty:
+	ld a, BANK(sBackupFollowerPartyData)
+	call OpenSRAM
+	ldh a, [rSVBK]
+	push af
+	ld a, BANK(wBackupPartyData)
+	ldh [rSVBK], a
+	ld hl, wBackupPartyData
+	ld de, sBackupFollowerPartyData
+	ld bc, wBackupPartyDataEnd - wBackupPartyData
+	call CopyBytes
+	pop af
+	ldh [rSVBK], a
+	call CloseSRAM
+	ret
+
+SaveFollowerParty:
+	ld a, BANK(sFollowerPartyData)
+	call OpenSRAM
+	ldh a, [rSVBK]
+	push af
+	ld a, BANK(wBackupPartyData)
+	ldh [rSVBK], a
+	ld hl, wBackupPartyData
+	ld de, sFollowerPartyData
+	ld bc, wBackupPartyDataEnd - wBackupPartyData
+	call CopyBytes
+	pop af
+	ldh [rSVBK], a
+	call CloseSRAM
+	ret
+
 SaveChecksum:
 	ld hl, sGameData
 	ld bc, sGameDataEnd - sGameData
@@ -580,6 +614,7 @@ TryLoadSaveFile:
 	call LoadPlayerData
 	call LoadPokemonData
 	call LoadBox
+	call LoadFollowerParty
 	farcall RestorePartyMonMail
 	farcall RestoreMobileEventIndex
 	farcall RestoreMysteryGift
@@ -597,6 +632,7 @@ TryLoadSaveFile:
 	call LoadBackupPlayerData
 	call LoadBackupPokemonData
 	call LoadBox
+	call LoadBackupFollowerParty
 	farcall RestorePartyMonMail
 	farcall RestoreMobileEventIndex
 	farcall RestoreMysteryGift
@@ -749,6 +785,22 @@ LoadBox:
 	call LoadBoxAddress
 	ret
 
+LoadFollowerParty:
+	ld a, BANK(sFollowerPartyData)
+	call OpenSRAM
+	ldh a, [rSVBK]
+	push af
+	ld a, BANK(wBackupPartyData)
+	ldh [rSVBK], a
+	ld hl, sFollowerPartyData
+	ld de, wBackupPartyData
+	ld bc, wBackupPartyDataEnd - wBackupPartyData
+	call CopyBytes
+	pop af
+	ldh [rSVBK], a
+	call CloseSRAM
+	ret
+
 VerifyChecksum:
 	ld hl, sGameData
 	ld bc, sGameDataEnd - sGameData
@@ -764,6 +816,22 @@ VerifyChecksum:
 	push af
 	call CloseSRAM
 	pop af
+	ret
+
+LoadBackupFollowerParty:
+	ld a, BANK(sBackupFollowerPartyData)
+	call OpenSRAM
+	ldh a, [rSVBK]
+	push af
+	ld a, BANK(wBackupPartyData)
+	ldh [rSVBK], a
+	ld hl, sBackupFollowerPartyData
+	ld de, wBackupPartyData
+	ld bc, wBackupPartyDataEnd - wBackupPartyData
+	call CopyBytes
+	pop af
+	ldh [rSVBK], a
+	call CloseSRAM
 	ret
 
 LoadBackupPlayerData:

@@ -334,12 +334,12 @@ ENDM
 	connection east, Route8, ROUTE_8, 9
 
 	map_attributes Route5, ROUTE_5, $0f, NORTH | SOUTH
-	connection north, CeruleanCity, CERULEAN_CITY, -5
+	connection north, CeruleanCity, CERULEAN_CITY, 0
 	connection south, SaffronCity, SAFFRON_CITY, -5
 
-	map_attributes CeruleanCity, CERULEAN_CITY, $0f, NORTH | SOUTH | WEST | EAST
+	map_attributes CeruleanCity, CERULEAN_CITY, $2c, NORTH | SOUTH | WEST | EAST
 	connection north, Route24, ROUTE_24, 6
-	connection south, Route5, ROUTE_5, 5
+	connection south, Route5, ROUTE_5, 0
 	connection west, Route4, ROUTE_4, 5
 	connection east, Route9, ROUTE_9, 9
 
@@ -694,3 +694,70 @@ ENDM
 	map_attributes Route30BerryHouse, ROUTE_30_BERRY_HOUSE, $00, 0
 	map_attributes MrPokemonsHouse, MR_POKEMONS_HOUSE, $00, 0
 	map_attributes Route31VioletGate, ROUTE_31_VIOLET_GATE, $00, 0
+	map_attributes ViridianForest, VIRIDIAN_FOREST, $00, 0
+	map_attributes CeruleanCave1F, CERULEAN_CAVE_1F, $09, 0
+	map_attributes CeruleanCave2F, CERULEAN_CAVE_2F, $09, 0
+	map_attributes CeruleanCaveB1F, CERULEAN_CAVE_B1F, $09, 0
+	map_attributes ViridianForestGateNorth, VIRIDIAN_FOREST_GATE_NORTH, $00, 0
+	map_attributes ViridianForestGateSouth, VIRIDIAN_FOREST_GATE_SOUTH, $00, 0
+
+; Cerulean Cave alt. layouts
+CeruleanCave1F_RG_MapAttributes::
+	db $09
+	db CERULEAN_CAVE_1F_HEIGHT, CERULEAN_CAVE_1F_WIDTH
+	db BANK(CeruleanCave1F_RG_Blocks)
+	dw CeruleanCave1F_RG_Blocks
+	db BANK(CeruleanCave1F_MapScripts) ; aka BANK(\1_MapEvents)
+	dw CeruleanCave1F_MapScripts
+	dw CeruleanCave1F_RG_MapEvents
+	db 0
+
+CeruleanCave1F_Y_MapAttributes::
+	db $09
+	db CERULEAN_CAVE_1F_HEIGHT, CERULEAN_CAVE_1F_WIDTH
+	db BANK(CeruleanCave1F_Y_Blocks)
+	dw CeruleanCave1F_Y_Blocks
+	db BANK(CeruleanCave1F_MapScripts) ; aka BANK(\1_MapEvents)
+	dw CeruleanCave1F_MapScripts
+	dw CeruleanCave1F_Y_MapEvents
+	db 0
+
+CeruleanCave2F_RG_MapAttributes::
+	db $09
+	db CERULEAN_CAVE_2F_HEIGHT, CERULEAN_CAVE_2F_WIDTH
+	db BANK(CeruleanCave2F_RG_Blocks)
+	dw CeruleanCave2F_RG_Blocks
+	db BANK(CeruleanCave2F_MapScripts) ; aka BANK(\1_MapEvents)
+	dw CeruleanCave2F_MapScripts
+	dw CeruleanCave2F_RG_MapEvents
+	db 0
+
+CeruleanCave2F_Y_MapAttributes::
+	db $09
+	db CERULEAN_CAVE_2F_HEIGHT, CERULEAN_CAVE_2F_WIDTH
+	db BANK(CeruleanCave2F_Y_Blocks)
+	dw CeruleanCave2F_Y_Blocks
+	db BANK(CeruleanCave2F_MapScripts) ; aka BANK(\1_MapEvents)
+	dw CeruleanCave2F_MapScripts
+	dw CeruleanCave2F_Y_MapEvents
+	db 0
+
+CeruleanCaveB1F_RG_MapAttributes::
+	db $09
+	db CERULEAN_CAVE_B1F_HEIGHT, CERULEAN_CAVE_B1F_WIDTH
+	db BANK(CeruleanCaveB1F_RG_Blocks)
+	dw CeruleanCaveB1F_RG_Blocks
+	db BANK(CeruleanCaveB1F_MapScripts) ; aka BANK(\1_MapEvents)
+	dw CeruleanCaveB1F_MapScripts
+	dw CeruleanCaveB1F_RG_MapEvents
+	db 0
+
+CeruleanCaveB1F_Y_MapAttributes::
+	db $09
+	db CERULEAN_CAVE_B1F_HEIGHT, CERULEAN_CAVE_B1F_WIDTH
+	db BANK(CeruleanCaveB1F_Y_Blocks)
+	dw CeruleanCaveB1F_Y_Blocks
+	db BANK(CeruleanCaveB1F_MapScripts) ; aka BANK(\1_MapEvents)
+	dw CeruleanCaveB1F_MapScripts
+	dw CeruleanCaveB1F_Y_MapEvents
+	db 0

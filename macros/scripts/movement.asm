@@ -73,6 +73,11 @@ fast_jump_step: MACRO
 	db movement_fast_jump_step | \1
 ENDM
 
+	const movement_short_jump ; $38
+short_jump: MACRO
+	db movement_short_jump | \1
+ENDM
+
 const_inc = 1
 
 ; Control
