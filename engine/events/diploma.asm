@@ -1,6 +1,8 @@
 _Diploma:
 	call PlaceDiplomaOnScreen
 	call WaitPressAorB_BlinkCursor
+	call PlaceDiplomaPageExtra
+	call WaitPressAorB_BlinkCursor
 	ret
 
 PlaceDiplomaOnScreen:
@@ -78,6 +80,92 @@ PrintDiplomaPage2:
 .PlayTime: db "PLAY TIME@"
 .GameFreak: db "GAME FREAK@"
 
+PUSHS
+SECTION "Miki GFX", ROMX
+DiplomaExtGFX:
+INCBIN "gfx/diploma/miki.2bpp"
+DiplomaExtGFX_End:
+POPS
+DIPLOMA_EXT_TILE_CT EQU (DiplomaExtGFX_End - DiplomaExtGFX) / 16
+
+PlaceDiplomaPageExtra:
+	call ClearBGPalettes
+	call ClearTilemap
+	call ClearSprites
+	call DisableLCD
+
+if DIPLOMA_EXT_TILE_CT < $80
+	ld de, DiplomaExtGFX
+	ld b, BANK(DiplomaExtGFX)
+	ld hl, vTiles2
+	ld c, DIPLOMA_EXT_TILE_CT
+	call Get2bpp
+else
+	ld de, DiplomaExtGFX
+	ld b, BANK(DiplomaExtGFX)
+	ld hl, vTiles2
+	ld c, $80
+	call Get2bpp
+if DIPLOMA_EXT_TILE_CT < $100
+	ld de, DiplomaExtGFX + $80 tiles
+	ld b, BANK(DiplomaExtGFX)
+	ld hl, vTiles1
+	ld c, DIPLOMA_EXT_TILE_CT - $80
+	call Get2bpp
+else
+	ld de, DiplomaExtGFX + $80 tiles
+	ld b, BANK(DiplomaExtGFX)
+	ld hl, vTiles1
+	ld c, $80
+	call Get2bpp
+
+	ldh a, [rVBK]
+	push af
+	ld a, BANK(vTiles5)
+	ldh [rVBK], a
+	ld de, DiplomaExtGFX + $100 tiles
+	ld b, BANK(DiplomaExtGFX)
+	ld hl, vTiles5
+	ld c, DIPLOMA_EXT_TILE_CT - $100
+	call Get2bpp
+	pop af
+	ldh [rVBK], a
+endc
+endc
+
+	hlcoord 0, 0
+	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	ld de, MikiTilemap
+.loop1
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec bc
+	ld a, b
+	or c
+	jr nz, .loop1
+
+	ld hl, wAttrmap
+	ld de, MikiAttrmap
+	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+.loop2
+	ld a, [de]
+	ld [hli], a
+	inc de
+	dec bc
+	ld a, b
+	or c
+	jr nz, .loop2
+
+	call EnableLCD
+	call WaitBGMap2
+	call WaitBGMap
+	ld b, SCGB_DIPLOMA_EXTRA
+	call GetSGBLayout
+	call SetPalettes
+	call DelayFrame
+	ret
+
 DiplomaGFX:
 INCBIN "gfx/diploma/diploma.2bpp.lz"
 
@@ -89,3 +177,8 @@ INCBIN "gfx/diploma/page2.tilemap"
 
 Diploma_DummyFunction: ; unreferenced
 	ret
+
+MikiTilemap:
+INCBIN "gfx/diploma/miki.tilemap"
+MikiAttrmap:
+INCBIN "gfx/diploma/miki.attrmap"

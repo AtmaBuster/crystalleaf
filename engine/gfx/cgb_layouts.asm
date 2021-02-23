@@ -63,6 +63,7 @@ LoadSGBLayoutCGB:
 	dw _CGB_IntroBothPlayerPals
 	dw _CGB_HoFBothPlayerPalsBack
 	dw _CGB_HoFBothPlayerPalsFront
+	dw _CGB_DiplomaExtra
 
 _CGB_BattleGrayscale:
 	ld hl, PalPacket_BattleGrayscale + 1
@@ -1047,3 +1048,14 @@ _CGB_HoFBothPlayerPalsFront:
 	call ApplyAttrmap
 	call ApplyPals
 	ret
+
+_CGB_DiplomaExtra:
+	ld hl, .ExtraPalettes
+	ld de, wBGPals1
+	ld bc, 8 palettes
+	ld a, BANK(wBGPals1)
+	call FarCopyWRAM
+	ret
+
+.ExtraPalettes
+INCLUDE "gfx/diploma/miki.pal"
