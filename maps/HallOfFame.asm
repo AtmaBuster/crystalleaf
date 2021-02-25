@@ -26,6 +26,7 @@ HallOfFame_MapScripts:
 	closetext
 	turnobject HALLOFFAME_LANCE, UP
 	applymovement PLAYER, HallOfFame_SlowlyApproachMachine
+	applymovement FOLLOWER, HallOfFame_FollowerApproachMachine
 	setscene SCENE_FINISHED
 	pause 15
 	setval HEALMACHINE_HALL_OF_FAME
@@ -62,6 +63,12 @@ HallOfFame_SlowlyApproachMachine:
 	slow_step UP
 	step_end
 
+HallOfFame_FollowerApproachMachine:
+	slow_step UP
+	slow_step RIGHT
+	turn_head UP
+	step_end
+
 HallOfFame_LanceText:
 	text "LANCE: It's been a"
 	line "long time since I"
@@ -80,32 +87,33 @@ HallOfFame_LanceText:
 	para "Here today, we"
 	line "witnessed the rise"
 
-	para "of a new LEAGUE"
-	line "CHAMPION--a"
+	para "of two new LEAGUE"
+	line "CHAMPIONS--two"
 
-	para "trainer who feels"
+	para "trainers who feel"
 	line "compassion for,"
 
 	para "and trust toward,"
 	line "all #MON."
 
-	para "A trainer who"
+	para "Trainers who"
 	line "succeeded through"
 
 	para "perseverance and"
 	line "determination."
 
 	para "The new LEAGUE"
-	line "CHAMPION who has"
+	line "CHAMPIONS who have"
 
 	para "all the makings"
 	line "of greatness!"
 
-	para "<PLAY_G>, allow me"
-	line "to register you"
+	para "<PLAY_G> & <FOLLOW>,"
+	line "allow me to"
 
-	para "and your partners"
-	line "as CHAMPIONS!"
+	para "register you"
+	line "and your partners"
+	cont "as CHAMPIONS!"
 	done
 
 HallOfFame_MapEvents:

@@ -76,11 +76,11 @@ _NUM_OBJECT_EVENTS = 0
 	object_event -4, -4, SPRITE_CHRIS, SPRITEMOVEDATA_PLAYER, 15, 15, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, 0, -1
 
 FollowObjTemplateLeaf:
-	object_event -4, -4, SPRITE_KRIS, SPRITEMOVEDATA_FOLLOWNOTEXACT, 15, 15, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, _FollowerScript, -1
+	object_event -4, -4, SPRITE_KRIS, SPRITEMOVEDATA_FOLLOWEROBJ, 15, 15, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, _FollowerScript, -1
 
 FollowObjTemplateRed:
 _NUM_OBJECT_EVENTS = 1
-	object_event -4, -4, SPRITE_CHRIS, SPRITEMOVEDATA_FOLLOWNOTEXACT, 15, 15, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, _FollowerScript, -1
+	object_event -4, -4, SPRITE_CHRIS, SPRITEMOVEDATA_FOLLOWEROBJ, 15, 15, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, _FollowerScript, -1
 
 PUSHS
 SECTION "Follower Script Home", ROM0
@@ -159,6 +159,7 @@ MapPlayerCoordWarped:
 	ld b, PLAYER
 	ld c, FOLLOWER
 	call MoveToObject
+;	call UpdateFollowerPositionAfterWarp
 	call MatchFollowerDirection
 	ret
 
@@ -215,6 +216,68 @@ MatchFollowerDirection:
 	ld [hl], a
 	ret
 
+UpdateFollowerPositionAfterWarp:
+	ld a, [wPlayerStandingMapX]
+	ld d, a
+	ld a, [wPlayerStandingMapY]
+	ld e, a
+	push de
+	call GetCoordTile
+	pop de
+	cp COLL_WARP_CARPET_UP
+	jr z, .up_down
+	cp COLL_WARP_CARPET_DOWN
+	jr z, .up_down
+	cp COLL_WARP_CARPET_LEFT
+	jr z, .left_right
+	cp COLL_WARP_CARPET_RIGHT
+	ret nz
+.left_right
+	inc e
+	push de
+	push af
+	dec e
+	dec e
+	jr .check
+
+.up_down
+	inc d
+	push de
+	push af
+	dec d
+	dec d
+.check
+	push de
+	call GetCoordTile
+	pop de
+	ld b, a
+	pop af
+	cp b
+	jr z, .move_follower_1
+	pop de
+	push af
+	push de
+	call GetCoordTile
+	pop de
+	ld b, a
+	pop af
+	cp b
+	jr z, .move_follower
+	ret
+
+.move_follower_1
+	pop bc
+.move_follower
+	ld a, FOLLOWER
+	call GetMapObject
+	ld hl, MAPOBJECT_X_COORD
+	add hl, bc
+	ld [hl], d
+	ld hl, MAPOBJECT_Y_COORD
+	add hl, bc
+	ld [hl], e
+	ret
+
 _RefreshPlayerCoords:
 	ld a, [wXCoord]
 	add 4
@@ -248,6 +311,12 @@ RefreshFollowingCoords::
 	ld b, PLAYER
 	ld c, FOLLOWER
 	call FollowNotExact
+	ret c
+	ld a, FOLLOWER
+	call GetObjectStruct
+	ld hl, OBJECT_MOVEMENTTYPE
+	add hl, de
+	ld [hl], SPRITEMOVEDATA_FOLLOWEROBJ
 	ret
 
 CopyObjectStruct::

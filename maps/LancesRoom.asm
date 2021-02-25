@@ -50,6 +50,7 @@ Script_ApproachLanceFromRight:
 	special FadeOutMusic
 	applymovement PLAYER, MovementData_ApproachLanceFromRight
 LancesRoomLanceScript:
+	applymovement FOLLOWER, MovementData_FollowerInLanceRoom
 	turnobject LANCESROOM_LANCE, LEFT
 	opentext
 	writetext LanceBattleIntroText
@@ -94,6 +95,7 @@ LancesRoomLanceScript:
 	writetext LancesRoomOakCongratulationsText
 	waitbutton
 	closetext
+	applymovement FOLLOWER, LancesRoomFollowerMovesForMary
 	applymovement LANCESROOM_MARY, LancesRoomMovementData_MaryInterviewChampion
 	turnobject PLAYER, LEFT
 	opentext
@@ -106,16 +108,21 @@ LancesRoomLanceScript:
 	writetext LancesRoomNoisyText
 	waitbutton
 	closetext
+	freezefollower
 	follow LANCESROOM_LANCE, PLAYER
 	turnobject LANCESROOM_MARY, UP
 	turnobject LANCESROOM_OAK, UP
 	applymovement LANCESROOM_LANCE, LancesRoomMovementData_LanceLeadsPlayerToHallOfFame
 	stopfollow
+	unfreezefollower
 	playsound SFX_EXIT_BUILDING
 	disappear LANCESROOM_LANCE
 	applymovement PLAYER, LancesRoomMovementData_PlayerExits
 	playsound SFX_EXIT_BUILDING
 	disappear PLAYER
+	applymovement FOLLOWER, LancesRoomMovementData_PlayerExits
+	playsound SFX_EXIT_BUILDING
+	disappear FOLLOWER
 	applymovement LANCESROOM_MARY, LancesRoomMovementData_MaryTriesToFollow
 	showemote EMOTE_SHOCK, LANCESROOM_MARY, 15
 	opentext
@@ -148,6 +155,12 @@ MovementData_ApproachLanceFromRight:
 	turn_head RIGHT
 	step_end
 
+MovementData_FollowerInLanceRoom:
+	step LEFT
+	step UP
+	turn_head RIGHT
+	step_end
+
 LancesRoomMovementData_MaryRushesIn:
 	big_step UP
 	big_step UP
@@ -163,6 +176,13 @@ LancesRoomMovementData_OakWalksIn:
 LancesRoomMovementData_MaryYieldsToOak:
 	step LEFT
 	turn_head RIGHT
+	step_end
+
+LancesRoomFollowerMovesForMary:
+	turn_head DOWN
+	fix_facing
+	big_step UP
+	remove_fixed_facing
 	step_end
 
 LancesRoomMovementData_MaryInterviewChampion:
@@ -208,7 +228,7 @@ LanceBattleIntroText:
 	text "LANCE: I've been"
 	line "waiting for you."
 
-	para "<PLAY_G>!"
+	para "<PLAY_G>! <FOLLOW>!"
 
 	para "I knew that you,"
 	line "with your skills,"
@@ -249,16 +269,16 @@ LanceBattleWinText:
 	para "Happy that I"
 	line "witnessed the rise"
 
-	para "of a great new"
-	line "CHAMPION!"
+	para "of two great new"
+	line "CHAMPIONS!"
 	done
 
 LanceBattleAfterText:
 	text "…Whew."
 
-	para "You have become"
+	para "You've both become"
 	line "truly powerful,"
-	cont "<PLAY_G>."
+	cont "<PLAY_G>, <FOLLOW>."
 
 	para "Your #MON have"
 	line "responded to your"
@@ -266,7 +286,7 @@ LanceBattleAfterText:
 	para "strong and up-"
 	line "standing nature."
 
-	para "As a trainer, you"
+	para "As trainers, you"
 	line "will continue to"
 
 	para "grow strong with"
@@ -283,7 +303,7 @@ LancesRoomMaryOhNoOakText:
 
 LancesRoomOakCongratulationsText:
 	text "PROF.OAK: Ah,"
-	line "<PLAY_G>!"
+	line "<PLAY_G>, <FOLLOW>!"
 
 	para "It's been a long"
 	line "while."
@@ -305,19 +325,19 @@ LancesRoomOakCongratulationsText:
 	line "outstanding too."
 
 	para "Because they be-"
-	line "lieved in you as a"
+	line "lieved in you as"
 
-	para "trainer, they per-"
-	line "severed."
+	para "trainers, they"
+	line "persevered."
 
 	para "Congratulations,"
-	line "<PLAY_G>!"
+	line "<PLAY_G> & <FOLLOW>!"
 	done
 
 LancesRoomMaryInterviewText:
 	text "MARY: Let's inter-"
 	line "view the brand new"
-	cont "CHAMPION!"
+	cont "CHAMPIONS!"
 	done
 
 LancesRoomNoisyText:
@@ -325,8 +345,9 @@ LancesRoomNoisyText:
 	line "getting to be a"
 	cont "bit too noisy…"
 
-	para "<PLAY_G>, could you"
-	line "come with me?"
+	para "<PLAY_G> & <FOLLOW>,"
+	line "could you both"
+	cont "come with me?"
 	done
 
 LancesRoomMaryNoInterviewText:

@@ -35,6 +35,9 @@ CherrygroveCityGuideGent:
 	waitbutton
 	closetext
 	playmusic MUSIC_SHOW_ME_AROUND
+	readvar VAR_FACING
+	ifequal RIGHT, .PlayerMove
+.Return:
 	follow CHERRYGROVECITY_GRAMPS, PLAYER
 	applymovement CHERRYGROVECITY_GRAMPS, GuideGentMovement1
 	opentext
@@ -84,6 +87,10 @@ CherrygroveCityGuideGent:
 	clearevent EVENT_GUIDE_GENT_VISIBLE_IN_CHERRYGROVE
 	waitsfx
 	end
+
+.PlayerMove:
+	applymovement PLAYER, GuideGentMovement_Player
+	sjump .Return
 
 .JumpstdReceiveItem:
 	jumpstd ReceiveItemScript
@@ -164,9 +171,14 @@ CherrygroveSilverSceneNorth:
 	waitbutton
 	closetext
 .FinishRival:
+	freezefollower
 	playsound SFX_TACKLE
 	applymovement PLAYER, CherrygroveCity_RivalPushesYouOutOfTheWay
-	turnobject PLAYER, LEFT
+	unfreezefollower
+	turnobject PLAYER, UP
+	applymovement CHERRYGROVECITY_SILVER, CherrygroveCity_RivalStepLeft
+	playsound SFX_TACKLE
+	applymovement FOLLOWER, CherrygroveCity_RivalPushesYouOutOfTheWay
 	applymovement CHERRYGROVECITY_SILVER, CherrygroveCity_RivalExitsStageLeft
 	disappear CHERRYGROVECITY_SILVER
 	setscene SCENE_CHERRYGROVECITY_NOTHING
@@ -234,6 +246,11 @@ CherrygroveCityPokecenterSign:
 
 CherrygroveCityMartSign:
 	jumpstd MartSignScript
+
+GuideGentMovement_Player:
+	step DOWN
+	step RIGHT
+	step_end
 
 GuideGentMovement1:
 	step LEFT
@@ -322,8 +339,11 @@ CherrygroveCity_UnusedMovementData: ; unreferenced
 	turn_head DOWN
 	step_end
 
-CherrygroveCity_RivalExitsStageLeft:
+CherrygroveCity_RivalStepLeft:
 	big_step LEFT
+	step_end
+
+CherrygroveCity_RivalExitsStageLeft:
 	big_step LEFT
 	big_step LEFT
 	big_step LEFT

@@ -346,16 +346,6 @@ CheckTileEvent:
 	call CallScript
 	ret
 
-CheckWildEncounterCooldown::
-	ld hl, wWildEncounterCooldown
-	ld a, [hl]
-	and a
-	ret z
-	dec [hl]
-	ret z
-	scf
-	ret
-
 SetUpFiveStepWildEncounterCooldown:
 	ld a, 5
 	ld [wWildEncounterCooldown], a
@@ -1112,9 +1102,9 @@ TryTileCollisionEvent::
 RandomEncounter::
 ; Random encounter
 
-	call CheckWildEncounterCooldown
+	farcall CheckWildEncounterCooldown
 	jr c, .nope
-	call CanUseSweetScent
+	farcall CanUseSweetScent
 	jr nc, .nope
 	ld hl, wStatusFlags2
 	bit STATUSFLAGS2_BUG_CONTEST_TIMER_F, [hl]
@@ -1146,35 +1136,6 @@ RandomEncounter::
 .done
 	call CallScript
 	scf
-	ret
-
-WildBattleScript:
-	randomwildmon
-	startbattle
-	reloadmapafterbattle
-	end
-
-CanUseSweetScent::
-	ld hl, wStatusFlags
-	bit STATUSFLAGS_NO_WILD_ENCOUNTERS_F, [hl]
-	jr nz, .no
-	ld a, [wEnvironment]
-	cp CAVE
-	jr z, .ice_check
-	cp DUNGEON
-	jr z, .ice_check
-	farcall CheckGrassCollision
-	jr nc, .no
-
-.ice_check
-	ld a, [wPlayerStandingTile]
-	call CheckIceTile
-	jr z, .no
-	scf
-	ret
-
-.no
-	and a
 	ret
 
 _TryWildEncounter_BugContest:
@@ -1349,4 +1310,79 @@ HandleMapBackground:
 	farcall _UpdateSprites
 	farcall ScrollScreen
 	farcall PlaceMapNameSign
+	ret
+
+CheckWildEncounterCooldown::
+	ld hl, wWildEncounterCooldown
+	ld a, [hl]
+	and a
+	ret z
+	dec [hl]
+	ret z
+	scf
+	ret
+
+WildBattleScript:
+	randomwildmon
+	startbattle
+	reloadmapafterbattle
+	end
+
+CanUseSweetScent::
+	ld hl, wStatusFlags
+	bit STATUSFLAGS_NO_WILD_ENCOUNTERS_F, [hl]
+	jr nz, .no
+	ld a, [wEnvironment]
+	cp CAVE
+	jr z, .ice_check
+	cp DUNGEON
+	jr z, .ice_check
+	farcall CheckGrassCollision
+	jr nc, .no
+
+.ice_check
+	ld a, [wPlayerStandingTile]
+	call CheckIceTile
+	jr z, .no
+	scf
+	ret
+
+.no
+	and a
+	ret
+
+Script_GetFollowerDirectionFromPlayer::
+	ld a, STANDING
+	ld [wScriptVar], a
+	ld a, [wObject1StandingMapX]
+	ld b, a
+	ld a, [wPlayerStandingMapX]
+	cp b
+	jr z, .check_y
+	jr c, .right
+	jr .left ; nc
+
+.check_y
+	ld a, [wObject1StandingMapY]
+	ld b, a
+	ld a, [wPlayerStandingMapY]
+	cp b
+	ret z
+	jr c, .down
+; up, fallthrough, nc
+	ld a, UP
+	jr .done
+
+.down
+	ld a, DOWN
+	jr .done
+
+.left
+	ld a, LEFT
+	jr .done
+
+.right
+	ld a, RIGHT
+.done
+	ld [wScriptVar], a
 	ret

@@ -233,6 +233,10 @@ ScriptCommandTable:
 	dw Script_getname                    ; a7
 	dw Script_wait                       ; a8
 	dw Script_checksave                  ; a9
+	dw Script_freezefollower             ; aa
+	dw Script_unfreezefollower           ; ab
+	dw Script_getfollowerdirection       ; ac
+	dw Script_checkfollowerswapped       ; ad
 
 StartScript:
 	ld hl, wScriptFlags
@@ -2173,9 +2177,9 @@ Script_warpcheck:
 	farcall EnableEvents
 	ret
 
-Script_enableevents: ; unreferenced
-	farcall EnableEvents
-	ret
+;Script_enableevents: ; unreferenced
+;	farcall EnableEvents
+;	ret
 
 Script_newloadmap:
 	call GetScriptByte
@@ -2203,8 +2207,8 @@ Script_writeunusedbyte:
 	ld [wUnusedScriptByte], a
 	ret
 
-UnusedClosetextScript: ; unreferenced
-	closetext
+;UnusedClosetextScript: ; unreferenced
+;	closetext
 
 Script_closetext:
 	call _OpenAndCloseMenu_HDMATransferTilemapAndAttrmap
@@ -2353,10 +2357,42 @@ Script_checksave:
 	ld [wScriptVar], a
 	ret
 
-Script_checkver_duplicate: ; unreferenced
-	ld a, [.gs_version]
-	ld [wScriptVar], a
+;Script_checkver_duplicate: ; unreferenced
+;	ld a, [.gs_version]
+;	ld [wScriptVar], a
+;	ret
+;
+;.gs_version
+;	db GS_VERSION
+
+Script_freezefollower:
+	ld bc, wObject1Struct
+	call DoesObjectHaveASprite
+	ret z
+	ld hl, OBJECT_FLAGS2
+	add hl, bc
+	set FROZEN_F, [hl]
+	ld hl, wFollowerFlags
+	set FOLLOWER_FROZEN_F, [hl]
 	ret
 
-.gs_version
-	db GS_VERSION
+Script_unfreezefollower:
+	ld bc, wObject1Struct
+	call DoesObjectHaveASprite
+	ret z
+	ld hl, OBJECT_FLAGS2
+	add hl, bc
+	res FROZEN_F, [hl]
+	ld hl, wFollowerFlags
+	res FOLLOWER_FROZEN_F, [hl]
+	ret
+
+Script_getfollowerdirection:
+	farcall Script_GetFollowerDirectionFromPlayer
+	ret
+
+Script_checkfollowerswapped:
+	ld a, [wFollowerFlags] ; swap flag is bit 0
+	and 1
+	ld [wScriptVar], a
+	ret

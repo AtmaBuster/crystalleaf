@@ -118,6 +118,7 @@ GoldenrodUndergroundSwitchRoomEntrancesTeacherScript:
 	jumptextfaceplayer GoldenrodUndergroundSwitchRoomEntrances_TeacherText
 
 UndergroundSilverScene1:
+	applymovement FOLLOWER, GoldenrodUndergroundFollowerMove1
 	turnobject PLAYER, RIGHT
 	showemote EMOTE_SHOCK, PLAYER, 15
 	special FadeOutMusic
@@ -137,6 +138,7 @@ UndergroundSilverScene1:
 	end
 
 UndergroundSilverScene2:
+	applymovement FOLLOWER, GoldenrodUndergroundFollowerMove2
 	turnobject PLAYER, RIGHT
 	showemote EMOTE_SHOCK, PLAYER, 15
 	special FadeOutMusic
@@ -634,6 +636,18 @@ GoldenrodUndergroundSwitchRoomEntrancesHiddenMaxPotion:
 
 GoldenrodUndergroundSwitchRoomEntrancesHiddenRevive:
 	hiddenitem REVIVE, EVENT_GOLDENROD_UNDERGROUND_SWITCH_ROOM_ENTRANCES_HIDDEN_REVIVE
+
+GoldenrodUndergroundFollowerMove1:
+	step DOWN
+	step LEFT
+	turn_head RIGHT
+	step_end
+
+GoldenrodUndergroundFollowerMove2:
+	step UP
+	step LEFT
+	turn_head RIGHT
+	step_end
 
 UndergroundSilverApproachMovement1:
 	step DOWN

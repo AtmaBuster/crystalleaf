@@ -761,6 +761,8 @@ SlideStep:
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
 	ld [hl], STEP_TYPE_PLAYER_WALK
+	ld a, FOLLOWERMOVE_SLIDE
+	ld [wFollowerNextMovement], a
 	ret
 
 HopStep:

@@ -599,6 +599,16 @@ DoPlayerMovement::
 	ld l, a
 	ld a, [hl]
 	ld [wWalkingTile], a
+if DEF(_DEBUG2)
+	ld a, [hJoyDown]
+	and B_BUTTON
+	ret z
+	ld a, [hl]
+	inc a
+	ret z
+	xor a
+	ld [wWalkingTile], a
+endc
 	ret
 
 player_action: MACRO
@@ -641,7 +651,7 @@ ENDM
 	ld hl, OBJECT_MOVEMENTTYPE
 	add hl, bc
 	ld a, [hl]
-	cp SPRITEMOVEDATA_FOLLOWNOTEXACT
+	cp SPRITEMOVEDATA_FOLLOWEROBJ
 	jr z, .is_npc
 	call .CheckStrengthBoulder
 	jr c, .no_bump

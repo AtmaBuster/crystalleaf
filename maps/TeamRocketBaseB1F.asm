@@ -27,6 +27,13 @@ SecurityCamera1a:
 	checkevent EVENT_TEAM_ROCKET_BASE_POPULATION
 	iftrue NoSecurityCamera
 	showemote EMOTE_SHOCK, PLAYER, 15
+	getfollowerdirection
+	ifequal RIGHT, .Right
+	applymovement FOLLOWER, RocketHideoutFollowerMoveDR
+	sjump .Join
+.Right:
+	applymovement FOLLOWER, RocketHideoutFollowerMoveDL
+.Join:
 	playmusic MUSIC_ROCKET_ENCOUNTER
 	moveobject TEAMROCKETBASEB1F_ROCKET1, 19, 2
 	appear TEAMROCKETBASEB1F_ROCKET1
@@ -52,6 +59,13 @@ SecurityCamera1b:
 	checkevent EVENT_TEAM_ROCKET_BASE_POPULATION
 	iftrue NoSecurityCamera
 	showemote EMOTE_SHOCK, PLAYER, 15
+	getfollowerdirection
+	ifequal RIGHT, .Right
+	applymovement FOLLOWER, RocketHideoutFollowerMoveUR
+	sjump .Join
+.Right:
+	applymovement FOLLOWER, RocketHideoutFollowerMoveUL
+.Join:
 	playmusic MUSIC_ROCKET_ENCOUNTER
 	moveobject TEAMROCKETBASEB1F_ROCKET1, 19, 3
 	appear TEAMROCKETBASEB1F_ROCKET1
@@ -77,6 +91,13 @@ SecurityCamera2a:
 	checkevent EVENT_TEAM_ROCKET_BASE_POPULATION
 	iftrue NoSecurityCamera
 	showemote EMOTE_SHOCK, PLAYER, 15
+	getfollowerdirection
+	ifequal RIGHT, .Right
+	applymovement FOLLOWER, RocketHideoutFollowerMoveDR
+	sjump .Join
+.Right:
+	applymovement FOLLOWER, RocketHideoutFollowerMoveDL
+.Join:
 	playmusic MUSIC_ROCKET_ENCOUNTER
 	moveobject TEAMROCKETBASEB1F_ROCKET1, 4, 7
 	appear TEAMROCKETBASEB1F_ROCKET1
@@ -103,6 +124,13 @@ SecurityCamera2b:
 	checkevent EVENT_TEAM_ROCKET_BASE_POPULATION
 	iftrue NoSecurityCamera
 	showemote EMOTE_SHOCK, PLAYER, 15
+	getfollowerdirection
+	ifequal RIGHT, .Right
+	applymovement FOLLOWER, RocketHideoutFollowerMoveUR
+	sjump .Join
+.Right:
+	applymovement FOLLOWER, RocketHideoutFollowerMoveUL
+.Join:
 	playmusic MUSIC_ROCKET_ENCOUNTER
 	moveobject TEAMROCKETBASEB1F_ROCKET1, 4, 8
 	appear TEAMROCKETBASEB1F_ROCKET1
@@ -129,6 +157,13 @@ SecurityCamera3a:
 	checkevent EVENT_TEAM_ROCKET_BASE_POPULATION
 	iftrue NoSecurityCamera
 	showemote EMOTE_SHOCK, PLAYER, 15
+	getfollowerdirection
+	ifequal RIGHT, .Right
+	applymovement FOLLOWER, RocketHideoutFollowerMoveDR
+	sjump .Join
+.Right:
+	applymovement FOLLOWER, RocketHideoutFollowerMoveDL
+.Join:
 	playmusic MUSIC_ROCKET_ENCOUNTER
 	moveobject TEAMROCKETBASEB1F_ROCKET1, 19, 6
 	appear TEAMROCKETBASEB1F_ROCKET1
@@ -155,6 +190,13 @@ SecurityCamera3b:
 	checkevent EVENT_TEAM_ROCKET_BASE_POPULATION
 	iftrue NoSecurityCamera
 	showemote EMOTE_SHOCK, PLAYER, 15
+	getfollowerdirection
+	ifequal RIGHT, .Right
+	applymovement FOLLOWER, RocketHideoutFollowerMoveUR
+	sjump .Join
+.Right:
+	applymovement FOLLOWER, RocketHideoutFollowerMoveUL
+.Join:
 	playmusic MUSIC_ROCKET_ENCOUNTER
 	moveobject TEAMROCKETBASEB1F_ROCKET1, 19, 7
 	appear TEAMROCKETBASEB1F_ROCKET1
@@ -181,6 +223,10 @@ SecurityCamera4:
 	checkevent EVENT_TEAM_ROCKET_BASE_POPULATION
 	iftrue NoSecurityCamera
 	showemote EMOTE_SHOCK, PLAYER, 15
+	getfollowerdirection
+	ifequal RIGHT, .SkipFollower
+	applymovement FOLLOWER, RocketHideoutFollowerMoveRR
+.SkipFollower:
 	playmusic MUSIC_ROCKET_ENCOUNTER
 	moveobject TEAMROCKETBASEB1F_ROCKET1, 17, 16
 	appear TEAMROCKETBASEB1F_ROCKET1
@@ -190,6 +236,7 @@ SecurityCamera4:
 	ifequal TRUE, NoSecurityCamera
 	scall PlaySecurityCameraSounds
 	showemote EMOTE_SHOCK, PLAYER, 15
+	applymovement FOLLOWER, RocketHideoutFollowerMoveLL
 	playmusic MUSIC_ROCKET_ENCOUNTER
 	turnobject PLAYER, RIGHT
 	moveobject TEAMROCKETBASEB1F_ROCKET1, 25, 11
@@ -207,6 +254,10 @@ SecurityCamera5:
 	checkevent EVENT_TEAM_ROCKET_BASE_POPULATION
 	iftrue NoSecurityCamera
 	showemote EMOTE_SHOCK, PLAYER, 15
+	getfollowerdirection
+	ifequal RIGHT, .SkipFollower
+	applymovement FOLLOWER, RocketHideoutFollowerMoveRR
+.SkipFollower:
 	playmusic MUSIC_ROCKET_ENCOUNTER
 	moveobject TEAMROCKETBASEB1F_ROCKET1, 3, 16
 	appear TEAMROCKETBASEB1F_ROCKET1
@@ -216,6 +267,7 @@ SecurityCamera5:
 	ifequal TRUE, NoSecurityCamera
 	scall PlaySecurityCameraSounds
 	showemote EMOTE_SHOCK, PLAYER, 15
+	applymovement FOLLOWER, RocketHideoutFollowerMoveLL
 	playmusic MUSIC_ROCKET_ENCOUNTER
 	turnobject PLAYER, RIGHT
 	moveobject TEAMROCKETBASEB1F_ROCKET1, 14, 16
@@ -236,8 +288,10 @@ TrainerCameraGrunt1:
 	closetext
 	winlosstext CameraGrunt1BeatenText, 0
 	setlasttalked TEAMROCKETBASEB1F_ROCKET1
+if !DEF(_DEBUG2)
 	loadtrainer GRUNTM, GRUNTM_20
 	startbattle
+endc
 	disappear TEAMROCKETBASEB1F_ROCKET1
 	reloadmapafterbattle
 	end
@@ -249,8 +303,10 @@ TrainerCameraGrunt2:
 	closetext
 	winlosstext CameraGrunt2BeatenText, 0
 	setlasttalked TEAMROCKETBASEB1F_ROCKET1
+if !DEF(_DEBUG2)
 	loadtrainer GRUNTM, GRUNTM_21
 	startbattle
+endc
 	disappear TEAMROCKETBASEB1F_ROCKET1
 	reloadmapafterbattle
 	end
@@ -626,6 +682,38 @@ SecurityCameraMovement9:
 	big_step LEFT
 	big_step LEFT
 	big_step LEFT
+	step_end
+
+RocketHideoutFollowerMoveLL:
+	step LEFT
+	step LEFT
+	turn_head RIGHT
+	step_end
+
+RocketHideoutFollowerMoveRR:
+	step RIGHT
+	step RIGHT
+	turn_head LEFT
+	step_end
+
+RocketHideoutFollowerMoveUL:
+	step UP
+	step LEFT
+	step_end
+
+RocketHideoutFollowerMoveUR:
+	step UP
+	step RIGHT
+	step_end
+
+RocketHideoutFollowerMoveDL:
+	step DOWN
+	step LEFT
+	step_end
+
+RocketHideoutFollowerMoveDR:
+	step DOWN
+	step RIGHT
 	step_end
 
 CameraGrunt1SeenText:

@@ -370,27 +370,6 @@ UpdateFollowerSprite:
 	pop bc
 	ret
 
-;.land_tile
-;	push af
-;	ld a, [wFollowerFlags]
-;	bit FOLLOWER_SWAPPED_F, a
-;	ld a, SPRITE_CHRIS
-;	jr nz, .done
-;	ld a, SPRITE_KRIS
-;	jr .done
-;
-;.water_tile
-;	push af
-;	ld a, SPRITE_SURF
-;.done
-;	ld [wUsedSprites + FOLLOWER * 2], a
-;	push bc
-;	ld [wMap1ObjectSprite], a ; should always be here
-;	farcall AddFollowSprite
-;	pop bc
-;	pop af
-;	ret
-
 AddStepVector:
 	call GetStepVector
 	ld hl, OBJECT_SPRITE_X
@@ -442,6 +421,11 @@ StepVectors:
 	db  0, -4,  4, 4
 	db -4,  0,  4, 4
 	db  4,  0,  4, 4
+	; very fast
+	db  0,  8,  2, 8
+	db  0, -8,  2, 8
+	db -8,  0,  2, 8
+	db  8,  0,  2, 8
 
 GetStepVectorSign:
 	add a
@@ -615,6 +599,7 @@ StepFunction_FromMovement:
 	dw MovementFunction_SpinCounterclockwise ; 19
 	dw MovementFunction_BoulderDust          ; 1a
 	dw MovementFunction_ShakingGrass         ; 1b
+	dw MovementFunction_FollowerObj          ; 1c
 
 MovementFunction_Null:
 	ret
@@ -760,7 +745,77 @@ MovementFunction_Strength:
 	ld [hl], STANDING
 	ret
 
+MovementFunction_FollowerObj:
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_FROZEN_F, a
+	jr z, .follow_not_exact
+	ld hl, OBJECT_ACTION
+	add hl, bc
+	ld [hl], OBJECT_ACTION_STAND
+	ret
+
+.follow_not_exact
+	call MoveFollowNotExact
+	ret nc
+	push af
+	ld a, [wFollowerNextMovement]
+	cp FOLLOWERMOVE_NUM_TYPES
+	jr c, .get_step
+	xor a
+.get_step
+	ld e, a
+	ld d, 0
+	ld hl, .step_functions
+	add hl, de
+	add hl, de
+	add hl, de
+	ld a, [hli]
+	ld [wFollowerNextMovement], a
+	ld a, [hli]
+	ld h, [hl]
+	ld l, a
+
+	pop af
+	jp hl
+
+.step_functions
+	dbw FOLLOWERMOVE_NORMAL,   NormalStep ; FOLLOWERMOVE_NORMAL
+	dbw FOLLOWERMOVE_NORMAL,   SlideStep  ; FOLLOWERMOVE_SLIDE
+	dbw FOLLOWERMOVE_NORMAL,   .BigStep   ; FOLLOWERMOVE_BIG_STEP
+	dbw FOLLOWERMOVE_STILL,    .TurnHead  ; FOLLOWERMOVE_STILL
+	dbw FOLLOWERMOVE_BIG_STEP, .TurnHead  ; FOLLOWERMOVE_PREPARE_JUMP
+
+.BigStep
+; need to modify the speed parameter
+	ld e, a
+	xor a
+	ld [wFollowerNextMovement], a
+	ld a, [wPlayerState]
+	cp PLAYER_BIKE
+	ld a, e
+	jr z, .biking
+	and $3
+	or STEP_BIKE << 2
+	jp JumpStep
+
+.biking
+	and %00000011
+	or %00001100 ; very big step
+	jp JumpStep
+
+.TurnHead:
+; TurnHead uses different arguments, so modify it here
+	and %00000011
+	add a
+	add a
+	jp TurnHead
+
 MovementFunction_FollowNotExact:
+	call MoveFollowNotExact
+	jp c, NormalStep
+	ret
+
+MoveFollowNotExact:
 	ld hl, OBJECT_NEXT_MAP_X
 	add hl, bc
 	ld d, [hl]
@@ -810,7 +865,8 @@ MovementFunction_FollowNotExact:
 	and %00001100
 	or d
 	pop bc
-	jp NormalStep
+	scf
+	ret
 
 .standing
 	pop bc
@@ -820,6 +876,7 @@ MovementFunction_FollowNotExact:
 	ld hl, OBJECT_ACTION
 	add hl, bc
 	ld [hl], OBJECT_ACTION_STAND
+	and a
 	ret
 
 MovementFunction_BigStanding:
@@ -1220,6 +1277,10 @@ StepFunction_NPCJump:
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
 	ld [hl], STEP_TYPE_FROM_MOVEMENT
+	xor a
+	ld hl, OBJECT_SPRITE_Y_OFFSET
+	add hl, bc
+	ld [hl], a
 	ret
 
 StepFunction_PlayerJump:
@@ -1252,6 +1313,8 @@ StepFunction_PlayerJump:
 	ret
 
 .initland
+	ld a, FOLLOWERMOVE_STILL
+	ld [wFollowerNextMovement], a
 	call GetNextTile
 	ld hl, wPlayerStepFlags
 	set PLAYERSTEP_START_F, [hl]
@@ -1263,6 +1326,8 @@ StepFunction_PlayerJump:
 	add hl, bc
 	dec [hl]
 	ret nz
+	ld a, FOLLOWERMOVE_PREPARE_JUMP
+	ld [wFollowerNextMovement], a
 	ld hl, wPlayerStepFlags
 	set PLAYERSTEP_STOP_F, [hl]
 	call CopyNextCoordsTileToStandingCoordsTile
@@ -1972,6 +2037,21 @@ UpdateJumpPosition:
 	db -11, -10,  -9,  -8,  -6,  -4,   0,   0
 
 GetPlayerNextMovementByte:
+if 0
+	ld hl, wPlayerNextMovement
+	ld d, [hl]
+	ld [hl], movement_step_sleep
+	inc hl ; wPlayerMovement
+	ld e, [hl]
+	ld [hl], d
+	ld a, e
+	cp movement_step_sleep
+	ld a, d
+	ret z
+	inc hl ; wPlayerLastMovement
+	ld [hl], e
+	ret
+else
 ; copy [wPlayerNextMovement] to [wPlayerMovement]
 	ld a, [wPlayerNextMovement]
 	ld hl, wPlayerMovement
@@ -1982,6 +2062,7 @@ GetPlayerNextMovementByte:
 ; recover the previous value of [wPlayerNextMovement]
 	ld a, [hl]
 	ret
+endc
 
 GetMovementByte:
 	ld hl, wMovementDataBank
@@ -2762,18 +2843,26 @@ FreezeAllObjects:
 	inc a
 	cp NUM_OBJECT_STRUCTS
 	jr nz, .loop
+	call TryUnfreezeFollower
 	ret
 
-_UnfreezeFollowerObject::
-; unfreeze follower poke/char
-	push bc
+TryUnfreezeFollower:
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_FROZEN_F, a
+	ret nz
 	ld a, FOLLOWER
 	call GetObjectStruct
+	ld hl, OBJECT_MOVEMENTTYPE
+	add hl, bc
+	ld a, [hl]
+	cp SPRITEMOVEDATA_FOLLOWEROBJ
+	ret nz
 	ld hl, OBJECT_FLAGS2
 	add hl, bc
 	res FROZEN_F, [hl]
-	pop bc
-; unfreeze event follower, if exists
+	ret
+
+_UnfreezeFollowerObject::
 	ld a, [wObjectFollow_Leader]
 	cp -1
 	ret z

@@ -14,8 +14,6 @@ LCD::
 	ldh a, [hLCDCPointer]
 	and a
 	jr z, .done
-	inc a
-	jr z, .hi_color_mode
 
 ; At this point it's assumed we're in BANK(wLYOverrides)!
 	push bc
@@ -31,10 +29,6 @@ LCD::
 	pop bc
 
 .done
-	pop af
-	reti
-
-.hi_color_mode
 	pop af
 	reti
 

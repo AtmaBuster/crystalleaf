@@ -1062,3 +1062,23 @@ ENDM
 checksave: MACRO
 	db checksave_command
 ENDM
+
+	const freezefollower_command ; $aa
+freezefollower: MACRO
+	db freezefollower_command
+ENDM
+
+	const unfreezefollower_command ; $ab
+unfreezefollower: MACRO
+	db unfreezefollower_command
+ENDM
+
+	const getfollowerdirection_command ; $ac
+getfollowerdirection: MACRO
+	db getfollowerdirection_command
+ENDM
+
+	const checkfollowerswapped_command ; $ad
+checkfollowerswapped: MACRO
+	db checkfollowerswapped_command
+ENDM

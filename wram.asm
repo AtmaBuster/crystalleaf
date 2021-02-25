@@ -164,8 +164,10 @@ wScriptVar:: db
 
 wPlayerNextMovement:: db
 wPlayerMovement:: db
+wFollowerNextMovement::
+wPlayerLastMovement:: db
 
-	ds 2
+	ds 1
 
 wMovementObject::
 	db
