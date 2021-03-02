@@ -5,6 +5,8 @@ IsInJohto::
 	ld b, a
 	ld a, [wMapNumber]
 	ld c, a
+
+IsBCInJohto::
 	call GetWorldMapLocation
 
 	cp LANDMARK_FAST_SHIP

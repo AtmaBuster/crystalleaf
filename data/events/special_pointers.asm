@@ -185,3 +185,4 @@ SpecialsPointers::
 	add_special UnusedDummySpecial ; unused
 	add_special FollowerSwapTeam
 	add_special FollowerTrade
+	add_special InitRoamBird

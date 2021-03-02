@@ -20,6 +20,7 @@ FishGroups:
 	fishgroup 50 percent + 1, .Qwilfish_Old,         .Qwilfish_Good,         .Qwilfish_Super
 	fishgroup 50 percent + 1, .Remoraid_Old,         .Remoraid_Good,         .Remoraid_Super
 	fishgroup 50 percent + 1, .Qwilfish_NoSwarm_Old, .Qwilfish_NoSwarm_Good, .Qwilfish_NoSwarm_Super
+	fishgroup 50 percent + 1, .Cinnabar_Old,         .Cinnabar_Good,         .Cinnabar_Super
 
 .Shore_Old:
 	db  70 percent + 1, MAGIKARP,   10
@@ -204,6 +205,21 @@ FishGroups:
 	db  90 percent + 1, MAGIKARP,   40
 	db 100 percent,     REMORAID,   40
 
+.Cinnabar_Old:
+	db  70 percent + 1, MAGIKARP,   10
+	db  85 percent + 1, MAGIKARP,   10
+	db 100 percent,     TENTACOOL,  10
+.Cinnabar_Good:
+	db  35 percent,     MAGIKARP,   20
+	db  70 percent,     TENTACOOL,  20
+	db  90 percent + 1, CHINCHOU,   20
+	db 100 percent,     time_group 22
+.Cinnabar_Super:
+	db  40 percent,     CHINCHOU,   40
+	db  70 percent,     time_group 23
+	db  90 percent + 1, TENTACRUEL, 40
+	db 100 percent,     LANTURN,    40
+
 TimeFishGroups:
 	;  day              nite
 	db CORSOLA,    20,  STARYU,     20 ; 0
@@ -228,3 +244,5 @@ TimeFishGroups:
 	db HORSEA,     40,  HORSEA,     40 ; 19
 	db TENTACOOL,  20,  TENTACOOL,  20 ; 20
 	db TENTACOOL,  40,  TENTACOOL,  40 ; 21
+	db OMANYTE,    20,  KABUTO,     20 ; 22
+	db OMANYTE,    40,  KABUTO,     40 ; 23

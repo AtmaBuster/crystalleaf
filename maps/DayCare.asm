@@ -27,11 +27,10 @@ DayCareManScript_Inside:
 	iftrue .AlreadyHaveOddEgg
 	writetext DayCareManText_GiveOddEgg
 	promptbutton
-	closetext
 	readvar VAR_PARTYCOUNT
 	ifequal PARTY_LENGTH, .PartyFull
 	special GiveOddEgg
-	opentext
+	waitsfx
 	writetext DayCareText_GotOddEgg
 	playsound SFX_KEY_ITEM
 	waitsfx
@@ -59,6 +58,47 @@ DayCareLadyScript:
 	opentext
 	checkflag ENGINE_DAY_CARE_MAN_HAS_EGG
 	iftrue .HusbandWasLookingForYou
+	checkevent EVENT_CLEARED_RADIO_TOWER
+	iffalse .Skip
+	checkevent EVENT_GOT_DAYCARE_STARTER_EGG
+	iftrue .Skip
+	writetext DayCareLadyText_GiveStarterEgg
+	promptbutton
+	readvar VAR_PARTYCOUNT
+	ifequal PARTY_LENGTH, .PartyFull
+	checkevent EVENT_GOT_TOTODILE_FROM_ELM
+	iftrue .Totodile
+	checkevent EVENT_GOT_CHIKORITA_FROM_ELM
+	iftrue .Chikorita
+	; Cyndaquil
+	giveegg CHIKORITA, EGG_LEVEL
+	sjump .Join
+
+.Totodile
+	giveegg CYNDAQUIL, EGG_LEVEL
+	sjump .Join
+
+.Chikorita
+	giveegg TOTODILE, EGG_LEVEL
+.Join
+	waitsfx
+	writetext DayCareText_GotEgg
+	playsound SFX_KEY_ITEM
+	waitsfx
+	writetext DayCareText_DescribeOddEgg
+	waitbutton
+	closetext
+	setevent EVENT_GOT_DAYCARE_STARTER_EGG
+	end
+
+.PartyFull
+	opentext
+	writetext DayCareText_PartyFull
+	waitbutton
+	closetext
+	end
+
+.Skip
 	special DayCareLady
 	waitbutton
 	closetext
@@ -101,6 +141,30 @@ Text_DayCareManTalksAboutEggTicket: ; unreferenced
 	line "as well have it."
 	done
 
+DayCareLadyText_GiveStarterEgg:
+	text "I'm the DAY-CARE"
+	line "LADY."
+
+	para "Do you know about"
+	line "EGGS?"
+
+	para "My husband and I"
+	line "were raising some"
+	cont "#MON, you see."
+
+	para "We were shocked to"
+	line "find an EGG!"
+
+	para "How incredible is"
+	line "could that be?"
+
+	para "Well, wouldn't you"
+	line "like this EGG?"
+
+	para "Then fine, this is"
+	line "yours to keep!"
+	done
+
 DayCareManText_GiveOddEgg:
 	text "I'm the DAY-CARE"
 	line "MAN."
@@ -127,6 +191,11 @@ DayCareManText_GiveOddEgg:
 
 DayCareText_ComeAgain: ; unreferenced
 	text "Come again."
+	done
+
+DayCareText_GotEgg:
+	text "<PLAYER> received"
+	line "EGG!"
 	done
 
 DayCareText_GotOddEgg:

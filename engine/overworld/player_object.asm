@@ -36,6 +36,8 @@ SpawnPlayer:
 	call CopyPlayerObjectTemplate
 	ld b, FOLLOWER
 	call PlayerSpawn_ConvertCoords
+	xor a
+	ld [wFollowerNextMovement], a
 
 .skip_follower
 	ld b, PLAYER_OBJECT

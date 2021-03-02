@@ -790,15 +790,23 @@ MovementFunction_FollowerObj:
 	ld e, a
 	xor a
 	ld [wFollowerNextMovement], a
+	ld a, [wPlayerStepType]
+	cp STEP_TYPE_PLAYER_JUMP
+	jr z, .regular
 	ld a, [wPlayerState]
 	cp PLAYER_BIKE
-	ld a, e
 	jr z, .biking
+	ld a, [wPlayerStandingTile]
+	cp COLL_ICE
+	jr z, .biking
+.regular
+	ld a, e
 	and $3
 	or STEP_BIKE << 2
 	jp JumpStep
 
 .biking
+	ld a, e
 	and %00000011
 	or %00001100 ; very big step
 	jp JumpStep

@@ -104,6 +104,7 @@
 	const SPRITE_ENTEI ; 64
 	const SPRITE_RAIKOU ; 65
 	const SPRITE_STANDING_YOUNGSTER ; 66
+	const SPRITE_OFFICER_F ; 67
 
 	const_next $80
 SPRITE_POKEMON EQU const_value

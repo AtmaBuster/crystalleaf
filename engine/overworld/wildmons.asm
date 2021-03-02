@@ -1,4 +1,8 @@
 LoadWildMonData:
+	ld a, MEW
+	ld [wScriptVar], a
+	farcall CheckOwnMonAnywhere
+	call MewEncFlagChange
 	call _GrassWildmonLookup
 	jr c, .copy
 	ld hl, wMornEncounterRate
@@ -25,32 +29,45 @@ LoadWildMonData:
 	ld [wWaterEncounterRate], a
 	ret
 
+MewEncFlagChange:
+	ld de, ENGINE_CAN_ENCOUNTER_MEW
+	jr c, .reset
+	ld b, SET_FLAG
+	farcall EngineFlagAction
+	ret
+
+.reset
+	ld b, RESET_FLAG
+	farcall EngineFlagAction
+	ret
+
 FindNest:
 ; Parameters:
 ; e: 0 = Johto, 1 = Kanto
 ; wNamedObjectIndex: species
-	hlcoord 0, 0
-	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
+	ld a, e
+	ld [wNestRegionBuffer], a
+	ld hl, wNestBuffer
+	ld bc, wNestBufferEnd - wNestBuffer
 	xor a
 	call ByteFill
 	ld a, e
 	and a
 	jr nz, .kanto
-	decoord 0, 0
+	ld de, wNestBuffer
 	ld hl, JohtoGrassWildMons
 	call .FindGrass
 	ld hl, JohtoWaterWildMons
 	call .FindWater
-	call .RoamMon1
-	call .RoamMon2
-	ret
+	jp .RoamMons
 
 .kanto
-	decoord 0, 0
+	ld de, wNestBuffer
 	ld hl, KantoGrassWildMons
 	call .FindGrass
 	ld hl, KantoWaterWildMons
-	jp .FindWater
+	call .FindWater
+	jp .RoamMons
 
 .FindGrass:
 	ld a, [hl]
@@ -121,8 +138,8 @@ FindNest:
 	push de
 	call GetWorldMapLocation
 	ld c, a
-	hlcoord 0, 0
-	ld de, SCREEN_WIDTH * SCREEN_HEIGHT
+	ld hl, wNestBuffer
+	ld de, wNestBufferEnd - wNestBuffer
 .AppendNestLoop:
 	ld a, [hli]
 	cp c
@@ -141,32 +158,38 @@ FindNest:
 	and a
 	ret
 
-.RoamMon1:
-	ld a, [wRoamMon1Species]
-	ld b, a
-	ld a, [wNamedObjectIndex]
-	cp b
-	ret nz
-	ld a, [wRoamMon1MapGroup]
-	ld b, a
-	ld a, [wRoamMon1MapNumber]
-	ld c, a
-	call .AppendNest
-	ret nc
-	ld [de], a
-	inc de
+.RoamMons:
+	call .RoamMon1
+	call .RoamMon2
+	call .RoamMon3
 	ret
 
+.RoamMon1:
+	ld hl, wRoamMon1
+	jr .CheckRoamMon
+
 .RoamMon2:
-	ld a, [wRoamMon2Species]
+	ld hl, wRoamMon2
+	jr .CheckRoamMon
+
+.RoamMon3:
+	ld hl, wRoamMon3
+
+.CheckRoamMon:
+	ld a, [hli]
 	ld b, a
 	ld a, [wNamedObjectIndex]
 	cp b
 	ret nz
-	ld a, [wRoamMon2MapGroup]
+	inc hl
+	ld a, [hli]
 	ld b, a
-	ld a, [wRoamMon2MapNumber]
+	ld a, [hl]
 	ld c, a
+	call IsBCInJohto
+	ld hl, wNestRegionBuffer
+	cp [hl]
+	ret nz
 	call .AppendNest
 	ret nc
 	ld [de], a
@@ -254,6 +277,8 @@ ChooseWildEncounter:
 	jp nc, .nowildbattle
 	call CheckEncounterRoamMon
 	jp c, .startwildbattle
+	call CheckEncounterMew
+	jp c, .startwildbattle
 
 	inc hl
 	inc hl
@@ -316,7 +341,7 @@ ChooseWildEncounter:
 	ld a, b
 	ld [wCurPartyLevel], a
 	ld b, [hl]
-	; ld a, b
+	ld a, b
 	call ValidateTempWildMonSpecies
 	jr c, .nowildbattle
 
@@ -526,38 +551,61 @@ LookUpWildmonsForMapDE:
 	scf
 	ret
 
+InitRoamBird:
+	ld hl, RoamMonSet_Birds
+	jr InitRoamMonSet
+
 InitRoamMons:
-; initialize wRoamMon structs
+	ld hl, RoamMonSet_Beasts
 
-; species
-	ld a, RAIKOU
-	ld [wRoamMon1Species], a
-	ld a, ENTEI
-	ld [wRoamMon2Species], a
+; fallthrough
 
-; level
-	ld a, 40
-	ld [wRoamMon1Level], a
-	ld [wRoamMon2Level], a
-
-; raikou starting map
-	ld a, GROUP_ROUTE_42
-	ld [wRoamMon1MapGroup], a
-	ld a, MAP_ROUTE_42
-	ld [wRoamMon1MapNumber], a
-
-; entei starting map
-	ld a, GROUP_ROUTE_37
-	ld [wRoamMon2MapGroup], a
-	ld a, MAP_ROUTE_37
-	ld [wRoamMon2MapNumber], a
-
-; hp
-	xor a ; generate new stats
-	ld [wRoamMon1HP], a
-	ld [wRoamMon2HP], a
-
+InitRoamMonSet:
+; inits the roam mon set in hl
+	ld de, wRoamMonStructs
+	ld a, [hli]
+	ld c, a
+.loop
+	ld b, 4
+.loop2
+	ld a, [hli]
+	ld [de], a
+	inc de
+	dec b
+	jr nz, .loop2
+	xor a
+	ld [de], a
+	inc de
+	ld [de], a
+	inc de
+	ld [de], a
+	inc de
+	dec c
+	jr nz, .loop
 	ret
+
+RoamMonSet_Beasts:
+; count
+	db 2
+; Raikou
+	db RAIKOU, 40
+	map_id ROUTE_42
+; Entei
+	db ENTEI, 40
+	map_id ROUTE_37
+
+RoamMonSet_Birds:
+; count
+	db 3
+; Articuno
+	db ARTICUNO, 50
+	map_id ROUTE_18
+; Zapdos
+	db ZAPDOS, 50
+	map_id ROUTE_10_NORTH
+; Moltres
+	db MOLTRES, 50
+	map_id ROUTE_22
 
 CheckEncounterRoamMon:
 	push hl
@@ -613,6 +661,8 @@ UpdateRoamMons:
 	ld b, a
 	ld a, [wRoamMon1MapNumber]
 	ld c, a
+	xor a ; ld a, 0
+	ldh [hRoamMonCheck], a
 	call .Update
 	ld a, b
 	ld [wRoamMon1MapGroup], a
@@ -626,6 +676,8 @@ UpdateRoamMons:
 	ld b, a
 	ld a, [wRoamMon2MapNumber]
 	ld c, a
+	ld a, 1
+	ldh [hRoamMonCheck], a
 	call .Update
 	ld a, b
 	ld [wRoamMon2MapGroup], a
@@ -639,6 +691,8 @@ UpdateRoamMons:
 	ld b, a
 	ld a, [wRoamMon3MapNumber]
 	ld c, a
+	ld a, 2
+	ldh [hRoamMonCheck], a
 	call .Update
 	ld a, b
 	ld [wRoamMon3MapGroup], a
@@ -682,7 +736,7 @@ UpdateRoamMons:
 	call Random
 	and %00011111 ; 1/8n chance it moves to a completely random map, where n is the number of roaming connections from the current map.
 	jr z, JumpRoamMon
-	and %11
+	and %111
 	cp [hl]
 	jr nc, .update_loop ; invalid index, try again
 	inc hl
@@ -709,6 +763,8 @@ JumpRoamMons:
 	ld a, [wRoamMon1MapGroup]
 	cp GROUP_N_A
 	jr z, .SkipRaikou
+	xor a
+	ldh [hRoamMonCheck], a
 	call JumpRoamMon
 	ld a, b
 	ld [wRoamMon1MapGroup], a
@@ -719,6 +775,8 @@ JumpRoamMons:
 	ld a, [wRoamMon2MapGroup]
 	cp GROUP_N_A
 	jr z, .SkipEntei
+	ld a, 1
+	ldh [hRoamMonCheck], a
 	call JumpRoamMon
 	ld a, b
 	ld [wRoamMon2MapGroup], a
@@ -729,6 +787,8 @@ JumpRoamMons:
 	ld a, [wRoamMon3MapGroup]
 	cp GROUP_N_A
 	jr z, .Finished
+	ld a, 2
+	ldh [hRoamMonCheck], a
 	call JumpRoamMon
 	ld a, b
 	ld [wRoamMon3MapGroup], a
@@ -739,6 +799,28 @@ JumpRoamMons:
 	jp _BackUpMapIndices
 
 JumpRoamMon:
+.loop
+	call _JumpRoamMon
+	call IsBCInJohto
+	push af
+	push bc
+	ld hl, wRoamMon1MapGroup
+	ldh a, [hRoamMonCheck]
+	ld bc, 7
+	call AddNTimes
+	ld a, [hli]
+	ld b, a
+	ld a, [hl]
+	ld c, a
+	call IsBCInJohto
+	ld d, a
+	pop bc
+	pop af
+	cp d
+	jr nz, .loop
+	ret
+
+_JumpRoamMon:
 .loop
 	ld hl, RoamMaps
 .innerloop1
@@ -788,6 +870,25 @@ _BackUpMapIndices:
 	ret
 
 INCLUDE "data/wild/roammon_maps.asm"
+
+CheckEncounterMew:
+	ld a, [wStatusFlags2]
+	bit STATUSFLAGS2_CAN_ENCOUNTER_MEW_F, a
+	ret z
+	call Random
+	and a
+	ret nz
+	call Random
+	cp 8
+	ret nc
+	ld a, MEW
+	ld [wTempWildMonSpecies], a
+	ld a, 20
+	ld [wCurPartyLevel], a
+	xor a ; BATTLETYPE_NORMAL
+	ld [wBattleType], a
+	scf
+	ret
 
 ValidateTempWildMonSpecies:
 ; Due to a development oversight, this function is called with the wild Pokemon's level, not its species, in a.

@@ -164,10 +164,8 @@ wScriptVar:: db
 
 wPlayerNextMovement:: db
 wPlayerMovement:: db
-wFollowerNextMovement::
-wPlayerLastMovement:: db
 
-	ds 1
+	ds 2
 
 wMovementObject::
 	db
@@ -370,10 +368,17 @@ wVirtualOAMEnd::
 
 SECTION "Tilemap", WRAM0
 
+UNION
 wTilemap::
 ; 20x18 grid of 8x8 tiles
 	ds SCREEN_WIDTH * SCREEN_HEIGHT
 wTilemapEnd::
+NEXTU
+wNestBuffer::
+	ds 359
+wNestBufferEnd::
+wNestRegionBuffer:: db
+ENDU
 
 
 SECTION "Miscellaneous", WRAM0
@@ -2702,8 +2707,10 @@ wStartSecond:: db
 
 wRTC:: ds 4
 
-wCeruleanCaveLayout::
-	ds 3
+wCeruleanCaveLayout::   db
+wFollowerNextMovement:: db
+
+	ds 1
 
 wDST::
 ; bit 7: dst
@@ -3189,6 +3196,7 @@ wDunsparceMapGroup:: db
 wDunsparceMapNumber:: db
 wFishingSwarmFlag:: db
 
+wRoamMonStructs::
 wRoamMon1:: roam_struct wRoamMon1
 wRoamMon2:: roam_struct wRoamMon2
 wRoamMon3:: roam_struct wRoamMon3

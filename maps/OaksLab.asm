@@ -16,7 +16,7 @@ Oak:
 	faceplayer
 	opentext
 	checkevent EVENT_OPENED_MT_SILVER
-	iftrue .CheckPokedex
+	iftrue .CheckBeasts
 	checkevent EVENT_TALKED_TO_OAK_IN_KANTO
 	iftrue .CheckBadges
 	writetext OakWelcomeKantoText
@@ -27,6 +27,15 @@ Oak:
 	ifequal NUM_BADGES, .OpenMtSilver
 	ifequal NUM_JOHTO_BADGES, .Complain
 	sjump .AhGood
+
+.CheckBeasts:
+	special BeastsCheck
+	iffalse .CheckPokedex
+	checkevent EVENT_SET_BIRDS_ROAMING_KANTO
+	iftrue .CheckPokedex
+	writetext OakLabBirdsRoaming
+	waitbutton
+	special InitRoamBird
 
 .CheckPokedex:
 	writetext OakLabDexCheckText
@@ -51,7 +60,7 @@ Oak:
 .AhGood:
 	writetext OakYesKantoBadgesText
 	promptbutton
-	sjump .CheckPokedex
+	sjump .CheckBeasts
 
 OaksAssistant1Script:
 	jumptextfaceplayer OaksAssistant1Text
@@ -252,6 +261,10 @@ OaksLabPCText:
 
 	para "ELM in NEW BARK"
 	line "TOWN 8-)"
+	done
+
+OakLabBirdsRoaming:
+	text "BIRDS ROAMING"
 	done
 
 OaksLab_MapEvents:

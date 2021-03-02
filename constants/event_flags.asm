@@ -203,7 +203,11 @@
 	const EVENT_FOREST_IS_RESTLESS
 	const EVENT_ANSWERED_DRAGON_MASTER_QUIZ_WRONG
 	const EVENT_GOT_EGG_FROM_RIVAL
-; Unused: next 5 events
+	const EVENT_SET_BIRDS_ROAMING_KANTO
+	const EVENT_GOT_BULBASAUR
+	const EVENT_GOT_SQUIRTLE
+	const EVENT_GOT_DAYCARE_STARTER_EGG
+; Unused: next 1 events
 
 	const_next 200
 ; Kanto story events

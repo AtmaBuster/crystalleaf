@@ -180,5 +180,6 @@ hPlayerTrademonSlot:: db
 hFollowerTradeSlotBuffer:: db
 hFollowerTradeMode:: db
 hFollowerBattleMode:: db
+hRoamMonCheck:: db
 
-	ds 14
+	ds 13

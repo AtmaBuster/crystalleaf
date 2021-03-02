@@ -151,6 +151,7 @@ PlateauTryGetEggFromRival:
 	waitbutton
 	readvar VAR_PARTYCOUNT
 	ifequal PARTY_LENGTH, .PartyFull
+	checkevent EVENT_GOT_TOTODILE_FROM_ELM
 	iftrue .Totodile
 	checkevent EVENT_GOT_CHIKORITA_FROM_ELM
 	iftrue .Chikorita

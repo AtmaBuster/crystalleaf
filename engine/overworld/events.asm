@@ -128,7 +128,7 @@ EnterMap:
 	xor a
 	ld [wPoisonStepCount], a
 .dontresetpoison
-	farcall RefreshFollowingCoords
+;	farcall RefreshFollowingCoords
 
 	xor a ; end map entry
 	ldh [hMapEntryMethod], a
@@ -1352,37 +1352,31 @@ CanUseSweetScent::
 	ret
 
 Script_GetFollowerDirectionFromPlayer::
-	ld a, STANDING
+	call GetFollowerDirectionFromPlayer
+	ld a, c
 	ld [wScriptVar], a
+	ret
+
+GetFollowerDirectionFromPlayer::
 	ld a, [wObject1StandingMapX]
 	ld b, a
 	ld a, [wPlayerStandingMapX]
 	cp b
 	jr z, .check_y
-	jr c, .right
-	jr .left ; nc
+	ld c, RIGHT
+	ret c
+	ld c, LEFT
+	ret
 
 .check_y
 	ld a, [wObject1StandingMapY]
 	ld b, a
 	ld a, [wPlayerStandingMapY]
 	cp b
+	ld c, STANDING
 	ret z
-	jr c, .down
-; up, fallthrough, nc
-	ld a, UP
-	jr .done
-
-.down
-	ld a, DOWN
-	jr .done
-
-.left
-	ld a, LEFT
-	jr .done
-
-.right
-	ld a, RIGHT
-.done
-	ld [wScriptVar], a
+	ld c, DOWN
+	ret c
+; nc
+	ld c, UP
 	ret

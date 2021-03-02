@@ -99,6 +99,107 @@ VermilionGymBadgeGuy:
 	closetext
 	end
 
+VermilionOfficer:
+	faceplayer
+	opentext
+	checkevent EVENT_GOT_SQUIRTLE
+	iftrue .GotSquirtle
+	writetext Text_WantSquirtle
+	yesorno
+	iffalse .Refuse
+	writetext Text_TakeSquirtle
+	promptbutton
+	waitsfx
+	readvar VAR_PARTYCOUNT
+	ifequal PARTY_LENGTH, .NoRoom
+	writetext ReceivedSquirtleText
+	playsound SFX_CAUGHT_MON
+	waitsfx
+	givepoke SQUIRTLE, 5
+	setevent EVENT_GOT_SQUIRTLE
+	writetext Text_AfterGetSquirtle
+	waitbutton
+	closetext
+	end
+
+.Refuse:
+	writetext Text_RefusedSquirtle
+	waitbutton
+	closetext
+	end
+
+.NoRoom:
+	writetext Text_NoRoomSquirtle
+	waitbutton
+	closetext
+	end
+
+.GotSquirtle:
+	writetext Text_HowIsSquirtle
+	waitbutton
+	closetext
+	end
+
+Text_WantSquirtle:
+	text "We've just caught"
+	line "a wanted criminal."
+
+	para "Who is it?"
+
+	para "It's this SQUIRTLE."
+
+	para "We'd like for a"
+	line "responsible"
+	cont "trainer to take"
+	cont "care of it."
+
+	para "You're the LEAGUE"
+	line "CHAMPION, right?"
+
+	para "Why don't you look"
+	line "after it?"
+	done
+
+Text_TakeSquirtle:
+	text "Ok, then. I'm"
+	line "counting on you to"
+	cont "put the little one"
+	cont "on the right path."
+	done
+
+ReceivedSquirtleText:
+	text "<PLAYER> received"
+	line "SQUIRTLE!"
+	done
+
+Text_AfterGetSquirtle:
+	text "You take care"
+	line "with this one."
+
+	para "It's quite the"
+	line "rascal."
+	done
+
+Text_RefusedSquirtle:
+	text "I see. Let me know"
+	line "if you change your"
+	cont "mind."
+	done
+
+Text_NoRoomSquirtle:
+	text "You don't have"
+	line "space for it."
+	done
+
+Text_HowIsSquirtle:
+	text "How is SQUIRTLE?"
+
+	para "Still as devious"
+	line "as ever?"
+
+	para "Ha ha!"
+	done
+
 VermilionCitySign:
 	jumptext VermilionCitySignText
 
@@ -299,3 +400,4 @@ VermilionCity_MapEvents:
 	object_event 14, 16, SPRITE_SUPER_NERD, SPRITEMOVEDATA_WANDER, 1, 1, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, VermilionCitySuperNerdScript, -1
 	object_event 34,  8, SPRITE_BIG_SNORLAX, SPRITEMOVEDATA_BIGDOLLSYM, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, VermilionSnorlax, EVENT_VERMILION_CITY_SNORLAX
 	object_event 31, 12, SPRITE_POKEFAN_M, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, VermilionGymBadgeGuy, -1
+	object_event 19, 13, SPRITE_OFFICER_F, SPRITEMOVEDATA_SPINRANDOM_SLOW, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, VermilionOfficer, -1

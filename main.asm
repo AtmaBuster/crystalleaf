@@ -131,12 +131,6 @@ INCLUDE "engine/link/link.asm"
 INCLUDE "engine/overworld/wildmons.asm"
 INCLUDE "engine/battle/link_result.asm"
 
-ChrisBackpic:
-INCBIN "gfx/player/chris_back.2bpp.lz"
-
-DudeBackpic:
-INCBIN "gfx/battle/dude.2bpp.lz"
-
 
 SECTION "bankB", ROMX
 
@@ -688,6 +682,13 @@ INCLUDE "engine/events/diploma.asm"
 INCLUDE "engine/pokedex/pokedex_3.asm"
 INCLUDE "engine/events/catch_tutorial_input.asm"
 INCLUDE "engine/pokegear/townmap_convertlinebreakcharacters.asm"
+
+ChrisBackpic:
+INCBIN "gfx/player/chris_back.2bpp.lz"
+
+DudeBackpic:
+INCBIN "gfx/battle/dude.2bpp.lz"
+
 
 PokegearGFX:
 INCBIN "gfx/pokegear/pokegear.2bpp.lz"

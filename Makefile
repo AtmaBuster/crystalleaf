@@ -78,7 +78,7 @@ endif
 $(pokecrystal_obj):         RGBASMFLAGS +=
 $(pokecrystal11_obj):       RGBASMFLAGS += -D _CRYSTAL11
 $(pokecrystal_au_obj):      RGBASMFLAGS += -D _CRYSTAL11 -D _CRYSTAL_AU
-$(pokecrystal_debug_obj):   RGBASMFLAGS += -D _DEBUG
+$(pokecrystal_debug_obj):   RGBASMFLAGS += -D _DEBUG2
 $(pokecrystal11_debug_obj): RGBASMFLAGS += -D _CRYSTAL11 -D _DEBUG
 
 rgbdscheck.o: rgbdscheck.asm
