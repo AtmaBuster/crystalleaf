@@ -704,6 +704,12 @@ CHRIS EQU __trainer_class__
 	trainerclass MYSTICALMAN ; 43
 	const EUSINE
 
+	trainerclass GOLD_NPC ; 44
+	const GOLD1
+
+	trainerclass KRIS_NPC ; 45
+	const KRIS1
+
 KRIS EQU __trainer_class__
 NUM_TRAINER_CLASSES EQU __trainer_class__
 

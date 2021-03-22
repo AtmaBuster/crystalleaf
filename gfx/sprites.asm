@@ -110,3 +110,5 @@ StandingYoungsterSpriteGFX::   INCBIN "gfx/sprites/standing_youngster.2bpp"
 
 SECTION "Sprites 3", ROMX
 OfficerFGFX::                  INCBIN "gfx/sprites/officer_f.2bpp"
+GoldNPCGFX::                   INCBIN "gfx/sprites/gold_npc.2bpp"
+KrisNPCGFX::                   INCBIN "gfx/sprites/kris_npc.2bpp"

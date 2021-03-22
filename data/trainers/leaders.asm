@@ -19,6 +19,8 @@ GymLeaders:
 	db KOGA
 	db CHAMPION
 	db RED
+	db GOLD_NPC
+	db KRIS_NPC
 ; fallthrough
 KantoGymLeaders:
 	db BROCK

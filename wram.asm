@@ -2709,8 +2709,7 @@ wRTC:: ds 4
 
 wCeruleanCaveLayout::   db
 wFollowerNextMovement:: db
-
-	ds 1
+wGoldKrisLossCounter::  db
 
 wDST::
 ; bit 7: dst

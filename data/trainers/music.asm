@@ -15,4 +15,10 @@ TrainerClassMusic::
 	dw MUSIC_RIVAL_BATTLE
 	db RIVAL1, RIVAL2, -1
 
+	dw MUSIC_CHAMPION_BATTLE_RSE
+	db GOLD_NPC, -1
+
+	dw MUSIC_FRONTIER_BRAIN
+	db KRIS_NPC, -1
+
 	dw -1

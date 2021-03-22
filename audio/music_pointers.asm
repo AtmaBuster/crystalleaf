@@ -106,5 +106,5 @@ Music:
 	dba Music_SuicuneBattle
 	dba Music_BattleTowerLobby
 	dba Music_MobileCenter
-
-	dba Music_SugarSweetNightmare
+	dba Music_ChampionBattleRSE
+	dba Music_FrontierBrainBattleRSE

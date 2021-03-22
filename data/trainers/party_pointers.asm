@@ -69,3 +69,5 @@ TrainerGroups:
 	dw OfficerGroup
 	dw GruntFGroup
 	dw MysticalmanGroup
+	dw GoldNPCGroup
+	dw KrisNPCGroup

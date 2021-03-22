@@ -69,6 +69,8 @@ _GetVarAction::
 	dwb wMapTileset,                    RETVAR_ADDR_DE
 	dwb .CurEnvironment,                RETVAR_EXECUTE
 	dwb wCeruleanCaveLayout,            RETVAR_ADDR_DE
+	dwb wGoldKrisLossCounter,           RETVAR_ADDR_DE
+	dwb .FollowerFacing,                RETVAR_EXECUTE
 	dwb NULL,                           RETVAR_STRBUF2
 
 .CurEnvironment:
@@ -102,6 +104,14 @@ _GetVarAction::
 .PlayerFacing:
 ; The direction the player is facing.
 	ld a, [wPlayerDirection]
+	and $c
+	rrca
+	rrca
+	jp .loadstringbuffer2
+
+.FollowerFacing:
+; The direction the follower is facing
+	ld a, [wObject1Direction]
 	and $c
 	rrca
 	rrca

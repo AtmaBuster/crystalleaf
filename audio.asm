@@ -127,6 +127,7 @@ INCLUDE "audio/music/battletowertheme.asm"
 INCLUDE "audio/music/suicunebattle.asm"
 INCLUDE "audio/music/battletowerlobby.asm"
 INCLUDE "audio/music/mobilecenter.asm"
+INCLUDE "audio/music/frontierbrain.asm"
 
 
 SECTION "Extra Songs 1", ROMX
@@ -134,7 +135,7 @@ SECTION "Extra Songs 1", ROMX
 INCLUDE "audio/music/credits.asm"
 INCLUDE "audio/music/clair.asm"
 INCLUDE "audio/music/mobileadapter.asm"
-INCLUDE "audio/music/sugarsweetnightmare.asm"
+INCLUDE "audio/music/championbattle_rse.asm"
 
 
 SECTION "Extra Songs 2", ROMX

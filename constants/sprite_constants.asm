@@ -105,6 +105,8 @@
 	const SPRITE_RAIKOU ; 65
 	const SPRITE_STANDING_YOUNGSTER ; 66
 	const SPRITE_OFFICER_F ; 67
+	const SPRITE_GOLDNPC ; 68
+	const SPRITE_KRISNPC ; 69
 
 	const_next $80
 SPRITE_POKEMON EQU const_value

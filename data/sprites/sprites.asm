@@ -109,3 +109,5 @@ OverworldSprites:
 	overworld_sprite RaikouSpriteGFX, 4, STILL_SPRITE, PAL_OW_RED
 	overworld_sprite StandingYoungsterSpriteGFX, 12, STANDING_SPRITE, PAL_OW_BLUE
 	overworld_sprite OfficerFGFX, 12, WALKING_SPRITE, PAL_OW_BLUE
+	overworld_sprite GoldNPCGFX, 12, WALKING_SPRITE, PAL_OW_RED
+	overworld_sprite KrisNPCGFX, 12, WALKING_SPRITE, PAL_OW_BLUE
