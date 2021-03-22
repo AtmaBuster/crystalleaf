@@ -1058,4 +1058,4 @@ _CGB_DiplomaExtra:
 	ret
 
 .ExtraPalettes
-INCLUDE "gfx/diploma/miki.pal"
+INCLUDE "gfx/diploma/redleaf.pal"

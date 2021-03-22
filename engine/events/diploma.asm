@@ -83,7 +83,7 @@ PrintDiplomaPage2:
 PUSHS
 SECTION "Miki GFX", ROMX
 DiplomaExtGFX:
-INCBIN "gfx/diploma/miki.2bpp"
+INCBIN "gfx/diploma/redleaf.2bpp"
 DiplomaExtGFX_End:
 POPS
 DIPLOMA_EXT_TILE_CT EQU (DiplomaExtGFX_End - DiplomaExtGFX) / 16
@@ -179,6 +179,6 @@ Diploma_DummyFunction: ; unreferenced
 	ret
 
 MikiTilemap:
-INCBIN "gfx/diploma/miki.tilemap"
+INCBIN "gfx/diploma/redleaf.tilemap"
 MikiAttrmap:
-INCBIN "gfx/diploma/miki.attrmap"
+INCBIN "gfx/diploma/redleaf.attrmap"

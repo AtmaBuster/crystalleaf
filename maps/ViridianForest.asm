@@ -146,8 +146,8 @@ ViridianForest_MapEvents:
 	def_coord_events
 
 	def_bg_events
-	bg_event 21, 42, BGEVENT_READ, ViridianForestSign1
-	bg_event  5,  5, BGEVENT_READ, ViridianForestSign2
+	bg_event  5,  5, BGEVENT_READ, ViridianForestSign1
+	bg_event 21, 42, BGEVENT_READ, ViridianForestSign2
 	bg_event 24,  6, BGEVENT_ITEM, ViridianForestHiddenMaxEther
 	bg_event 19, 39, BGEVENT_ITEM, ViridianForestHiddenFullHeal
 	bg_event  2, 13, BGEVENT_ITEM, ViridianForestHiddenFullRestore
