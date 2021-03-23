@@ -89,6 +89,11 @@ ElmsLab_MapScripts:
 ProfElmScript:
 	faceplayer
 	opentext
+	checkevent EVENT_GOT_GS_BALL_FROM_ELM
+	iftrue ElmCheckSSTicket
+	checkevent EVENT_GOT_GS_BALL_PHONE_CALL
+	iftrue ElmGiveGSBallScript
+ElmCheckSSTicket:
 	checkevent EVENT_GOT_SS_TICKET_FROM_ELM
 	iftrue ElmCheckMasterBall
 	checkevent EVENT_BEAT_ELITE_FOUR
@@ -403,6 +408,19 @@ ElmGiveMasterBallScript:
 	iffalse .notdone
 	setevent EVENT_GOT_MASTER_BALL_FROM_ELM
 	writetext ElmGiveMasterBallText2
+	waitbutton
+.notdone
+	closetext
+	end
+
+ElmGiveGSBallScript:
+	writetext ElmGiveGSBallText1
+	promptbutton
+	verbosegiveitem GS_BALL
+	iffalse .notdone
+	setevent EVENT_GOT_GS_BALL_FROM_ELM
+	setevent EVENT_CAN_GIVE_GS_BALL_TO_KURT
+	writetext ElmGiveGSBallText2
 	waitbutton
 .notdone
 	closetext
@@ -1194,6 +1212,39 @@ ElmGiveMasterBallText2:
 
 	para "use of it than I"
 	line "can, <PLAY_G>!"
+	done
+
+ElmGiveGSBallText1:
+	text "ELM: <PLAYER>! It's"
+	line "good to see you."
+
+	para "I called because I"
+	line "have something for"
+	cont "you."
+
+	para "It's a special kind"
+	line "of BALL called the"
+	cont "GS BALL."
+
+	para "I'd like you to"
+	line "take it to my"
+	cont "friend KURT."
+
+	para "You've met him,"
+	line "right?"
+	cont "He lives in"
+	cont "AZALEA TOWN."
+	done
+
+ElmGiveGSBallText2:
+	text "KURT is the master"
+	line "when it comes to"
+	cont "# BALLS."
+
+	para "If anybody can"
+	line "figure out what"
+	cont "this thing does,"
+	cont "it's him."
 	done
 
 ElmGiveTicketText1:

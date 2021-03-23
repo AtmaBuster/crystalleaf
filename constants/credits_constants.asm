@@ -103,6 +103,12 @@
 	const US_COORDINATION
 	const TEXT_TRANSLATION
 	const PAAD_TESTING
+	const ADDITIONAL_MUSIC
+	const FROGGESTSPIRIT
+	const MMMMMM
+	const THANKS_FOR_PLAYING
+	const WE_LOVE_YOU
+	const PRECIOUSLEAF
 
 ; CreditsScript indexes (see data/credits_script.asm)
 	const_def -1, -1

@@ -103,6 +103,12 @@ CreditsStringsPointers:
 	dw .UsCoordination
 	dw .TextTranslation
 	dw .PaadTesting
+	dw .AdditionalMusic
+	dw .FroggestSpirit
+	dw .Mmmmmm
+	dw .ThanksForPlaying
+	dw .WeLoveYou
+	dw .PreciousLeaf
 
 .SatoshiTajiri:       db "   SATOSHI TAJIRI@"         ; "たじり　さとし@"
 .JunichiMasuda:       db "   JUNICHI MASUDA@"         ; "ますだ　じゅんいち@"
@@ -210,6 +216,12 @@ CreditsStringsPointers:
 .UsCoordination:      db "  US COORDINATION@"
 .TextTranslation:     db "  TEXT TRANSLATION@"
 .PaadTesting:         db "    PAAD TESTING@"
+.AdditionalMusic:     db "  ADDITIONAL MUSIC@"
+.FroggestSpirit:      db "   FroggestSpirit@"
+.Mmmmmm:              db "       Mmmmmm@"
+.ThanksForPlaying:    db " THANKS FOR PLAYING@"
+.WeLoveYou:           db "    WE LOVE YOU@"
+.PreciousLeaf:        db "    PRECIOUSLEAF@"
 
 .Copyright:
 	;    (C) 1  9  9  5 - 2  0  0  1     N  i  n  t  e  n  d  o

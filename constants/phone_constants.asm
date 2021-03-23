@@ -50,6 +50,7 @@
 	const SPECIALCALL_BIKESHOP
 	const SPECIALCALL_WORRIED
 	const SPECIALCALL_MASTERBALL
+	const SPECIALCALL_GSBALL
 
 ; phone struct members
 	const_def

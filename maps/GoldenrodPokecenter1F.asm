@@ -13,7 +13,7 @@ GoldenrodPokecenter1F_MapScripts:
 GoldenrodPokecenter1FNurseScript:
 	jumpstd PokecenterNurseScript
 
-GoldenrodPokecenter1F_GSBallSceneLeft:
+GoldenrodPokecenter1F_GSBallSceneLeft: ; dummy
 	setval BATTLETOWERACTION_CHECKMOBILEEVENT
 	special BattleTowerAction
 	ifequal MOBILE_EVENT_OBJECT_GS_BALL, .gsball
@@ -45,7 +45,7 @@ GoldenrodPokecenter1F_GSBallSceneLeft:
 .cancel
 	end
 
-GoldenrodPokecenter1F_GSBallSceneRight:
+GoldenrodPokecenter1F_GSBallSceneRight: ; dummy
 	setval BATTLETOWERACTION_CHECKMOBILEEVENT
 	special BattleTowerAction
 	ifequal MOBILE_EVENT_OBJECT_GS_BALL, .gsball
@@ -811,8 +811,8 @@ GoldenrodPokecenter1F_MapEvents:
 	warp_event  0,  7, POKECENTER_2F, 1
 
 	def_coord_events
-	coord_event  3,  7, SCENE_DEFAULT, GoldenrodPokecenter1F_GSBallSceneLeft
-	coord_event  4,  7, SCENE_DEFAULT, GoldenrodPokecenter1F_GSBallSceneRight
+;	coord_event  3,  7, SCENE_DEFAULT, GoldenrodPokecenter1F_GSBallSceneLeft
+;	coord_event  4,  7, SCENE_DEFAULT, GoldenrodPokecenter1F_GSBallSceneRight
 
 	def_bg_events
 

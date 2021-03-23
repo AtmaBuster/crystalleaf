@@ -24,8 +24,7 @@ ScriptEvents::
 	dw WaitScript
 
 EndScript:
-	call StopScript
-	ret
+	jp StopScript
 
 WaitScript:
 	call StopScript
@@ -38,8 +37,7 @@ WaitScript:
 
 	ld a, SCRIPT_READ
 	ld [wScriptMode], a
-	call StartScript
-	ret
+	jp StartScript
 
 WaitScriptMovement:
 	call StopScript
@@ -52,8 +50,7 @@ WaitScriptMovement:
 
 	ld a, SCRIPT_READ
 	ld [wScriptMode], a
-	call StartScript
-	ret
+	jp StartScript
 
 RunScriptCommand:
 	call GetScriptByte
@@ -137,7 +134,7 @@ ScriptCommandTable:
 	dw Script_opentext                   ; 47
 	dw Script_refreshscreen              ; 48
 	dw Script_closetext                  ; 49
-	dw Script_writeunusedbyte      ; 4a
+	dw Script_writeunusedbyte            ; 4a
 	dw Script_farwritetext               ; 4b
 	dw Script_writetext                  ; 4c
 	dw Script_repeattext                 ; 4d
@@ -237,6 +234,8 @@ ScriptCommandTable:
 	dw Script_unfreezefollower           ; ab
 	dw Script_getfollowerdirection       ; ac
 	dw Script_checkfollowerswapped       ; ad
+	dw Script_getcurlandmark             ; ae
+	dw Script_getregion                  ; af
 
 StartScript:
 	ld hl, wScriptFlags
@@ -335,8 +334,7 @@ Script_writetext:
 	ld h, a
 	ld a, [wScriptBank]
 	ld b, a
-	call MapTextbox
-	ret
+	jp MapTextbox
 
 Script_farwritetext:
 	call GetScriptByte
@@ -345,8 +343,7 @@ Script_farwritetext:
 	ld l, a
 	call GetScriptByte
 	ld h, a
-	call MapTextbox
-	ret
+	jp MapTextbox
 
 Script_repeattext:
 	call GetScriptByte
@@ -364,8 +361,7 @@ Script_repeattext:
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
-	call MapTextbox
-	ret
+	jp MapTextbox
 
 .done
 	ret
@@ -2394,5 +2390,17 @@ Script_getfollowerdirection:
 Script_checkfollowerswapped:
 	ld a, [wFollowerFlags] ; swap flag is bit 0
 	and 1
+	ld [wScriptVar], a
+	ret
+
+Script_getcurlandmark:
+	ld de, MAP_LOCATION
+	call GetMapField
+	ld a, c
+	ld [wScriptVar], a
+	ret
+
+Script_getregion:
+	call IsInJohto
 	ld [wScriptVar], a
 	ret

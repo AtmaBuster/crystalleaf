@@ -1082,3 +1082,13 @@ ENDM
 checkfollowerswapped: MACRO
 	db checkfollowerswapped_command
 ENDM
+
+	const getcurlandmark_command ; $ae
+getcurlandmark: MACRO
+	db getcurlandmark_command
+ENDM
+
+	const getregion_command ; $af
+getregion: MACRO
+	db getregion_command
+ENDM

@@ -13,7 +13,7 @@ CopycatsHouse2F_MapScripts:
 	callback MAPCALLBACK_OBJECTS, .Callback
 
 .Callback:
-	checkflag ENGINE_PLAYER_IS_FEMALE
+	checkfollowerswapped
 	iftrue .Female
 	disappear COPYCATSHOUSE2F_COPYCAT2
 	appear COPYCATSHOUSE2F_COPYCAT1
@@ -32,7 +32,7 @@ Copycat:
 	iftrue .TryGivePassAgain
 	checkitem LOST_ITEM
 	iftrue .ReturnLostItem
-	checkflag ENGINE_PLAYER_IS_FEMALE
+	checkfollowerswapped
 	iftrue .Default_Female_1
 	applymovement COPYCATSHOUSE2F_COPYCAT1, CopycatSpinAroundMovementData
 	faceplayer
@@ -48,7 +48,7 @@ Copycat:
 	checkevent EVENT_RETURNED_MACHINE_PART
 	iftrue .TalkAboutLostItem
 	opentext
-	checkflag ENGINE_PLAYER_IS_FEMALE
+	checkfollowerswapped
 	iftrue .Default_Female_2a
 	writetext CopycatText_Male_1
 	sjump .Default_Merge_2a
@@ -58,7 +58,7 @@ Copycat:
 .Default_Merge_2a:
 	waitbutton
 	closetext
-	checkflag ENGINE_PLAYER_IS_FEMALE
+	checkfollowerswapped
 	iftrue .Default_Female_3a
 	applymovement COPYCATSHOUSE2F_COPYCAT1, CopycatSpinAroundMovementData
 	sjump .Default_Merge_3a
@@ -77,7 +77,7 @@ Copycat:
 
 .TalkAboutLostItem:
 	opentext
-	checkflag ENGINE_PLAYER_IS_FEMALE
+	checkfollowerswapped
 	iftrue .Default_Female_2b
 	writetext CopycatText_Male_2
 	sjump .Default_Merge_2b
@@ -87,7 +87,7 @@ Copycat:
 .Default_Merge_2b:
 	waitbutton
 	closetext
-	checkflag ENGINE_PLAYER_IS_FEMALE
+	checkfollowerswapped
 	iftrue .Default_Female_3b
 	applymovement COPYCATSHOUSE2F_COPYCAT1, CopycatSpinAroundMovementData
 	sjump .Default_Merge_3b
@@ -128,7 +128,7 @@ Copycat:
 	end
 
 .GotPass:
-	checkflag ENGINE_PLAYER_IS_FEMALE
+	checkfollowerswapped
 	iftrue .GotPass_Female_1
 	applymovement COPYCATSHOUSE2F_COPYCAT1, CopycatSpinAroundMovementData
 	faceplayer
@@ -142,7 +142,7 @@ Copycat:
 .GotPass_Merge_1:
 	special LoadUsedSpritesGFX
 	opentext
-	checkflag ENGINE_PLAYER_IS_FEMALE
+	checkfollowerswapped
 	iftrue .GotPass_Female_2
 	writetext CopycatText_Male_3
 	sjump .GotPass_Merge_2
@@ -152,7 +152,7 @@ Copycat:
 .GotPass_Merge_2:
 	waitbutton
 	closetext
-	checkflag ENGINE_PLAYER_IS_FEMALE
+	checkfollowerswapped
 	iftrue .GotPass_Female_3
 	applymovement COPYCATSHOUSE2F_COPYCAT1, CopycatSpinAroundMovementData
 	sjump .GotPass_Merge_3
@@ -376,4 +376,4 @@ CopycatsHouse2F_MapEvents:
 	object_event  6,  1, SPRITE_FAIRY, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_RED, OBJECTTYPE_SCRIPT, 0, CopycatsHouse2FDoll, EVENT_COPYCATS_HOUSE_2F_DOLL
 	object_event  2,  1, SPRITE_MONSTER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, CopycatsHouse2FDoll, -1
 	object_event  7,  1, SPRITE_BIRD, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, CopycatsHouse2FDoll, -1
-	object_event  4,  3, SPRITE_COPYCAT, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_BLUE, OBJECTTYPE_SCRIPT, 0, Copycat, EVENT_COPYCAT_2
+	object_event  4,  3, SPRITE_COPYCAT, SPRITEMOVEDATA_STANDING_LEFT, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, Copycat, EVENT_COPYCAT_2

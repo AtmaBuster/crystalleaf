@@ -273,8 +273,16 @@ CreditsScript:
 	db     HIROSHI_YAMAUCHI, 2
 
 	db CREDITS_WAIT, 12
+	
+	db     ADDITIONAL_MUSIC, 0
+	db       FROGGESTSPIRIT, 1
+	db               MMMMMM, 2
 
-	db            COPYRIGHT, 1
+	db CREDITS_WAIT, 12
+
+	db   THANKS_FOR_PLAYING, 0
+	db          WE_LOVE_YOU, 2
+	db         PRECIOUSLEAF, 3
 
 	db CREDITS_WAIT, 9
 

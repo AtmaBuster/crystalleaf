@@ -326,6 +326,7 @@ INCLUDE "engine/rtc/timeset.asm"
 INCLUDE "engine/pokegear/pokegear.asm"
 INCLUDE "engine/events/fish.asm"
 INCLUDE "engine/games/slot_machine.asm"
+INCLUDE "engine/phone/gsball.asm"
 
 
 SECTION "Phone Scripts 1", ROMX
@@ -657,6 +658,7 @@ INCLUDE "data/phone/text/parry_callee.asm"
 INCLUDE "data/phone/text/erin_callee.asm"
 INCLUDE "data/phone/text/unused.asm"
 INCLUDE "engine/events/follower.asm"
+INCLUDE "engine/events/follower_chat.asm"
 
 
 SECTION "Miscellaneous Text", ROMX
@@ -665,6 +667,7 @@ INCLUDE "data/items/names.asm"
 INCLUDE "engine/items/print_item_description.asm"
 INCLUDE "data/moves/names.asm"
 INCLUDE "engine/overworld/landmarks.asm"
+INCLUDE "data/text/followerchat.asm"
 
 
 SECTION "bank77", ROMX

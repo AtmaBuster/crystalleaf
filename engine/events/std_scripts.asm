@@ -2025,6 +2025,18 @@ CanSwapFollower:
 	ld a, [wFollowerFlags]
 	bit FOLLOWER_LOCK_SWAP_F, a
 	ret nz
+; can't swap in bug catching contest
+	ld a, [wStatusFlags2]
+	bit STATUSFLAGS2_BUG_CONTEST_TIMER_F, a
+	ret nz
+; can't swap in copycat's room
+	ld a, [wMapGroup]
+	cp GROUP_COPYCATS_HOUSE_2F
+	jr nz, .next
+	ld a, [wMapNumber]
+	cp MAP_COPYCATS_HOUSE_2F
+	ret z
+.next
 ; cant swap if states aren't the same
 	ld a, [wPlayerState]
 	ld hl, wFollowerState

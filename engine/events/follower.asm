@@ -9,9 +9,12 @@ FollowerScript_Leaf::
 	loadmenu Follower_ActionMenuHeader
 	verticalmenu
 	closewindow
-	ifequal 1, FollowerScript_Leaf_Trade
-	ifequal 2, FollowerScript_Leaf_Battle
-	ifequal 3, FollowerScript_Leaf_Chat
+	ifequal 1, FollowerScript_Leaf_Chat
+	ifequal 2, FollowerScript_Leaf_Trade
+	ifequal 3, FollowerScript_Leaf_Battle
+if DEF(_DEBUG2)
+	ifequal 5, FollowerScript_ChatDebug
+endc
 	writetext Follower_Text_Leaf_AllDone
 	waitbutton
 	closetext
@@ -24,9 +27,12 @@ FollowerScript_Red::
 	loadmenu Follower_ActionMenuHeader
 	verticalmenu
 	closewindow
-	ifequal 1, FollowerScript_Red_Trade
-	ifequal 2, FollowerScript_Red_Battle
-	ifequal 3, FollowerScript_Red_Chat
+	ifequal 1, FollowerScript_Red_Chat
+	ifequal 2, FollowerScript_Red_Trade
+	ifequal 3, FollowerScript_Red_Battle
+if DEF(_DEBUG2)
+	ifequal 5, FollowerScript_ChatDebug
+endc
 	writetext Follower_Text_Red_AllDone
 	waitbutton
 	closetext
@@ -93,11 +99,7 @@ FollowerScript_Leaf_Battle::
 	writetext Follower_Text_Leaf_LetsBattle
 	waitbutton
 	winlosstext Follower_Text_Leaf_BattleWin, Follower_Text_Leaf_BattleLoss
-	scall Follower_Battle
-	writetext Follower_Text_Leaf_BattleDone
-	waitbutton
-	closetext
-	end
+	sjump Follower_Battle
 
 FollowerScript_Leaf_CantBattleRoute::
 	writetext Follower_Text_Leaf_CantBattleRoute
@@ -122,11 +124,7 @@ FollowerScript_Red_Battle::
 	writetext Follower_Text_Red_LetsBattle
 	waitbutton
 	winlosstext Follower_Text_Red_BattleWin, Follower_Text_Red_BattleLoss
-	scall Follower_Battle
-	writetext Follower_Text_Red_BattleDone
-	waitbutton
-	closetext
-	end
+	sjump Follower_Battle
 
 FollowerScript_Red_CantBattleRoute::
 	writetext Follower_Text_Red_CantBattleRoute
@@ -141,155 +139,183 @@ FollowerScript_Red_CantBattleIndoor::
 	end
 
 FollowerScript_Red_Chat::
+	sjump FollowerChatRed
+
 FollowerScript_Leaf_Chat::
-	writetext Follower_Text_NYI
+	sjump FollowerChatLeaf
+
+if DEF(_DEBUG2)
+FollowerScript_ChatDebug:
+	callasm .inittext
+.loop
+	callasm .setuptext
+	iffalse .chatdebugdone
+	writetext hDebugStringBuffer
 	waitbutton
+	waitsfx
+	playsound SFX_PUSH_BUTTON
+	waitsfx
+	sjump .loop
+
+.chatdebugdone
 	closetext
 	end
 
+.inittext
+	xor a
+	ld hl, hDebugTextIndex
+	ld [hli], a
+	ld a, TX_FAR
+	ld [hli], a
+	xor a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld a, "@"
+	ld [hl], a
+	ret
+
+.setuptext
+	ld hl, hDebugTextIndex
+	ld a, [hl]
+	inc [hl]
+	ld hl, FollowerChatList
+	ld c, a
+	ld b, 0
+	add hl, bc
+	add hl, bc
+	ld a, BANK(FollowerChatList)
+	call GetFarWord
+	ld a, l
+	cp -1
+	jr z, .setupdone
+	ldh [hDebugStringBuffer + 1], a
+	ld a, h
+	ldh [hDebugStringBuffer + 2], a
+	ld a, BANK(FollowerChatList)
+	ldh [hDebugStringBuffer + 3], a
+	ld a, 1
+	ld [wScriptVar], a
+	ret
+
+.setupdone
+	xor a
+	ld [wScriptVar], a
+	ret
+endc
+
 Follower_ActionMenuHeader:
 	db MENU_BACKUP_TILES ; flags
+if DEF(_DEBUG2)
+	menu_coords 10, 0, 19, 11
+else
 	menu_coords 10, 0, 19, 9
+endc
 	dw .MenuData
 	db 1 ; default option
 
 .MenuData:
 	db STATICMENU_CURSOR ; flags
+if DEF(_DEBUG2)
+	db 5 ; items
+else
 	db 4 ; items
+endc
+	db "Chat@"
 	db "Trade@"
 	db "Battle@"
-	db "Chat@"
 	db "Nothing@"
+if DEF(_DEBUG2)
+	db "Debug@"
+endc
 
 Follower_Text_Leaf_Intro::
-	text "Follower Text"
-	line "Leaf:Intro"
+	text "Hey! What's up?"
 	done
 
 Follower_Text_Leaf_AllDone::
-	text "Follower Text"
-	line "Leaf:All Done"
+	text "Ok, let's go!"
 	done
 
 Follower_Text_Leaf_CantTradeLocation::
-	text "Follower Text"
-	line "Leaf:Can't Trade"
-	cont "Not in PMC"
+	text "In order to trade,"
+	line "we need special"
+	cont "equipment in a"
+	cont "#MON CENTER."
 	done
 
 Follower_Text_Leaf_LetsTrade::
-	text "Follower Text"
-	line "Leaf:Let's Trade"
+	text "Ok!"
+	line "Let's trade!"
 	done
 
 Follower_Text_Leaf_TradeDone::
-	text "Follower Text"
-	line "Leaf:Done Trade"
+	text "All done!"
 	done
 
 Follower_Text_Leaf_TradeNevermind::
-	text "Follower Text"
-	line "Leaf:Done NVM"
+	text "Next time, then."
 	done
 
 Follower_Text_Leaf_BattleWin::
-	text "Follower Text"
-	line "Leaf:Battle Win"
+	text "Darn, I lost."
+
+	para "That was a good"
+	line "battle!"
 	done
 
 Follower_Text_Leaf_BattleLoss::
-	text "Follower Text"
-	line "Leaf:Battle Loss"
-	done
-
-Follower_Text_Leaf_BattleDone::
-	text "Follower Text"
-	line "Leaf:Battle Done"
+	text "Yay, I won!"
 	done
 
 Follower_Text_Leaf_CantBattleRoute::
-	text "Follower Text"
-	line "Leaf:Can't Battle"
-	cont "In route"
+	text "We should battle"
+	line "near a #MON"
+	cont "CENTER in case our"
+	cont "#MON get hurt."
 	done
 
 Follower_Text_Leaf_CantBattleIndoor::
-	text "Follower Text"
-	line "Leaf:Can't Battle"
-	cont "Indoor"
+	text "We shouldn't battle"
+	line "indoors."
+
+	para "It's too cramped!"
 	done
 
 Follower_Text_Leaf_LetsBattle::
-	text "Follower Text"
-	line "Leaf:Let's Battle"
-	done
-
-Follower_Text_NYI:: ; debugging
-	text "Follower Text"
-	line "Feature NYI"
+	text "Ok, let's battle!"
+	line "I won't go easy!"
 	done
 
 Follower_Text_Red_Intro::
-	text "Follower Text"
-	line "Red:Intro"
-	done
-
 Follower_Text_Red_AllDone::
-	text "Follower Text"
-	line "Red:All Done"
+Follower_Text_Red_LetsTrade::
+Follower_Text_Red_TradeDone::
+Follower_Text_Red_TradeNevermind::
+Follower_Text_Red_BattleWin::
+Follower_Text_Red_BattleLoss::
+Follower_Text_Red_LetsBattle::
+	text "…"
 	done
 
 Follower_Text_Red_CantTradeLocation::
-	text "Follower Text"
-	line "Red:Can't Trade"
-	cont "Not in PMC"
-	done
+	text "Can't."
 
-Follower_Text_Red_LetsTrade::
-	text "Follower Text"
-	line "Red:Let's Trade"
-	done
-
-Follower_Text_Red_TradeDone::
-	text "Follower Text"
-	line "Red:Done Trade"
-	done
-
-Follower_Text_Red_TradeNevermind::
-	text "Follower Text"
-	line "Red:Done NVM"
-	done
-
-Follower_Text_Red_BattleWin::
-	text "Follower Text"
-	line "Red:Battle Win"
-	done
-
-Follower_Text_Red_BattleLoss::
-	text "Follower Text"
-	line "Red:Battle Loss"
-	done
-
-Follower_Text_Red_BattleDone::
-	text "Follower Text"
-	line "Red:Battle Done"
+	para "Only at a #MON"
+	line "CENTER."
 	done
 
 Follower_Text_Red_CantBattleRoute::
-	text "Follower Text"
-	line "Red:Can't Battle"
-	cont "In route"
+	text "Can't."
+
+	para "Only in a city."
 	done
 
 Follower_Text_Red_CantBattleIndoor::
-	text "Follower Text"
-	line "Red:Can't Battle"
-	cont "Indoor"
-	done
+	text "Can't."
 
-Follower_Text_Red_LetsBattle::
-	text "Follower Text"
-	line "Red:Let's Battle"
+	para "No battling"
+	line "indoors."
 	done
 
 Follower_Battle::
@@ -299,7 +325,6 @@ Follower_Battle::
 	startbattle
 	callasm .battlemode
 	reloadmap
-	opentext
 	end
 
 .battlemode

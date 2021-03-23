@@ -47,6 +47,7 @@ MapSetupScript_Warp:
 	mapsetup FadeInPalettes
 	mapsetup ActivateMapAnims
 	mapsetup LoadWildMonData
+	mapsetup CheckGSBallPhoneCall
 	db -1 ; end
 
 MapSetupScript_BadWarp:
@@ -72,6 +73,7 @@ MapSetupScript_BadWarp:
 	mapsetup FadeInPalettes
 	mapsetup ActivateMapAnims
 	mapsetup LoadWildMonData
+	mapsetup CheckGSBallPhoneCall
 	db -1 ; end
 
 MapSetupScript_Connection:
@@ -89,6 +91,7 @@ MapSetupScript_Connection:
 	mapsetup InitMapNameSign
 	mapsetup ApplyMapPalettes
 	mapsetup LoadWildMonData
+	mapsetup CheckGSBallPhoneCall
 	mapsetup UpdateRoamMons
 	mapsetup ActivateMapAnims
 	db -1 ; end
@@ -118,6 +121,7 @@ MapSetupScript_Train:
 	mapsetup FadeInPalettes
 	mapsetup ActivateMapAnims
 	mapsetup LoadWildMonData
+	mapsetup CheckGSBallPhoneCall
 	mapsetup UpdateRoamMons
 	db -1 ; end
 
@@ -137,6 +141,7 @@ MapSetupScript_ReloadMap:
 	mapsetup FadeInPalettes
 	mapsetup ActivateMapAnims
 	mapsetup LoadWildMonData
+	mapsetup CheckGSBallPhoneCall
 	db -1 ; end
 
 MapSetupScript_LinkReturn:
@@ -155,6 +160,7 @@ MapSetupScript_LinkReturn:
 	mapsetup FadeInPalettes
 	mapsetup ActivateMapAnims
 	mapsetup LoadWildMonData
+	mapsetup CheckGSBallPhoneCall
 	mapsetup EnableTextAcceleration
 	db -1 ; end
 
@@ -176,6 +182,7 @@ MapSetupScript_Continue:
 	mapsetup FadeInPalettes
 	mapsetup ActivateMapAnims
 	mapsetup LoadWildMonData
+	mapsetup CheckGSBallPhoneCall
 	db -1 ; end
 
 MapSetupScript_Submenu:

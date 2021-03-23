@@ -53,3 +53,4 @@ MapSetupCommands:
 	add_mapsetup MapPlayerCoordWarped ; 2e
 	add_mapsetup MapPlayerCoordConnected ; 2f
 	add_mapsetup UpdateFollowerPositionAfterWarp ; 30
+	add_mapsetup CheckGSBallPhoneCall ; 31

@@ -182,4 +182,9 @@ hFollowerTradeMode:: db
 hFollowerBattleMode:: db
 hRoamMonCheck:: db
 
+if DEF(_DEBUG2)
+hDebugTextIndex:: db
+hDebugStringBuffer:: ds 12
+else
 	ds 13
+endc
