@@ -1,4 +1,9 @@
 HealParty:
+	farcall FollowerSwapTeam
+	call _HealParty
+	farcall FollowerSwapTeam
+
+_HealParty:
 	xor a
 	ld [wCurPartyMon], a
 	ld hl, wPartySpecies

@@ -186,3 +186,5 @@ SpecialsPointers::
 	add_special FollowerSwapTeam
 	add_special FollowerTrade
 	add_special InitRoamBird
+	add_special BackupPartyHeldItems
+	add_special RestorePartyHeldItems

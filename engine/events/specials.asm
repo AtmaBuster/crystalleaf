@@ -450,3 +450,35 @@ TrainerHouse:
 	ld a, [sMysteryGiftTrainerHouseFlag]
 	ld [wScriptVar], a
 	jp CloseSRAM
+
+BackupPartyHeldItems:
+	ld hl, wPartyMon1Item
+	ld de, wPartyMonItemBackup
+	ld c, PARTY_LENGTH
+.loop
+	push bc
+	ld a, [hl]
+	ld [de], a
+	inc de
+	ld bc, PARTYMON_STRUCT_LENGTH
+	add hl, bc
+	pop bc
+	dec c
+	jr nz, .loop
+	ret
+
+RestorePartyHeldItems:
+	ld hl, wPartyMon1Item
+	ld de, wPartyMonItemBackup
+	ld c, PARTY_LENGTH
+.loop
+	push bc
+	ld a, [de]
+	ld [hl], a
+	inc de
+	ld bc, PARTYMON_STRUCT_LENGTH
+	add hl, bc
+	pop bc
+	dec c
+	jr nz, .loop
+	ret

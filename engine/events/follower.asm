@@ -96,10 +96,18 @@ FollowerScript_Leaf_Battle::
 	ifequal GATE, FollowerScript_Leaf_CantBattleIndoor
 	ifequal DUNGEON, FollowerScript_Leaf_CantBattleRoute
 	ifnotequal TOWN, FollowerScript_Leaf_CantBattleRoute
+	readvar VAR_PARTYCOUNT
+	ifequal 0, FollowerScript_Leaf_CantBattleNoMons
 	writetext Follower_Text_Leaf_LetsBattle
 	waitbutton
 	winlosstext Follower_Text_Leaf_BattleWin, Follower_Text_Leaf_BattleLoss
 	sjump Follower_Battle
+
+FollowerScript_Leaf_CantBattleNoMons::
+	writetext Follower_Text_Leaf_CantBattleNoMons
+	waitbutton
+	closetext
+	end
 
 FollowerScript_Leaf_CantBattleRoute::
 	writetext Follower_Text_Leaf_CantBattleRoute
@@ -121,10 +129,18 @@ FollowerScript_Red_Battle::
 	ifequal GATE, FollowerScript_Red_CantBattleIndoor
 	ifequal DUNGEON, FollowerScript_Red_CantBattleRoute
 	ifnotequal TOWN, FollowerScript_Red_CantBattleRoute
+	readvar VAR_PARTYCOUNT
+	ifequal 0, FollowerScript_Red_CantBattleNoMons
 	writetext Follower_Text_Red_LetsBattle
 	waitbutton
 	winlosstext Follower_Text_Red_BattleWin, Follower_Text_Red_BattleLoss
 	sjump Follower_Battle
+
+FollowerScript_Red_CantBattleNoMons::
+	writetext Follower_Text_Red_CantBattleNoMons
+	waitbutton
+	closetext
+	end
 
 FollowerScript_Red_CantBattleRoute::
 	writetext Follower_Text_Red_CantBattleRoute
@@ -268,6 +284,13 @@ Follower_Text_Leaf_BattleLoss::
 	text "Yay, I won!"
 	done
 
+Follower_Text_Leaf_CantBattleNoMons::
+	text "We can't battle."
+
+	para "We don't have any"
+	line "#MON!"
+	done
+
 Follower_Text_Leaf_CantBattleRoute::
 	text "We should battle"
 	line "near a #MON"
@@ -298,6 +321,13 @@ Follower_Text_Red_LetsBattle::
 	text "…"
 	done
 
+Follower_Text_Red_CantBattleNoMons::
+	text "Can't."
+
+	para "Don't have any"
+	line "#MON."
+	done
+
 Follower_Text_Red_CantTradeLocation::
 	text "Can't."
 
@@ -319,12 +349,14 @@ Follower_Text_Red_CantBattleIndoor::
 	done
 
 Follower_Battle::
+	special BackupPartyHeldItems
 	callasm .battlemode
 	loadtrainer TRAINER_FROM_RAM, 0
 	loadvar VAR_BATTLETYPE, BATTLETYPE_CANLOSE
 	startbattle
 	callasm .battlemode
 	reloadmap
+	special RestorePartyHeldItems
 	end
 
 .battlemode

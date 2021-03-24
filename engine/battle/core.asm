@@ -8098,8 +8098,11 @@ LoadTrainerOrWildMonPic:
 	ld a, [wFollowerFlags]
 	bit FOLLOWER_SWAPPED_F, a
 	ld a, KRIS
-	jr z, .ok
+	jr z, .ok_ram_trainer
 	ld a, CHRIS
+.ok_ram_trainer
+	ld [wTrainerClass], a
+	xor a
 .ok
 	ld [wTempEnemyMonSpecies], a
 	ret

@@ -116,6 +116,7 @@ CheckUpdatePlayerSprite:
 	ret z
 	ld a, PLAYER_BIKE
 	ld [wPlayerState], a
+	ld [wFollowerState], a
 	scf
 	ret
 

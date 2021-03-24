@@ -495,6 +495,7 @@ AideScript_GivePotion:
 	verbosegiveitem POTION
 	writetext AideText_AlwaysBusy
 	waitbutton
+	writetext AideText_SwapTutorial
 	closetext
 	setscene SCENE_ELMSLAB_NOTHING
 	end
@@ -1293,6 +1294,14 @@ AideText_AlwaysBusy:
 	text "There are only two"
 	line "of us, so we're"
 	cont "always busy."
+	done
+
+AideText_SwapTutorial:
+	text "Oh, by the way."
+
+	para "Hold B and press"
+	line "SELECT to change"
+	cont "places."
 	done
 
 AideText_TheftTestimony:

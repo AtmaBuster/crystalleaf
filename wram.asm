@@ -3145,7 +3145,9 @@ wPartyMonOT:: ds NAME_LENGTH * PARTY_LENGTH
 wPartyMonNicknames:: ds MON_NAME_LENGTH * PARTY_LENGTH
 wPartyMonNicknamesEnd::
 
-	ds 22
+	ds 16
+
+wPartyMonItemBackup:: ds PARTY_LENGTH
 
 wPokedexCaught:: flag_array NUM_POKEMON
 wEndPokedexCaught::

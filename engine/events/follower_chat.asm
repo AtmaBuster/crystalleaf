@@ -96,12 +96,6 @@ FollowerChatLeaf:
 	sjump .NationalParkComment
 
 .EcruteakCheck:
-	checkevent EVENT_SAW_SUICUNE_AT_CIANWOOD_CITY
-	iffalse .EcruteakCheck2
-	checkevent EVENT_SAW_SUICUNE_ON_ROUTE_42
-	iffalse .EcruteakCheck2
-	checkevent EVENT_SAW_SUICUNE_ON_ROUTE_36
-	iffalse .EcruteakCheck2
 	checkevent EVENT_GOT_CLEAR_BELL
 	iffalse .EcruteakCheck2
 	checkevent EVENT_FOUGHT_SUICUNE
@@ -169,7 +163,7 @@ FollowerChatLeaf:
 
 .LakeOfRageCheck:
 	checkflag ENGINE_ROCKETS_IN_MAHOGANY
-	iftrue .GetGenericText
+	iffalse .GetGenericText
 	checkevent EVENT_DECIDED_TO_HELP_LANCE
 	iftrue .LakeOfRageRocketHint
 	checkevent EVENT_LAKE_OF_RAGE_RED_GYARADOS
@@ -206,7 +200,7 @@ FollowerChatLeaf:
 
 .IndigoPlateauCheck:
 	checkevent EVENT_BEAT_ELITE_FOUR
-	iftrue .IndigoPlateauFirstTimeComment
+	iffalse .IndigoPlateauFirstTimeComment
 	sjump .IndigoPlateauComment
 
 .VermilionCheck:
