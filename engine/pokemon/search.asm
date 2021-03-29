@@ -55,6 +55,15 @@ CheckOwnMonAnywhere:
 	and a
 	ret z
 
+	farcall FollowerSwapTeam
+	call .check_party
+	push af
+	farcall FollowerSwapTeam
+	pop af
+	ret c
+
+.check_party
+	ld a, [wPartyCount]
 	ld d, a
 	ld e, 0
 	ld hl, wPartyMon1Species

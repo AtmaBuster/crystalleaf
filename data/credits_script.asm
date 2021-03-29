@@ -278,7 +278,13 @@ CreditsScript:
 	db       FROGGESTSPIRIT, 1
 	db               MMMMMM, 2
 
-	db CREDITS_WAIT, 12
+	db CREDITS_WAIT, 6
+
+	db  ADDITIONAL_GRAPHICS, 0
+	db          TASTYSNAX12, 1
+	db               FARORE, 2
+
+	db CREDITS_WAIT, 6
 
 	db   THANKS_FOR_PLAYING, 0
 	db          WE_LOVE_YOU, 2

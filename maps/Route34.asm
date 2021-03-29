@@ -60,17 +60,13 @@ DayCareManScript_Outside:
 	ifequal TRUE, .end_fail
 	clearflag ENGINE_DAY_CARE_MAN_HAS_EGG
 	readvar VAR_FACING
-	ifequal RIGHT, .walk_around_player
+	ifnotequal RIGHT, .skip
+	applymovement PLAYER, Route34MovementData_DayCareManWalksBackInside_PlayerMove
+.skip
 	applymovement ROUTE34_GRAMPS, Route34MovementData_DayCareManWalksBackInside
 	playsound SFX_ENTER_DOOR
 	disappear ROUTE34_GRAMPS
 .end_fail
-	end
-
-.walk_around_player
-	applymovement ROUTE34_GRAMPS, Route34MovementData_DayCareManWalksBackInside_WalkAroundPlayer
-	playsound SFX_ENTER_DOOR
-	disappear ROUTE34_GRAMPS
 	end
 
 DayCareMon1Script:
@@ -497,12 +493,10 @@ Route34MovementData_DayCareManWalksBackInside:
 	slow_step UP
 	step_end
 
-Route34MovementData_DayCareManWalksBackInside_WalkAroundPlayer:
-	slow_step DOWN
-	slow_step LEFT
-	slow_step LEFT
-	slow_step UP
-	slow_step UP
+Route34MovementData_DayCareManWalksBackInside_PlayerMove:
+	step DOWN
+	step LEFT
+	turn_head UP
 	step_end
 
 YoungsterSamuelSeenText:

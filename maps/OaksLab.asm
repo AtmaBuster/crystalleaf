@@ -264,7 +264,21 @@ OaksLabPCText:
 	done
 
 OakLabBirdsRoaming:
-	text "BIRDS ROAMING"
+	text "By the way, I've"
+	line "been hearing some"
+	cont "rumors."
+
+	para "There have been"
+	line "sightings of the"
+	cont "legendary bird"
+	cont "#MON roaming"
+	cont "around KANTO."
+
+	para "Maybe you should"
+	line "try and find them."
+
+	para "It might be a good"
+	line "challenge for you!"
 	done
 
 OaksLab_MapEvents:

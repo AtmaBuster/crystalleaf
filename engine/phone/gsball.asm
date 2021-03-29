@@ -23,7 +23,9 @@ CheckGSBallPhoneCall:
 	ld a, [hli]
 	cp -1
 	jr z, .done
+	push hl
 	call CheckCaughtMon
+	pop hl
 	ret z
 	jr .dex_loop
 .done
@@ -38,13 +40,13 @@ CheckGSBallPhoneCall:
 	ret
 
 .LegendaryList
-	db ARTICUNO
-	db ZAPDOS
-	db MOLTRES
-	db MEWTWO
-	db RAIKOU
-	db ENTEI
-	db SUICUNE
-	db HO_OH
-	db LUGIA
+	db ARTICUNO - 1
+	db ZAPDOS   - 1
+	db MOLTRES  - 1
+	db MEWTWO   - 1
+	db RAIKOU   - 1
+	db ENTEI    - 1
+	db SUICUNE  - 1
+	db HO_OH    - 1
+	db LUGIA    - 1
 	db -1

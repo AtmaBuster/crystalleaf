@@ -328,14 +328,14 @@ ENDM
 	connection south, VermilionCity, VERMILION_CITY, -5
 
 	map_attributes SaffronCity, SAFFRON_CITY, $0f, NORTH | SOUTH | WEST | EAST
-	connection north, Route5, ROUTE_5, 5
+	connection north, Route5, ROUTE_5, 0
 	connection south, Route6, ROUTE_6, 5
 	connection west, Route7, ROUTE_7, 9
 	connection east, Route8, ROUTE_8, 9
 
 	map_attributes Route5, ROUTE_5, $0f, NORTH | SOUTH
 	connection north, CeruleanCity, CERULEAN_CITY, 0
-	connection south, SaffronCity, SAFFRON_CITY, -5
+	connection south, SaffronCity, SAFFRON_CITY, 0
 
 	map_attributes CeruleanCity, CERULEAN_CITY, $2c, NORTH | SOUTH | WEST | EAST
 	connection north, Route24, ROUTE_24, 6

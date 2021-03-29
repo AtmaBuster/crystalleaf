@@ -9,7 +9,10 @@ FollowerChatRed:
 FollowerChatLeaf:
 ; if rockets in radio tower
 	checkflag ENGINE_ROCKETS_IN_RADIO_TOWER
-	iftrue .RocketsInRadioTower
+	iffalse .NotRocketsInRadioTower
+	callasm CheckSpecialPhoneCallQueued
+	iffalse .RocketsInRadioTower
+.NotRocketsInRadioTower
 	getregion
 	ifnotequal KANTO_REGION, .CheckLandmark
 	checkevent EVENT_RESTORED_POWER_TO_KANTO
@@ -19,8 +22,10 @@ FollowerChatLeaf:
 	checkevent EVENT_GOT_PASS_FROM_COPYCAT
 	iffalse .MagnetTrainPassHint
 .CheckLandmark
+if !DEF(_DEBUG2)
 	random 4
 	iffalse .GetGenericText
+endc
 	getcurlandmark
 	ifequal LANDMARK_NEW_BARK_TOWN, .NewBarkTownComment
 	ifequal LANDMARK_CHERRYGROVE_CITY, .CherrygroveCheck
@@ -57,10 +62,12 @@ FollowerChatLeaf:
 .VioletCheck:
 	checkevent EVENT_GOT_HM05_FLASH
 	iffalse .VioletSproutTowerHint
-	checkevent EVENT_ELMS_AIDE_IN_VIOLET_POKEMON_CENTER
-	iftrue .VioletEggHint
 	checkflag ENGINE_ZEPHYRBADGE
 	iffalse .VioletGymHint
+	callasm CheckSpecialPhoneCallQueued
+	iftrue .GetGenericText
+	checkevent EVENT_ELMS_AIDE_IN_VIOLET_POKEMON_CENTER
+	iffalse .VioletEggHint
 	sjump .GetGenericText
 
 .UnionCaveCheck:
@@ -139,8 +146,11 @@ FollowerChatLeaf:
 	checkevent EVENT_GOT_HM02_FLY
 	iffalse .CianwoodFlyHint
 .CianwoodCheck2:
+	checkevent EVENT_GOT_SECRETPOTION_FROM_PHARMACY
+	iftrue .CianwoodCheck3
 	checkevent EVENT_JASMINE_EXPLAINED_AMPHYS_SICKNESS
 	iftrue .CianwoodMedicineHint
+.CianwoodCheck3
 	checkevent EVENT_BEAT_BLACKBELT_NOB
 	iffalse .GetGenericText
 	checkevent EVENT_GOT_HM04_STRENGTH
@@ -149,7 +159,7 @@ FollowerChatLeaf:
 
 .MahoganyCheck:
 	checkflag ENGINE_ROCKETS_IN_MAHOGANY
-	iftrue .MahoganyCheck2
+	iffalse .MahoganyCheck2
 	checkflag ENGINE_GLACIERBADGE
 	iffalse .MahoganyGymHint
 	sjump .GetGenericText
@@ -359,6 +369,15 @@ FollowerChatLeaf:
 	farjumptext FollowerChatText_Leaf_VermilionRadioHint
 .SilverCaveComment:
 	farjumptext FollowerChatText_Leaf_SilverCaveComment
+
+CheckSpecialPhoneCallQueued:
+	ld a, [wSpecialPhoneCallID]
+	and a
+	jr z, .no
+	ld a, 1
+.no
+	ld [wScriptVar], a
+	ret
 
 GetLandmarkType:
 ; returns 0 for unknown

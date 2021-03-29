@@ -109,6 +109,9 @@
 	const THANKS_FOR_PLAYING
 	const WE_LOVE_YOU
 	const PRECIOUSLEAF
+	const ADDITIONAL_GRAPHICS
+	const TASTYSNAX12
+	const FARORE
 
 ; CreditsScript indexes (see data/credits_script.asm)
 	const_def -1, -1

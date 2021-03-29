@@ -109,6 +109,9 @@ CreditsStringsPointers:
 	dw .ThanksForPlaying
 	dw .WeLoveYou
 	dw .PreciousLeaf
+	dw .AdditionalGraphics
+	dw .TastySnax12
+	dw .Farore
 
 .SatoshiTajiri:       db "   SATOSHI TAJIRI@"         ; "たじり　さとし@"
 .JunichiMasuda:       db "   JUNICHI MASUDA@"         ; "ますだ　じゅんいち@"
@@ -222,6 +225,9 @@ CreditsStringsPointers:
 .ThanksForPlaying:    db " THANKS FOR PLAYING@"
 .WeLoveYou:           db "    WE LOVE YOU@"
 .PreciousLeaf:        db "    PRECIOUSLEAF@"
+.AdditionalGraphics:  db "ADDITIONAL GRAPHICS@"
+.TastySnax12:         db "     TastySnax12@"
+.Farore:              db "       Farore@"
 
 .Copyright:
 	;    (C) 1  9  9  5 - 2  0  0  1     N  i  n  t  e  n  d  o

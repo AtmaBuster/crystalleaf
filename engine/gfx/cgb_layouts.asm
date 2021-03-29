@@ -659,8 +659,8 @@ _CGB_TrainerCard:
 	; fill trainer sprite area with same-gender palette
 	hlcoord 14, 1, wAttrmap
 	lb bc, 7, 5
-	ld a, [wPlayerGender]
-	bit PLAYERGENDER_FEMALE_F, a
+	ld a, [wFollowerFlags]
+	bit FOLLOWER_SWAPPED_F, a
 	ld a, $0 ; chris
 	jr z, .got_gender2
 	ld a, $1 ; kris
