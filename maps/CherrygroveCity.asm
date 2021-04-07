@@ -107,6 +107,9 @@ CherrygroveCityGuideGent:
 
 CherrygroveSilverSceneSouth:
 	moveobject CHERRYGROVECITY_SILVER, 39, 7
+	getfollowerdirection
+	ifnotequal DOWN, CherrygroveSilverSceneNorth
+	applymovement FOLLOWER, CherrygroveCity_FollowerMovementForRival
 CherrygroveSilverSceneNorth:
 	turnobject PLAYER, RIGHT
 	showemote EMOTE_SHOCK, PLAYER, 15
@@ -319,6 +322,12 @@ GuideGentMovement5:
 GuideGentMovement6:
 	step UP
 	step UP
+	step_end
+
+CherrygroveCity_FollowerMovementForRival:
+	step LEFT
+	step UP
+	turn_head RIGHT
 	step_end
 
 CherrygroveCity_RivalWalksToYou:

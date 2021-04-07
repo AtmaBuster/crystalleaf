@@ -496,6 +496,7 @@ AideScript_GivePotion:
 	writetext AideText_AlwaysBusy
 	waitbutton
 	writetext AideText_SwapTutorial
+	waitbutton
 	closetext
 	setscene SCENE_ELMSLAB_NOTHING
 	end

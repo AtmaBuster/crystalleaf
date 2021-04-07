@@ -116,6 +116,7 @@ NewBarkTownSilverScript:
 	writetext NewBarkTownRivalText2
 	waitbutton
 	closetext
+	freezefollower
 	follow PLAYER, NEWBARKTOWN_SILVER
 	applymovement PLAYER, NewBarkTown_SilverPushesYouAwayMovement
 	stopfollow
@@ -125,7 +126,16 @@ NewBarkTownSilverScript:
 	playsound SFX_TACKLE
 	applymovement PLAYER, NewBarkTown_SilverShovesYouOutMovement
 	applymovement NEWBARKTOWN_SILVER, NewBarkTown_SilverReturnsToTheShadowsMovement
+	unfreezefollower
+	applymovement FOLLOWER, NewBarkTown_FollowerMoveDown
+	callasm .follower_movement_fix
 	end
+
+.follower_movement_fix:
+	; hacky fix
+	xor a
+	ld [wFollowerNextMovement], a
+	ret
 
 NewBarkTownSign:
 	jumptext NewBarkTownSignText
@@ -179,6 +189,10 @@ NewBarkTown_TeacherBringsYouBackMovement2:
 	step RIGHT
 	step RIGHT
 	turn_head LEFT
+	step_end
+
+NewBarkTown_FollowerMoveDown:
+	step DOWN
 	step_end
 
 NewBarkTown_SilverPushesYouAwayMovement:
