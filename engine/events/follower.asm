@@ -12,8 +12,9 @@ FollowerScript_Leaf::
 	ifequal 1, FollowerScript_Leaf_Chat
 	ifequal 2, FollowerScript_Leaf_Trade
 	ifequal 3, FollowerScript_Leaf_Battle
+	ifequal 4, FollowerScript_Leaf_Switch
 if DEF(_DEBUG2)
-	ifequal 5, FollowerScript_ChatDebug
+	ifequal 6, FollowerScript_ChatDebug
 endc
 	writetext Follower_Text_Leaf_AllDone
 	waitbutton
@@ -30,10 +31,35 @@ FollowerScript_Red::
 	ifequal 1, FollowerScript_Red_Chat
 	ifequal 2, FollowerScript_Red_Trade
 	ifequal 3, FollowerScript_Red_Battle
+	ifequal 4, FollowerScript_Red_Switch
 if DEF(_DEBUG2)
-	ifequal 5, FollowerScript_ChatDebug
+	ifequal 6, FollowerScript_ChatDebug
 endc
 	writetext Follower_Text_Red_AllDone
+	waitbutton
+	closetext
+	end
+
+FollowerScript_Red_Switch::
+	callasm CanSwapFollower
+	iffalse .done
+	closetext
+	jumpstd SwapFollowerScript
+
+.done
+	writetext Follower_Text_Red_CantSwitch
+	waitbutton
+	closetext
+	end
+
+FollowerScript_Leaf_Switch::
+	callasm CanSwapFollower
+	iffalse .done
+	closetext
+	jumpstd SwapFollowerScript
+
+.done
+	writetext Follower_Text_Leaf_CantSwitch
 	waitbutton
 	closetext
 	end
@@ -223,9 +249,9 @@ endc
 Follower_ActionMenuHeader:
 	db MENU_BACKUP_TILES ; flags
 if DEF(_DEBUG2)
-	menu_coords 10, 0, 19, 11
+	menu_coords 10, 0, 19, 13
 else
-	menu_coords 10, 0, 19, 9
+	menu_coords 10, 0, 19, 11
 endc
 	dw .MenuData
 	db 1 ; default option
@@ -233,13 +259,14 @@ endc
 .MenuData:
 	db STATICMENU_CURSOR ; flags
 if DEF(_DEBUG2)
-	db 5 ; items
+	db 6 ; items
 else
-	db 4 ; items
+	db 5 ; items
 endc
 	db "Chat@"
 	db "Trade@"
 	db "Battle@"
+	db "Switch@"
 	db "Nothing@"
 if DEF(_DEBUG2)
 	db "Debug@"
@@ -387,3 +414,11 @@ FollowerScript_CheckFollowerSwapped:
 	ld [wScriptVar], a
 	ret
 
+Follower_Text_Red_CantSwitch:
+	text "Can't right now."
+	done
+
+Follower_Text_Leaf_CantSwitch:
+	text "We can't change"
+	line "places right now."
+	done
