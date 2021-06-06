@@ -1,7 +1,13 @@
+;DEF BETTER_MEW_CHECK EQU 1
+
 LoadWildMonData:
 	ld a, MEW
+IF DEF(BETTER_MEW_CHECK)
 	ld [wScriptVar], a
 	farcall CheckOwnMonAnywhere
+ELSE
+	call CheckCaughtMon
+ENDC
 	call MewEncFlagChange
 	call _GrassWildmonLookup
 	jr c, .copy
@@ -31,7 +37,11 @@ LoadWildMonData:
 
 MewEncFlagChange:
 	ld de, ENGINE_CAN_ENCOUNTER_MEW
+IF DEF(BETTER_MEW_CHECK)
 	jr c, .reset
+ELSE
+	jr nz, .reset
+ENDC
 	ld b, SET_FLAG
 	farcall EngineFlagAction
 	ret
