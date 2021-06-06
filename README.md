@@ -1,5 +1,7 @@
 # Pokémon Crystal [![Build Status][travis-badge]][travis]
 
+If using any code from this repository other than the vanilla pokecrystal code, please give credit, otherwise do whatever lol
+
 This is a disassembly of Pokémon Crystal.
 
 It builds the following ROMs:
