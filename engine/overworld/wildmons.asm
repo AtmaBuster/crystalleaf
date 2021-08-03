@@ -1,11 +1,12 @@
 ;DEF BETTER_MEW_CHECK EQU 1
 
 LoadWildMonData:
-	ld a, MEW
 IF DEF(BETTER_MEW_CHECK)
+	ld a, MEW
 	ld [wScriptVar], a
 	farcall CheckOwnMonAnywhere
 ELSE
+	ld a, MEW - 1
 	call CheckCaughtMon
 ENDC
 	call MewEncFlagChange
